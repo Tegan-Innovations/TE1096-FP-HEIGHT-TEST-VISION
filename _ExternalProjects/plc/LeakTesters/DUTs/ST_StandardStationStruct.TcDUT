@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_StandardStationStruct" Id="{7dda221a-7a06-46d2-b131-92bd1a558b98}">
+    <Declaration><![CDATA[TYPE ST_StandardStationStruct :
+STRUCT
+	
+		// Station Manager => Master Control
+	nState 							: 	DINT := 100;//Station Cycle State
+	bStationWaitOnInit              :   BOOL;       //Station Waiting For Initialisation Request
+	bStationWaitOnRequest			:	BOOL;		//Station In Valide State Avaiting For Request Command
+	bStationInProgress				: 	BOOL;		//Station In Progress With Cycle
+	bStationInProgressInit          :   BOOL;       //Station In Progress With Imotialisation     
+	bStationComplete				: 	BOOL;		//Station Complete Cycle - Flag Set After Every Cycle Finsh
+	bStationCycleStopped			: 	BOOL;
+	bStationHomed					: 	BOOL;		//Station Homed - All Station Functions Are Homed 
+	bStationDone					:	BOOL;		//Sequence Finished With Success - Flag Set For One PLC Cycle
+	bStationNotMoving				: 	BOOL;		//Station Parts Are Not Moving
+	bStationInDwell					: 	BOOL;		//Station Waiting For External Action By Operator
+	bStationAcknowledge             :   BOOL;       //Station Acknowledge request from Master 
+	bStationInitDone                :   BOOL;       //Station Initialisation Progress Done
+	// Master Control => Station Manager
+	bStationInitRequest             :   BOOL;       //Request Commnad To Start Station Initialisation
+	bStationRequest					: 	BOOL;		//Request Commnad To Start Station Cycle
+	bStationCompleteAck				: 	BOOL;		//Request Commnad To Start Station Cycle
+	bStationHomingRequest			:	BOOL;		//Staion Homing Requested By Manager Or Internal Functions
+	bStationAbort					: 	BOOL;		//Station Abort By Manager
+	bNoCycleStopRequest				:	BOOL;		//Stop Cycle Requested By Manager
+	bNoCycleStopFault				: 	BOOL;		//No  Stop Fault On Station - Immidiat STOP Station
+	bNoImmediateFault				: 	BOOL;		//No Immediate Fault On Station - Immidiat STOP Machine
+	
+	
+	bStationManualRequestHMI		:	BOOL;		//Sequence Cycle Requested From HMI
+	bStationInManualMode			:	BOOL;		//Station Sequence Manage By Operator
+
+	bStationInStandByMode			:	BOOL;		//Sequence In Stand By State
+	bStationFreezedByManager		: 	BOOL;		//Sequence Cycle Freezed (Suspend)  By Manager
+	
+	eStationState					: 	E_StationState; // state of sequence
+	
+	bPartOK							:	BOOL;		// 1-Cycle succeed
+	bPartReject                     :   BOOL;       // 1-Cycle failed
+
+	
+	bStationWaiting                 :   BOOL; // Station in the  positiont waiting for work done
+	bStationCycleCondition          :   BOOL; // Station in cycle move
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

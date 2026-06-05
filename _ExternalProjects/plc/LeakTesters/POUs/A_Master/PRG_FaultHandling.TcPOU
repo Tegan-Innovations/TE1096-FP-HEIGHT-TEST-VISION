@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_FaultHandling" Id="{1ed57a34-1c0a-4c7e-a0fc-90a123d0d2dc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_FaultHandling
+VAR
+	
+	i							: INT;
+	bFlagResetOn				: BOOL;
+	bStationCycleFaultFlag		: BOOL;
+
+
+
+
+END_VAR
+VAR_IN_OUT
+
+  aAlarms  : ARRAY[0..3] OF ST_Events;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_FaultTrig();
+
+(************************************** Faults reset **********************************************)
+IF   GVL_HMI_GLOBAL.bResetButton THEN 
+	FOR i := 0 TO 127 DO
+		GVL_MASTER.stAlarms[0].aEventFlags[i] := FALSE;
+	END_FOR
+END_IF
+
+
+//===============================================================
+//Initialize event texts on first scan
+IF NOT GVL_MASTER.stAlarms[0].bEventTextsSet THEN
+	SetEventTexts();
+	GVL_MASTER.stAlarms[0].bEventTextsSet := TRUE;
+END_IF
+IF NOT GVL_MASTER.stAlarms[0].bEventTextsSet THEN
+	GVL_MASTER.stAlarms[0].bEventTextsSet := FALSE;
+END_IF
+
+
+(***************************************************************************************************)
+//Immediate fault
+GVL_MASTER.stAlarms[0].bImmediateFault := FALSE;
+FOR i := 0 TO 32DO
+	GVL_MASTER.stAlarms[0].bImmediateFault := GVL_MASTER.stAlarms[0].bImmediateFault OR GVL_MASTER.stAlarms[0].aEventFlags[i];
+END_FOR
+
+//Cycle stop fault
+GVL_MASTER.stAlarms[0].bCycleStopFault := FALSE;
+FOR i := 33 TO 79 DO
+	GVL_MASTER.stAlarms[0].bCycleStopFault := GVL_MASTER.stAlarms[0].bCycleStopFault OR GVL_MASTER.stAlarms[0].aEventFlags[i];
+END_FOR
+
+//Cycle stop request
+GVL_MASTER.stAlarms[0].bCycleStopRequest := FALSE;
+FOR i := 80 TO 99 DO
+	GVL_MASTER.stAlarms[0].bCycleStopRequest := GVL_MASTER.stAlarms[0].bCycleStopRequest OR GVL_MASTER.stAlarms[0].aEventFlags[i];
+END_FOR
+
+
+(**************************** Master Fault Monitors ***********************************************)
+(* Station Immediate Fault Monitor *)
+GVL_MASTER.stMasterControl.bNoStationImmediateFault := 	NOT GVL_MASTER.stAlarms[0].bImmediateFault AND NOT GVL_MASTER.stAlarms[1].bImmediateFault AND
+                                            			NOT GVL_MASTER.stAlarms[2].bImmediateFault AND NOT GVL_MASTER.stAlarms[3].bImmediateFault;
+
+(**************************************************************************************************)
+(**************************** Cycle stop falt  **************************************)
+bStationCycleFaultFlag := NOT GVL_MASTER.stAlarms[0].bCycleStopFault AND NOT GVL_MASTER.stAlarms[1].bCycleStopFault AND
+                          NOT GVL_MASTER.stAlarms[2].bCycleStopFault AND NOT GVL_MASTER.stAlarms[3].bCycleStopFault;
+
+(**************************** Master Immediate Fault Monitor **************************************)
+GVL_MASTER.stMasterControl.bNoMachineImmediateFault := NOT GVL_MASTER.stAlarms[0].bImmediateFault AND NOT GVL_MASTER.stAlarms[1].bImmediateFault AND
+                                            NOT GVL_MASTER.stAlarms[2].bImmediateFault AND NOT GVL_MASTER.stAlarms[3].bImmediateFault;
+
+									
+(**************************************************************************************************)
+
+(* Master Cycle Stop Fault Monitor *)
+GVL_MASTER.stMasterControl.bNoCycleStopFault := NOT GVL_MASTER.stAlarms[0].bCycleStopFault AND NOT GVL_MASTER.stAlarms[1].bCycleStopFault
+												AND NOT GVL_MASTER.stAlarms[2].bCycleStopFault AND NOT GVL_MASTER.stAlarms[3].bCycleStopFault;
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_FaultTrig" Id="{f82952b9-10cd-47a6-a8aa-cbbe9096c605}">
+      <Implementation>
+        <ST><![CDATA[(**************************************************************************************************)
+(**************************** Master Immediate Fault Stop *****************************************)
+(**************************************************************************************************)
+
+//Beckhoff EL1809 Not Operational
+IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp AND GVL_IO.dwTerminalInfo[3].nTerminal_State<>8 THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[33] := TRUE;
+END_IF
+//Beckhoff EL2809 Not Operational
+IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp AND GVL_IO.dwTerminalInfo[4].nTerminal_State<>8 THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[34] := TRUE;
+END_IF
+//Cognex  IS2801M Connection Erro
+IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp AND GVL_IO.dwBoxInfo[15].nPnIoBoxState<>0 THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[35] := TRUE;
+END_IF
+//External Error - Cognex Camera ERROR
+IF GVL_IO.dw_B06_IS2802M.isError   THEN // 
+	GVL_MASTER.stAlarms[0].aEventFlags[36] := TRUE;
+END_IF
+//Cognex  IS2801M Diagnostic Error
+IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp AND GVL_IO.dwBoxInfo[15].nPnIoBoxDiag=1 THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[37] := TRUE;
+END_IF
+//System stopping timeout
+GVL_MASTER.stAlarms[0].aEventTimers[38](IN := ( GVL_MASTER.stMachineStatus.bSystemStopping ), PT := T#20S);
+IF GVL_MASTER.stAlarms[0].aEventTimers[38].Q THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[38] := TRUE;	
+END_IF
+//User not Log In
+GVL_MASTER.stAlarms[0].aEventTimers[39](IN := (NOT GVL_HMI_GLOBAL.bUserLogedIntSignal), PT := T#40MS);
+IF GVL_MASTER.stAlarms[0].aEventTimers[39].Q THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[39] := TRUE;	
+END_IF
+//User LOG-Off Timeout Manual Mode
+GVL_MASTER.stAlarms[0].aEventTimers[40](IN:= ((NOT GVL_HMI_GLOBAL.bUserLogedIntSignal) AND GVL_MASTER.stMachineStatus.bManualMode),PT:= T#1S); 
+IF GVL_MASTER.stAlarms[0].aEventTimers[40].Q THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[40] := TRUE;
+END_IF
+//Keyence DL-P1 Error
+IF GVL_IO.dw_B08_DL_PN1.dldErrorStt THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[41] := TRUE;
+END_IF
+//10 Min Auto cycle stop
+IF PRG_MasterCycle.bAutoCycleStop  THEN //
+	GVL_MASTER.stAlarms[0].aEventFlags[80] := TRUE;
+END_IF
+//Autocyle Timeout 
+GVL_MASTER.stAlarms[0].aEventTimers[42](IN:= GVL_MASTER.stStationSruct[0].bStationInProgress, PT :=T#10M ); 
+IF GVL_MASTER.stAlarms[0].aEventTimers[42].Q THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[42] := TRUE;
+END_IF
+//Part removed during process
+IF GVL_Master.stStationSruct[0].nState > 1000 AND GVL_Master.stStationSruct[0].nState < 2000 AND NOT GVL_IO.dw_T02_EL1809.iPartPresent THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[43] := TRUE;
+END_IF
+//Clamp toggled before requested
+IF GVL_Master.stStationSruct[0].nState > 1000 AND GVL_Master.stStationSruct[0].nState <= 1136 AND GVL_IO.dw_T02_EL1809.iCalmpClosed THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[44] := TRUE;
+END_IF
+//Clamp toggled before requested
+IF GVL_Master.stStationSruct[0].nState > 1142 AND GVL_Master.stStationSruct[0].nState < 1700 AND NOT GVL_IO.dw_T02_EL1809.iCalmpClosed THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[45] := TRUE;
+END_IF
+//Press Acknowledge
+IF GVL_HMI_GLOBAL.bAutocycleFaultDialog THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[46] := TRUE;
+END_IF
+
+
+//Remove Nest **LA 17092025
+IF GVL_HMI_GLOBAL.bStartButton AND NOT PRG_Mastercycle.biClamp AND PRG_Mastercycle.biPartPresent THEN 
+	GVL_MASTER.stAlarms[0].aEventFlags[100] := TRUE;
+	ELSIF NOT PRG_Mastercycle.biPartPresent THEN 
+		GVL_MASTER.stAlarms[0].aEventFlags[100] := FALSE;
+END_IF
+
+//Release Clamp  **LA 17092025
+IF GVL_HMI_GLOBAL.bStartButton AND PRG_Mastercycle.biClamp AND NOT PRG_Mastercycle.biPartPresent AND GVL_MASTER.stMachineStatus.bSystemReadyToStart THEN 
+	GVL_MASTER.stAlarms[0].aEventFlags[101] := TRUE;
+	ELSIF NOT PRG_Mastercycle.biClamp THEN 
+		GVL_MASTER.stAlarms[0].aEventFlags[101] := FALSE;
+END_IF
+
+//Releas Clamp and Remove Nest  **LA 17092025
+IF GVL_HMI_GLOBAL.bStartButton AND PRG_Mastercycle.biClamp AND PRG_Mastercycle.biPartPresent AND GVL_MASTER.stMachineStatus.bSystemReadyToStart THEN
+	GVL_MASTER.stAlarms[0].aEventFlags[102] := TRUE;
+	ELSIF  NOT PRG_Mastercycle.biClamp AND NOT PRG_Mastercycle.biPartPresent THEN
+		GVL_MASTER.stAlarms[0].aEventFlags[102] := FALSE;
+END_IF
+ 
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="SetEventTexts" Id="{84625549-67f8-41bf-b81a-cc5fcd6308ae}">
+      <Declaration><![CDATA[METHOD PRIVATE SetEventTexts : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Immediate Faults
+GVL_MASTER.stAlarms[0].aEventTexts[0] := 'SPARE';
+GVL_MASTER.stAlarms[0].aEventTexts[1] := 'SPARE';
+GVL_MASTER.stAlarms[0].aEventTexts[2] := 'SPARE';
+GVL_MASTER.stAlarms[0].aEventTexts[3] := 'SPARE';
+GVL_MASTER.stAlarms[0].aEventTexts[4] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[5] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[6] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[7] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[8] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[9] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[10] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[10] := ''; 
+GVL_MASTER.stAlarms[0].aEventTexts[11] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[12] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[13] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[14] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[15] := '';
+
+
+//Cycle stop fault
+
+GVL_MASTER.stAlarms[0].aEventTexts[33] := 'Beckhoff EL1809 Not Operational';
+GVL_MASTER.stAlarms[0].aEventTexts[34] := 'Beckhoff EL2809 Not Operational';
+GVL_MASTER.stAlarms[0].aEventTexts[35] := 'Cognex  IS2801M Connection Error';
+GVL_MASTER.stAlarms[0].aEventTexts[36] := 'External Error - Cognex Camera ERROR';
+GVL_MASTER.stAlarms[0].aEventTexts[37] := 'Cognex  IS2801M Diagnostic Error';
+GVL_MASTER.stAlarms[0].aEventTexts[38] := 'Master - Stopping timeout';
+GVL_MASTER.stAlarms[0].aEventTexts[39] := 'User Not Log IN';
+GVL_MASTER.stAlarms[0].aEventTexts[40] := 'User Log-Off Timeout Manual Mode'; 
+GVL_MASTER.stAlarms[0].aEventTexts[41] := 'Keyence DL-P1 Error';
+GVL_MASTER.stAlarms[0].aEventTexts[42] := 'Autocyle Timeou' ;
+GVL_MASTER.stAlarms[0].aEventTexts[43] := 'Part removed during cycle';
+GVL_MASTER.stAlarms[0].aEventTexts[44] := 'Clamp toggled before requested';
+GVL_MASTER.stAlarms[0].aEventTexts[45] := 'Clamp toggled before requested';
+GVL_MASTER.stAlarms[0].aEventTexts[46] := 'Press Acknowledge';
+GVL_MASTER.stAlarms[0].aEventTexts[47] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[48] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[59] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[50] := '';
+
+//Cycle Stop Requests
+
+GVL_MASTER.stAlarms[0].aEventTexts[80] := 'Machine Cycle Stop 10 Min Not Use Timeout';
+GVL_MASTER.stAlarms[0].aEventTexts[81] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[82] := '';
+
+GVL_MASTER.stAlarms[0].aEventTexts[84] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[85] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[86] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[87] := ''; 
+GVL_MASTER.stAlarms[0].aEventTexts[88] := '';
+GVL_MASTER.stAlarms[0].aEventTexts[89] := '';
+
+
+// Message //**LA 15092025
+GVL_MASTER.stAlarms[0].aEventTexts[100] := 'Remove Nest';
+GVL_MASTER.stAlarms[0].aEventTexts[101] := 'Release Clamp';
+GVL_MASTER.stAlarms[0].aEventTexts[102] := 'Release Clamp and Remove Nest';]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PRG_FaultHandling">
+      <LineId Id="121" Count="0" />
+      <LineId Id="35" Count="6" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="50" Count="7" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="63" Count="13" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="77" Count="9" />
+      <LineId Id="88" Count="4" />
+      <LineId Id="94" Count="3" />
+      <LineId Id="99" Count="5" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_FaultHandling.ACT_FaultTrig">
+      <LineId Id="2" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="26" Count="3" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="41" Count="3" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="45" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="63" Count="3" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="70" Count="2" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="77" Count="2" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="92" Count="23" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="53" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_FaultHandling.SetEventTexts">
+      <LineId Id="6" Count="51" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="62" Count="4" />
+      <LineId Id="61" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

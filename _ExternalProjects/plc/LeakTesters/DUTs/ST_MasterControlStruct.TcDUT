@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_MasterControlStruct" Id="{fe912495-2861-45fa-b3cd-022b4c15c3e5}">
+    <Declaration><![CDATA[TYPE ST_MasterControlStruct :
+STRUCT
+	bAbort									:BOOL;
+	bNoMachineImmediateFault				:BOOL;
+	bNoStationImmediateFault				:BOOL;
+	bNoCycleStopFault						:BOOL;
+	bAllStationsHomed						:BOOL;
+	bAllStationsCycledStopped				:BOOL;
+	bCycleStopRequest						:BOOL;
+	bDwellRequest							:BOOL;
+	bManualModeRequest						:BOOL;
+	bFreezeMachineStatus					:BOOL;
+	bPowerUpTimerComplete					:BOOL;
+	bSystemInitialisingTimerComplete		:BOOL;
+	bSystemInitialisingTimeoutComplete		:BOOL;
+	bResetImmediateFaultDelay				:BOOL;
+	
+	bAllStationsSafeToIndex					:BOOL;
+	bAllStationsOKToIndex					:BOOL;
+	bAllStationsNotMoving					:BOOL;
+	
+	bLineClearanceRequest					:BOOL;
+	bLineClearanceComplete					:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

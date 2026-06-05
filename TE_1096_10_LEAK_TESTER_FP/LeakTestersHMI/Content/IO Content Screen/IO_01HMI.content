@@ -1,0 +1,17 @@
+<div id="IO_01HMI" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1280" data-tchmi-height="465" data-tchmi-creator-viewport-width="800" data-tchmi-creator-viewport-height="600">
+
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_39" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="323" data-tchmi-height-unit="px" data-tchmi-left="47" data-tchmi-left-unit="px" data-tchmi-src="Images/IO Beckhoff/CP2912-0000.PNG" data-tchmi-top="89" data-tchmi-top-unit="px" data-tchmi-width="470" data-tchmi-width-unit="px" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_275" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="323" data-tchmi-height-unit="px" data-tchmi-left="559" data-tchmi-left-unit="px" data-tchmi-text="Multi-touch built-in Control Panel with DVI/USB Extended interface
+Housing	aluminum housing with glass front	stainless steel housing with glass front
+12.1&quot; 1280 x 800
+Touch screen
+Protection rating	front side IP65, rear side IP20
+DVI-E and USB-E enables to connect the Control Panel at a distance of up to 50 m to the PC. The DVI-E input is compatible to the standard DVI output of a PC. USB-E 2.0 transmits USB 2.0 with 480 Mbit/s.
+RJ45 for USB-E 2.0, USB 3.0 input for the direct connection to the standard USB output of a PCs at a distance up to 5 m, DVI input, 2 x USB 3.0 (at more than 3 m distance to the PC limited to USB 2.0)	1 x USB in the front
+0…55°C
+24 V DC" data-tchmi-top="89" data-tchmi-top-unit="px" data-tchmi-width="672" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-weight="Normal" data-tchmi-text-font-style="Normal" data-tchmi-ignore-escape-sequences="false" data-tchmi-text-font-size="20">
+</div>
+<div id="TcHmiTextblock_9086" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="HMI | CP2912" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="1280" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="25">
+</div>
+</div>

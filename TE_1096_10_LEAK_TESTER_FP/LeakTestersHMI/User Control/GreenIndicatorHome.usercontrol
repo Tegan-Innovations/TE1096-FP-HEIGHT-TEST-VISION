@@ -1,0 +1,116 @@
+<div id="GreenIndicator_3131" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControl" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="40" data-tchmi-height="40" data-tchmi-width-unit="px" data-tchmi-height-unit="px" data-tchmi-creator-viewport-width="500" data-tchmi-creator-viewport-height="500">
+
+<div id="GreenIndicator_3132" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEllipse" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="40" data-tchmi-width-unit="px" data-tchmi-stroke-thickness="2" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-stroke-thickness-unit="px">
+
+
+<script data-tchmi-target-attribute="data-tchmi-fill-color" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(90, 224, 27, 1)",
+      "stop": "65.06%"
+    },
+    {
+      "color": "rgba(235, 229, 230, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">[
+  {
+    "event": "%pp%Variable%/pp%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "asyncWait": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "symbolExpression": "%pp%Variable%/pp%"
+                },
+                "compare2": {
+                  "objectType": "Symbol",
+                  "symbolExpression": "%pp%Value%/pp%"
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%GreenIndicator_3132::FillColor%/ctrl%",
+                "valueType": "tchmi:framework#/definitions/Color",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "angle": 32.0,
+                    "stopPoints": [
+                      {
+                        "color": "rgba(94, 241, 49, 1)",
+                        "stop": "67.16%"
+                      },
+                      {
+                        "color": "rgba(236, 246, 226, 1)",
+                        "stop": "100%"
+                      }
+                    ]
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%GreenIndicator_3132::FillColor%/ctrl%",
+                "valueType": "tchmi:framework#/definitions/Color",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(122, 146, 122, 1)"
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]</script>
+</div>
+
+</div>

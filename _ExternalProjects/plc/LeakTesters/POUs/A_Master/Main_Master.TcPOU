@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="Main_Master" Id="{b0ad0f82-d4ab-4da2-9666-6643c9a92eb5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Main_Master
+VAR
+	i                       :INT; //Int to handle user log index	
+	k						:INT; //Int to handle user log index
+	j						:INT;
+	l						:INT;
+	
+	//////UserLog
+	
+	sUserGroupID			:	STRING;
+	nSize					:	UDINT					:=9;
+	nLen					:	UDINT					:=18;
+	npos					:	UDINT					:=1;
+	tonUserLogOut           :	Tc2_Standard.TON;
+	fbStringFormatter       :	Tc2_Utilities.FB_FormatString;
+	fbEventLogger			:	FB_EventLog;
+	rUserLoggedIn			: 	R_TRIG;
+	tUserLoggedIn			: 	TON;
+	bFirstScan				:   BOOL;
+	tFirstScan				:   TON;
+
+	bUserLoggedIn			: 	BOOL;
+	
+
+	
+	
+	/////ShutDown&Quit
+	closeChrome 			: 	NT_StartProcess;	
+	ntShutdown					: TC2_Utilities.NT_Shutdown;
+	ntError						: BOOL;
+	ntBusy						: BOOL;
+	ntErrorID					: UDINT;
+
+	
+	
+	/////General
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PRG_FaultHandling(aAlarms := GVL_Master.stAlarms );
+PRG_Fault_HeightTest(aAlarms := GVL_Master.stAlarms);
+PRG_Fault_LeakTest(aAlarms := GVL_Master.stAlarms);
+PRG_Fault_VisionTest(aAlarms := GVL_Master.stAlarms);
+
+PRG_MachineStatus();
+PRG_MasterCycle(stStationStruct:= GVL_Master.stStationSruct[0]);
+PRG_MasterSystemTime();
+ACT_ShutdownAndQuit();
+ACT_UserLog();
+MapUnitEventsToHmi();
+PRG_HMI();
+PRG_Puls();
+ACT_FirstScan();
+PRG_TerminBoxInfo();
+
+//gfggf
+
+
+
+
+PRG_LeakTestEvents_Info();
+
+
+
+
+
+//Stations
+PRG_HeightTest(stStationStruct:= GVL_Master.stStationSruct[1]);
+PRG_LeakTest(stStationStruct:= GVL_Master.stStationSruct[2]);
+PRG_VisionTest(stStationStruct:= GVL_Master.stStationSruct[3]);
+
+
+
+fbEventLogger(	bEnable       	:= PRG_MasterSystemTime.bReadyToRead AND GVL_MASTER.stMasterControl.bPowerUpTimerComplete,
+			    sDateTime     	:= PRG_MasterSystemTime.sDateTimeSpaces,
+			    aEventFlags   	:= GVL_HMI_GLOBAL.aEventFlags,
+			    aEventTexts   	:= GVL_HMI_GLOBAL.aEventTexts,
+			    aActiveEvents 	:= GVL_HMI_GLOBAL.aActiveEvents,
+			    aEventLog     	:= GVL_HMI_GLOBAL.aEventLog,
+				siDate			:= GVL_HMI_GLOBAL.sSystemDate,
+				siTime			:= GVL_HMI_GLOBAL.sSystemTime,
+				soDate			:= GVL_HMI_GLOBAL.aDateLog,
+				soTime			:= GVL_HMI_GLOBAL.aTimeLog
+);
+
+
+
+ 
+
+IF GVL_MASTER.bFlashScale THEN
+FOR j := 0 TO 39 DO
+	
+GVL_HMI_GLOBAL.stActiveEventsHMI[j].sActiveEvents := GVL_HMI_GLOBAL.aActiveEvents[j];
+END_FOR
+FOR l:=0 TO 250 DO
+	
+	GVL_HMI_GLOBAL.stAlarmHistory[l].sEventlog 	:= GVL_HMI_GLOBAL.aEventLog[l];
+	GVL_HMI_GLOBAL.stAlarmHistory[l].sDate		:= GVL_HMI_GLOBAL.aDateLog[l];
+	GVL_HMI_GLOBAL.stAlarmHistory[l].sTime		:= GVL_HMI_GLOBAL.aTimeLog[l];
+END_FOR
+ELSE 
+	
+j:=0; 
+l:=0;
+
+END_IF]]></ST>
+    </Implementation>
+    <Action Name="ACT_FirstScan" Id="{ff735814-429d-4f8e-a3a9-cdce4e591021}">
+      <Implementation>
+        <ST><![CDATA[tFirstScan(IN := NOT bFirstScan, PT := T#5S);
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_ShutdownAndQuit" Id="{b7dac9a1-fefc-426e-a57f-b21e21205edc}">
+      <Implementation>
+        <ST><![CDATA[closeChrome(
+    NetId := '',
+    PathStr := 'C:\Windows\System32\mshta vbscript:Execute("CreateObject(""WScript.Shell"").Run ""powershell -c',
+    DirName := 'C:\Windows\System32\WindowsPowerShell\v1.0',
+    ComndLine := 'taskkill /F /IM chrome.exe /T"", 0: window.close")',
+    Start := GVL_HMI_GLOBAL.bQuitHmi,
+    TmOut := DEFAULT_ADS_TIMEOUT
+);
+ 
+GVL_HMI_GLOBAL.bQuitHmi:= FALSE;
+
+ntShutdown(NETID := GVL_HMI_GLOBAL.ntAMSNetID, DELAY := 5, START := GVL_HMI_GLOBAL.bShutDown, BUSY => ntBusy, ERR => ntError, ERRID => ntErrorID);]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_UserLog" Id="{804f315c-0a35-4a48-b9b3-6593241a417c}">
+      <Implementation>
+        <ST><![CDATA[
+//Getting user group
+
+Tc2_Utilities.DELETE2( ADR(GVL_HMI_GLOBAL.sUserGroup), ADR(sUserGroupID), NSize, Nlen, nPos) ;
+
+IF sUserGroupID = 'Administ' THEN
+	
+	GVL_HMI_GLOBAL.sUserGroup2 := 'Administrator';
+
+ELSE GVL_HMI_GLOBAL.sUserGroup2 := sUserGroupID;
+	
+
+END_IF
+
+
+//Logout 
+
+tonUserLogOut( IN := (sUserGroupID = 'Administ' OR sUserGroupID ='Engineer') AND GVL_HMI_GLOBAL.bUserLogedIntSignal , PT := T#10M);
+
+IF tonUserLogOut.Q AND (sUserGroupID = 'Administ' OR sUserGroupID ='Engineer') THEN
+	
+	GVL_HMI_GLOBAL.bLogOut 	:= TRUE;
+
+	ELSE GVL_HMI_GLOBAL.bLogOut := FALSE;
+
+END_IF
+
+tUserLoggedIn( IN := GVL_HMI_GLOBAL.bUserLogedIntSignal, PT := T#2S);
+
+rUserLoggedIn( CLK := tUserLoggedIn.Q);
+
+
+IF rUserLoggedIn.Q THEN
+	
+	FOR i :=200 TO 1 BY (-1) DO
+		GVL_PERSIST.stUserLogHMI[i]	:= GVL_PERSIST.stUserLogHMI[i-1];
+	END_FOR
+	
+	GVL_PERSIST.stUserLogHMI[0].UserLog := GVL_HMI_GLOBAL.sUserName;
+	GVL_PERSIST.stUserLogHMI[0].UserLogTime := GVL_HMI_GLOBAL.sSystemTime;
+	GVL_PERSIST.stUserLogHMI[0].UserLogDate := GVL_HMI_GLOBAL.sSystemDate;
+
+END_IF
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="MapUnitEventsToHMI" Id="{32e71418-dd66-4dd1-85c6-b068060c43f0}">
+      <Declaration><![CDATA[METHOD MapUnitEventsToHMI : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	i		:INT; 	//Unit index
+	j		:INT;	//Unit event index
+	k		:INT; 	//HMI event index	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Set event texts first
+IF GVL_Master.stAlarms[0].bEventTextsSet AND
+   GVL_Master.stAlarms[1].bEventTextsSet AND
+   GVL_Master.stAlarms[2].bEventTextsSet AND
+   GVL_Master.stAlarms[3].bEventTextsSet AND
+   NOT GVL_HMI_GLOBAL.bEventTextsSet 
+THEN
+	SetEventTexts();
+		
+	GVL_HMI_GLOBAL.bEventTextsSet := TRUE;
+END_IF
+
+//Map events from master and stations into HMI events
+IF GVL_HMI_GLOBAL.bEventTextsSet THEN
+	k := 0; 
+	FOR i := 0 TO 3 DO
+		FOR j := 0 TO 128 - 1 DO
+			GVL_HMI_GLOBAL.aEventFlags[k] := GVL_Master.stAlarms[i].aEventFlags[j];
+			k := k + 1;
+		END_FOR
+	END_FOR
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetEventTexts" Id="{f9e7d27e-a7a1-45ef-b32f-52dcb6509272}">
+      <Declaration><![CDATA[METHOD SetEventTexts : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	i				:INT; 	//Unit index
+	j				:INT;	//HMI event index
+	k				:INT;	//
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Set global event texts based on unit event texts (master and stations
+k := 0;
+FOR i := 0 TO 3 DO
+	//For each unit (master, station1, station2)
+	//Alarm texts
+	FOR j := 0 TO 99 DO
+		fbStringFormatter(	sFormat := 'Alarm No. %d - %s', 
+					 	arg1 := F_INT(k), 
+						arg2 := F_String(GVL_Master.stAlarms[i].aEventTexts[j]),
+						sOut => GVL_HMI_GLOBAL.aEventTexts[k]);
+						
+		k := k + 1; //Increment global events index
+	END_FOR
+	
+	//Messages
+	FOR j := 100 TO 127 DO
+		fbStringFormatter(	sFormat := 'Message No. %d - %s', 
+					 		arg1 := F_INT(k), 
+							arg2 := F_String(GVL_Master.stAlarms[i].aEventTexts[j]),
+							sOut => GVL_HMI_GLOBAL.aEventTexts[k]);
+							
+		k := k + 1; //Increment global events index
+	END_FOR
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Main_Master">
+      <LineId Id="469" Count="14" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="484" Count="47" />
+      <LineId Id="255" Count="0" />
+    </LineIds>
+    <LineIds Name="Main_Master.ACT_FirstScan">
+      <LineId Id="1" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Main_Master.ACT_ShutdownAndQuit">
+      <LineId Id="2" Count="8" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="Main_Master.ACT_UserLog">
+      <LineId Id="1" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="176" Count="11" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="110" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+    </LineIds>
+    <LineIds Name="Main_Master.MapUnitEventsToHMI">
+      <LineId Id="6" Count="4" />
+      <LineId Id="12" Count="16" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Main_Master.SetEventTexts">
+      <LineId Id="6" Count="22" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

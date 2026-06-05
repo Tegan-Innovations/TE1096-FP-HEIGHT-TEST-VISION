@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="E_CameraJobChange" Id="{85585f29-f596-4441-8f4a-ffea34461c1a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_CameraJobChange :
+(
+	WAITING_FOR_REQUEST := 50,
+	LOAD_PROD_JOB := 200,
+	LOAD_CALB_JOB := 300,
+	GO_OFFLINE	  := 350,
+	EXECUTE_COMMAND := 400,
+	RESET_FLAG := 600
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

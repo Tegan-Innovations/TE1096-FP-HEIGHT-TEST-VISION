@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_Fault_LeakTest" Id="{f942a169-13e0-4394-ae93-dcfe48cb4a0c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Fault_LeakTest
+VAR
+	
+
+
+				i						: INT;
+END_VAR
+VAR_IN_OUT
+
+  aAlarms  : ARRAY[0..3] OF ST_Events;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_FaultTrig();
+
+(************************************** Faults reset **********************************************)
+IF   GVL_HMI_GLOBAL.bResetButton THEN 
+	FOR i := 0 TO 127 DO
+		GVL_MASTER.stAlarms[2].aEventFlags[i] := FALSE;
+	END_FOR
+END_IF
+//===============================================================
+//Initialize event texts on first scan
+IF NOT GVL_MASTER.stAlarms[2].bEventTextsSet THEN
+	SetEventTexts();
+	GVL_MASTER.stAlarms[2].bEventTextsSet := TRUE;
+END_IF
+
+
+(***************************************************************************************************)
+//Immediate fault
+GVL_MASTER.stAlarms[2].bImmediateFault := FALSE;
+FOR i := 0 TO 32DO
+	GVL_MASTER.stAlarms[2].bImmediateFault := GVL_MASTER.stAlarms[2].bImmediateFault OR GVL_MASTER.stAlarms[2].aEventFlags[i];
+END_FOR
+
+//Cycle stop fault
+GVL_MASTER.stAlarms[2].bCycleStopFault := FALSE;
+FOR i := 33 TO 79 DO
+	GVL_MASTER.stAlarms[2].bCycleStopFault := GVL_MASTER.stAlarms[2].bCycleStopFault OR GVL_MASTER.stAlarms[2].aEventFlags[i];
+END_FOR
+//Cycle stop Request
+GVL_MASTER.stAlarms[2].bCycleStopRequest := FALSE;
+FOR i := 80 TO 99 DO
+	GVL_MASTER.stAlarms[2].bCycleStopRequest := GVL_MASTER.stAlarms[2].bCycleStopRequest OR GVL_MASTER.stAlarms[2].aEventFlags[i];
+END_FOR
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_FaultTrig" Id="{6d5f3508-3165-4456-beac-16a74a41be5a}">
+      <Implementation>
+        <ST><![CDATA[(**************************************************************************************************)
+(**************************** Master Immediate Fault Stop *****************************************)
+(**************************************************************************************************)
+(* Copy Safety Immediate Stop Faults to Master Immediate Stop Faults *)
+(* *)
+
+//Leak Station Not Homed Timeout
+GVL_MASTER.stAlarms[2].aEventTimers[0](IN:= (GVL_Master.stStationSruct[2].nState>=200 AND GVL_Master.stStationSruct[2].nState<=900) ,PT:=T#5S);																	
+IF GVL_MASTER.stAlarms[2].aEventTimers[0].Q THEN //
+	GVL_MASTER.stAlarms[2].aEventFlags[0] := TRUE;
+END_IF
+//Leak Station Cycle Timeout
+GVL_MASTER.stAlarms[2].aEventTimers[1](IN:= (GVL_Master.stStationSruct[2].nState>1000 AND GVL_Master.stStationSruct[2].nState<2000) ,PT:=T#15S);
+IF GVL_MASTER.stAlarms[2].aEventTimers[1].Q THEN // 
+	GVL_MASTER.stAlarms[2].aEventFlags[1] := TRUE;
+END_IF
+//Leak Error
+GVL_MASTER.stAlarms[2].aEventTimers[2](IN := (NOT PRG_LeakTest.bLeakTesterNoError),PT:=T#100MS);
+IF GVL_MASTER.stAlarms[2].aEventTimers[2].Q THEN //
+	GVL_MASTER.stAlarms[2].aEventFlags[2] := TRUE;
+END_IF
+//Consecutive part rejects
+IF PRG_LeakTest.nConsParts>2 THEN // 
+	GVL_MASTER.stAlarms[2].aEventFlags[3] := TRUE;
+END_IF
+						]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="SetEventTexts" Id="{af115427-1992-453d-b37a-2c96ced679a3}">
+      <Declaration><![CDATA[METHOD SetEventTexts : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Immediate Faults
+GVL_MASTER.stAlarms[2].aEventTexts[0] := 'Leak Station Not Homed Timeout';
+GVL_MASTER.stAlarms[2].aEventTexts[1] := 'Leak Station Cycle Timeout';
+GVL_MASTER.stAlarms[2].aEventTexts[2] := 'Leak Error';
+GVL_MASTER.stAlarms[2].aEventTexts[3] := 'More than 2 Consecutive rejects';
+GVL_MASTER.stAlarms[2].aEventTexts[4] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[5] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[6] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[7] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[8] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[9] := ''; 
+GVL_MASTER.stAlarms[2].aEventTexts[10] := ''; 
+GVL_MASTER.stAlarms[2].aEventTexts[11] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[12] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[13] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[14] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[15] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[16] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[17] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[18] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[19] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[20] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[21] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[22] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[28] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[29] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[30] := '';
+
+//Cycle Stop Requests
+
+GVL_MASTER.stAlarms[2].aEventTexts[80] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[81] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[82] := '';
+
+GVL_MASTER.stAlarms[2].aEventTexts[84] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[85] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[86] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[87] := ''; 
+GVL_MASTER.stAlarms[2].aEventTexts[88] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[89] := '';
+
+//Master Messages
+
+GVL_MASTER.stAlarms[2].aEventTexts[100] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[101] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[102] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[103] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[104] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[105] := '';
+GVL_MASTER.stAlarms[2].aEventTexts[106] := '';]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PRG_Fault_LeakTest">
+      <LineId Id="6" Count="37" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Fault_LeakTest.ACT_FaultTrig">
+      <LineId Id="2" Count="24" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Fault_LeakTest.SetEventTexts">
+      <LineId Id="6" Count="48" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

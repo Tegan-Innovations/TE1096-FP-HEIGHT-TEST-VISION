@@ -1,0 +1,59 @@
+<div id="Manual_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1280" data-tchmi-height="487" data-tchmi-creator-viewport-width="800" data-tchmi-creator-viewport-height="600" data-tchmi-zindex="2">
+<div id="TcHmiTabNavigation" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTabNavigation" data-tchmi-height="437" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="17" data-tchmi-top-unit="px" data-tchmi-width="828" data-tchmi-width-unit="px" data-tchmi-zindex="17">
+<script data-tchmi-target-attribute="data-tchmi-tabs" type="application/json">
+[
+  {
+    "name": "Tab0",
+    "displayName": "Position",
+    "targetFile": {
+      "path": "Content/Height measure/Position.content"
+    },
+    "targetFileHostPreload": false,
+    "targetFileHostPreAttach": false,
+    "targetFileHostKeepAlive": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center"
+  },
+  {
+    "name": "Tab1",
+    "displayName": "Calibration",
+    "targetFile": {
+      "path": "Content/Height measure/Calibration.content"
+    },
+    "targetFileHostPreload": false,
+    "targetFileHostPreAttach": false,
+    "targetFileHostKeepAlive": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center"
+  },
+  {
+    "name": "Tab2",
+    "displayName": "Distances",
+    "targetFile": {
+      "path": "Content/Height measure/DistanceTolTab.content"
+    },
+    "targetFileHostPreload": false,
+    "targetFileHostPreAttach": false,
+    "targetFileHostKeepAlive": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center"
+  },
+  {
+    "name": "Tab3",
+    "displayName": "Tolerance & Limits",
+    "targetFile": {
+      "path": "Content/Height measure/LimitsTab.content"
+    },
+    "targetFileHostPreload": false,
+    "targetFileHostPreAttach": false,
+    "targetFileHostKeepAlive": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center"
+  }
+]
+</script>
+
+</div>
+<div id="Piece_3" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="313" data-tchmi-height-unit="px" data-tchmi-left="823" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/Piece.usercontrol" data-tchmi-top="84" data-tchmi-top-unit="px" data-tchmi-width="447" data-tchmi-width-unit="px">
+</div>
+</div>

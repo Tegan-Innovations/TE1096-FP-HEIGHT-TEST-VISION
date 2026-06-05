@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <GVL Name="GVL_PERSIST" Id="{d7074b9f-b8f7-43b8-b977-625646657a49}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	
+stPartsInspection			: ST_PartsInspection;
+stUserLogHMI				: ARRAY[0..250] OF ST_UserLogHMI;
+UserId						: UINT;
+ast_i28LasResult            : ARRAY [0..250] OF st_i28LasResult;
+nLeakTestID					: UINT;
+
+nCycleNumber				: INT;
+
+aSensorSetPointsHeightTest		: ARRAY[1..4] OF DINT;
+aTolerancesHeightTest			: ARRAY[1..4] OF DINT;
+
+stHeightLimits					: ST_HeightLimits;
+
+
+
+
+
+	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

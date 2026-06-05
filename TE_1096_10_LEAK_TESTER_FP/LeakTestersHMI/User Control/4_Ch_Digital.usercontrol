@@ -1,0 +1,204 @@
+<div id="HMI_EL6910_15" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControl" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="800" data-tchmi-height="364" data-tchmi-width-unit="px" data-tchmi-height-unit="px" data-tchmi-creator-viewport-width="500" data-tchmi-creator-viewport-height="500" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-max-width-unit="px" data-tchmi-max-height-unit="px" data-tchmi-min-width-unit="px" data-tchmi-min-height-unit="px" data-tchmi-opacity="1" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center">
+<div id="EL_Status_14" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="194" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/GreenIndicator.usercontrol" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="26" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-variable="%pp%EL_State%/pp%">
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+8
+</script>
+</div>
+<div id="EL_StatusText_14" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="230" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="293" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="24" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-text-font-weight="Auto" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-text-color="%pp%TextCol%/pp%">
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%pp%EL_State%/pp%",
+    "actions": [
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/UINT",
+          "symbolExpression": "%pp%EL_State%/pp%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/INT",
+              "value": 8
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%EL_StatusText_14::Text%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "Operational"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/INT",
+              "value": 4
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%EL_StatusText_14::Text%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "SAFEOP"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/INT",
+              "value": 3
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%EL_StatusText_14::Text%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "BOOT"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/INT",
+              "value": 2
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%EL_StatusText_14::Text%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "PREOP"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/INT",
+              "value": 1
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%EL_StatusText_14::Text%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "INIT"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/INT",
+              "value": 0
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%EL_StatusText_14::Text%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": ""
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+
+</div>
+<div id="EL_Image_14" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="343" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="156" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-src="%pp%EL_Image%/pp%" data-tchmi-width-mode="Content" data-tchmi-height-mode="Content">
+</div>
+<div id="Ch1_6" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="194" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/GreenIndicator.usercontrol" data-tchmi-top="72" data-tchmi-top-unit="px" data-tchmi-width="26" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-variable="%pp%Ch1%/pp%">
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="Ch1_Text_23" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="230" data-tchmi-left-unit="px" data-tchmi-text="%pp%Ch1_Text%/pp%" data-tchmi-top="72" data-tchmi-top-unit="px" data-tchmi-width="235" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-text-color="%pp%TextCol%/pp%">
+
+
+</div>
+<div id="Ch2_6" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="194" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/GreenIndicator.usercontrol" data-tchmi-top="108" data-tchmi-top-unit="px" data-tchmi-width="26" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-variable="%pp%Ch2%/pp%">
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="Ch2_Text_19" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="230" data-tchmi-left-unit="px" data-tchmi-text="%pp%Ch2_Text%/pp%" data-tchmi-top="108" data-tchmi-top-unit="px" data-tchmi-width="235" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-text-color="%pp%TextCol%/pp%">
+
+
+</div>
+<div id="Ch3_4" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="194" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/GreenIndicator.usercontrol" data-tchmi-top="144" data-tchmi-top-unit="px" data-tchmi-width="26" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-variable="%pp%Ch3%/pp%">
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="Ch3_Text_14" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="230" data-tchmi-left-unit="px" data-tchmi-text="%pp%Ch3_Text%/pp%" data-tchmi-top="144" data-tchmi-top-unit="px" data-tchmi-width="235" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-text-color="%pp%TextCol%/pp%">
+
+
+</div>
+<div id="Ch4_4" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="194" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/GreenIndicator.usercontrol" data-tchmi-top="180" data-tchmi-top-unit="px" data-tchmi-width="26" data-tchmi-width-unit="px" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-variable="%pp%Ch4%/pp%">
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="Ch4_Text_14" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="230" data-tchmi-left-unit="px" data-tchmi-text="%pp%Ch4_Text%/pp%" data-tchmi-top="180" data-tchmi-top-unit="px" data-tchmi-width="235" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-background-image-width-unit="px" data-tchmi-background-image-height-unit="px" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-text-color="%pp%TextCol%/pp%">
+
+
+</div>
+</div>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_Nest" Id="{829630f7-c5a6-455e-94c8-ac3bd3a2a92f}">
+    <Declaration><![CDATA[TYPE ST_Nest :
+STRUCT
+		 
+
+	 
+     bNestPartProced    : BOOL;
+     bNestPartOK        : BOOL;
+	 bNestPresent       : BOOL;
+
+	 
+	 bHeightPass		: BOOL;
+	 bVisionPass		: BOOL;
+	 bLeakPass			: BOOL;
+	 bPiecePass			: BOOL;
+	 
+	 bHeightReject		: BOOL;
+	 bVisionReject		: BOOL;
+	 bLeakReject		: BOOL;	
+	 bPieceReject		: BOOL; 
+	 
+	 sHeightHMI			: WSTRING;
+	 sVisionHMI			: WSTRING;
+	 sLeakHMI			: WSTRING;
+	 sPieceHMI			: WSTRING;
+
+	 nDistance			: ARRAY[1..3] OF REAL;
+	 nTarget			: ARRAY[1..3] OF REAL;	
+
+ 
+	 sDate				: STRING;
+	 sTime				: STRING;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

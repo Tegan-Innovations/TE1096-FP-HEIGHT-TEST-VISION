@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_Fault_HeightTest" Id="{0584f3d9-a64a-484e-a850-c45f5a2b7022}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Fault_HeightTest
+VAR
+	
+			i					: INT;
+END_VAR
+VAR_IN_OUT
+
+  aAlarms  : ARRAY[0..3] OF ST_Events;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_FaultTrig();
+
+(************************************** Faults reset **********************************************)
+IF   GVL_HMI_GLOBAL.bResetButton THEN 
+	FOR i := 0 TO 127 DO
+		GVL_MASTER.stAlarms[1].aEventFlags[i] := FALSE;
+	END_FOR
+END_IF
+//===============================================================
+//Initialize event texts on first scan
+IF NOT GVL_MASTER.stAlarms[1].bEventTextsSet THEN
+	SetEventTexts();
+	GVL_MASTER.stAlarms[1].bEventTextsSet := TRUE;
+END_IF
+
+
+(***************************************************************************************************)
+//Immediate fault
+GVL_MASTER.stAlarms[1].bImmediateFault := FALSE;
+FOR i := 0 TO 32DO
+	GVL_MASTER.stAlarms[1].bImmediateFault := GVL_MASTER.stAlarms[1].bImmediateFault OR GVL_MASTER.stAlarms[1].aEventFlags[i];
+END_FOR
+
+//Cycle stop fault
+GVL_MASTER.stAlarms[1].bCycleStopFault := FALSE;
+FOR i := 33 TO 79 DO
+	GVL_MASTER.stAlarms[1].bCycleStopFault := GVL_MASTER.stAlarms[1].bCycleStopFault OR GVL_MASTER.stAlarms[1].aEventFlags[i];
+END_FOR
+
+//Cycle stop REQUEST
+GVL_MASTER.stAlarms[1].bCycleStopRequest := FALSE;
+FOR i := 80 TO 99 DO
+	GVL_MASTER.stAlarms[1].bCycleStopRequest := GVL_MASTER.stAlarms[1].bCycleStopRequest OR GVL_MASTER.stAlarms[1].aEventFlags[i];
+END_FOR
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_FaultTrig" Id="{6c31b7af-712d-4d2a-ba5b-a04a620d9534}">
+      <Implementation>
+        <ST><![CDATA[(**************************************************************************************************)
+(**************************** Master Immediate Fault Stop *****************************************)
+(**************************************************************************************************)
+(* Copy Safety Immediate Stop Faults to Master Immediate Stop Faults *)
+(* *)
+
+//Station 3 - Keyence Inspection Homing Time Out
+GVL_MASTER.stAlarms[1].aEventTimers[1](IN := (GVL_MASTER.stStationSruct[1].nState>=200 AND GVL_MASTER.stStationSruct[1].nState<=900),PT:= T#10000MS );
+IF GVL_MASTER.stAlarms[1].aEventTimers[1].Q  THEN // Fault 1
+	GVL_MASTER.stAlarms[1].aEventFlags[1] := TRUE;
+END_IF
+// Probe 1 Current Value Invalid
+GVL_MASTER.stAlarms[1].aEventTimers[2](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_1CurrValInv ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[2].Q  THEN // Fault 2
+	GVL_MASTER.stAlarms[1].aEventFlags[2] := TRUE;
+END_IF
+// Probe 2 Current Value Invalid
+GVL_MASTER.stAlarms[1].aEventTimers[3](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_2CurrValInv ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[3].Q  THEN // Fault 3
+	GVL_MASTER.stAlarms[1].aEventFlags[3] := TRUE;
+END_IF
+// Probe 3 Current Value Invalid
+GVL_MASTER.stAlarms[1].aEventTimers[4](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_3CurrValInv ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[4].Q  THEN // Fault 4
+	GVL_MASTER.stAlarms[1].aEventFlags[4] := TRUE;
+END_IF
+// Probe 4 Current Value Invalid
+GVL_MASTER.stAlarms[1].aEventTimers[5](IN:= GVL_IO.dw_B08_DL_PN1.gt2_2CurrValInv ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[5].Q  THEN // Fault 5
+	GVL_MASTER.stAlarms[1].aEventFlags[5] := TRUE;
+END_IF
+// Probe 1 Error
+GVL_MASTER.stAlarms[1].aEventTimers[6](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_1ErrorStat ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[6].Q  THEN // Fault 6
+	GVL_MASTER.stAlarms[1].aEventFlags[6] := TRUE;
+END_IF
+// Probe 2 Error
+GVL_MASTER.stAlarms[1].aEventTimers[7](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_2ErrorStat  ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[7].Q  THEN // Fault 7
+	GVL_MASTER.stAlarms[1].aEventFlags[7] := TRUE;
+END_IF
+// Probe 3 Error
+GVL_MASTER.stAlarms[1].aEventTimers[8](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_3ErrorStat  ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[8].Q  THEN // Fault 8
+	GVL_MASTER.stAlarms[1].aEventFlags[8] := TRUE;
+END_IF
+// Probe 4 Error
+GVL_MASTER.stAlarms[1].aEventTimers[9](IN:= GVL_IO.dw_B08_DL_PN1.gt2_1_1ErrorStat  ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[9].Q  THEN // Fault 9
+	GVL_MASTER.stAlarms[1].aEventFlags[9] := TRUE;
+END_IF
+
+// Master Probe Error
+GVL_MASTER.stAlarms[1].aEventTimers[10](IN:= GVL_IO.dw_B08_DL_PN1.dldErrorStt ,PT:= T#100MS);
+IF GVL_MASTER.stAlarms[1].aEventTimers[10].Q  THEN // Fault 10
+	GVL_MASTER.stAlarms[1].aEventFlags[10] := TRUE;
+END_IF
+
+//Height Station Cycle Timeout
+GVL_MASTER.stAlarms[1].aEventTimers[11](IN:= (GVL_Master.stStationSruct[1].nState>=1100 AND GVL_Master.stStationSruct[1].nState<=1900) ,PT:=T#10S);
+IF GVL_MASTER.stAlarms[1].aEventTimers[11].Q THEN // 
+	GVL_MASTER.stAlarms[1].aEventFlags[11] := TRUE;
+END_IF
+// Sensor 1 Stuck
+IF GVL_MASTER.abSensorStuck[1]  THEN 
+	GVL_MASTER.stAlarms[1].aEventFlags[12] := TRUE;
+END_IF
+// Sensor 2 Stuck
+IF GVL_MASTER.abSensorStuck[2]  THEN 
+	GVL_MASTER.stAlarms[1].aEventFlags[13] := TRUE;
+END_IF
+// Sensor 3 Stuck
+IF GVL_MASTER.abSensorStuck[3]  THEN 
+	GVL_MASTER.stAlarms[1].aEventFlags[14] := TRUE;
+END_IF
+// Sensor 4 Stuck
+IF GVL_MASTER.abSensorStuck[4]  THEN 
+	GVL_MASTER.stAlarms[1].aEventFlags[15] := TRUE;
+END_IF
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="SetEventTexts" Id="{0b9dbd57-52ba-4bdc-ac54-a98ff33276ae}">
+      <Declaration><![CDATA[METHOD PRIVATE SetEventTexts : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Immediate Faults
+GVL_MASTER.stAlarms[1].aEventTexts[0] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[1] := 'Station 3 - Keyence Inspection Homing Time Out';
+GVL_MASTER.stAlarms[1].aEventTexts[2] := 'Invalid Value Probe 1';
+GVL_MASTER.stAlarms[1].aEventTexts[3] := 'Invalid Value Probe 2';
+GVL_MASTER.stAlarms[1].aEventTexts[4] := 'Invalid Value Probe 3';
+GVL_MASTER.stAlarms[1].aEventTexts[5] := 'Invalid Value Probe 4';
+GVL_MASTER.stAlarms[1].aEventTexts[6] := 'Error State Probe 1';
+GVL_MASTER.stAlarms[1].aEventTexts[7] := 'Error State Probe 2';
+GVL_MASTER.stAlarms[1].aEventTexts[8] := 'Error State Probe 3';
+GVL_MASTER.stAlarms[1].aEventTexts[9] := 'Error State Probe 4'; 
+GVL_MASTER.stAlarms[1].aEventTexts[10] := 'Error Master Probes Profinet'; 
+GVL_MASTER.stAlarms[1].aEventTexts[11] := 'Height Station Cycle Timeout';
+GVL_MASTER.stAlarms[1].aEventTexts[12] := 'Sensor 1 Stuck';
+GVL_MASTER.stAlarms[1].aEventTexts[13] := 'Sensor 2 Stuck';
+GVL_MASTER.stAlarms[1].aEventTexts[14] := 'Sensor 3 Stuck';
+GVL_MASTER.stAlarms[1].aEventTexts[15] := 'Sensor 4 Stuck';
+GVL_MASTER.stAlarms[1].aEventTexts[16] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[17] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[18] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[19] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[20] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[21] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[22] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[28] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[29] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[30] := '';
+
+//Cycle Stop Requests
+
+GVL_MASTER.stAlarms[1].aEventTexts[80] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[81] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[82] := '';
+
+GVL_MASTER.stAlarms[1].aEventTexts[84] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[85] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[86] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[87] := ''; 
+GVL_MASTER.stAlarms[1].aEventTexts[88] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[89] := '';
+
+//Master Messages
+
+GVL_MASTER.stAlarms[1].aEventTexts[100] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[101] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[102] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[103] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[104] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[105] := '';
+GVL_MASTER.stAlarms[1].aEventTexts[106] := '';]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="PRG_Fault_HeightTest">
+      <LineId Id="6" Count="13" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="26" Count="12" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="39" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Fault_HeightTest.ACT_FaultTrig">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="3" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="13" Count="39" />
+      <LineId Id="54" Count="2" />
+      <LineId Id="59" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="62" Count="4" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="92" Count="2" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="96" Count="2" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="100" Count="2" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="104" Count="2" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="68" Count="2" />
+      <LineId Id="67" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_Fault_HeightTest.SetEventTexts">
+      <LineId Id="6" Count="48" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

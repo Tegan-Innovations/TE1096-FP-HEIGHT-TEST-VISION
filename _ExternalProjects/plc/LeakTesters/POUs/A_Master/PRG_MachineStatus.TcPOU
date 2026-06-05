@@ -1,0 +1,680 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_MachineStatus" Id="{8102b8c9-84c4-49f2-a786-8d8daca4054c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_MachineStatus
+VAR
+
+	tonPowerUp						: TON;
+	tonSystemInitialising			: TON;
+	tonSystemInitialisingTimeout	: TON;
+	
+	bMemoSystemReadyToStart			:BOOL; //flag set only once to establissh if system was in ready to start state after powerUP
+	
+// =========== Manual =============	
+
+	rtrigManualModeOFF              :ARRAY[1..4] OF R_TRIG;
+	rtrigManualMode                 :R_TRIG;	
+		// =========== Master Time =============
+		//Variables
+	bReadyToRead				:BOOL;
+	bFirstScan					:BOOL := TRUE;
+	bUpdateSysTime				:BOOL; //Output of pulse generator
+	tSysTimeUpdatePeriod		:TIME := T#5S;
+	stTimeStamp					:TIMESTRUCT;
+	stNullTimeStamp				:TIMESTRUCT;
+	sRawDateTime				:STRING;
+
+	
+
+	
+	
+	sDateTime					:STRING;
+	sDateTimeSpaces				:STRING;
+	
+	
+	
+	//Functions
+	fbGetSystemTime				:TC2_Utilities.NT_GetTime;
+	fbRTClock					:TC2_Utilities.RTC_EX2;		//Local real-time clock
+	tonTimeUpdateGen			:TC2_Utilities.TON;			//Pulse generator for triggering fbGetSystemTime function
+	rtrigSysTimeCollected		:TC2_Utilities.R_TRIG;		//System time collected
+
+
+
+		
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_ManualMode();
+ACT_MasterTime();
+ACT_MachineStatusBaner();
+
+
+(*Power Up*)
+
+tonPowerUp( IN := TRUE,  PT := T#5S, Q => GVL_MASTER.stMasterControl.bPowerUpTimerComplete );
+
+(*System Initialising*)
+
+tonSystemInitialising( IN := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING),
+	PT := T#1S,
+	Q => GVL_MASTER.stMasterControl.bSystemInitialisingTimerComplete);
+	
+(*System Initialising Timeout*)
+	
+tonSystemInitialisingTimeout(IN := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING),
+	PT := T#5M,
+	Q => GVL_MASTER.stMasterControl.bSystemInitialisingTimeoutComplete);
+	
+(* Set Machine State to Power Up while waiting for Power Up Timer to Complete *)
+IF NOT GVL_MASTER.stMasterControl.bPowerUpTimerComplete THEN
+	GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_POWER_UP;
+END_IF
+
+(********************************(Sequence )*******************************************************)
+(* Move to Immediate Stopped once there is an Immediate Fault *)
+IF NOT GVL_MASTER.stMasterControl.bNoMachineImmediateFault THEN		
+	GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_STOPPED;
+ELSIF NOT GVL_MASTER.stMasterControl.bNoCycleStopFault THEN
+	GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOP_FAULT;	
+END_IF
+
+CASE GVL_MASTER.stMachineStatus.eMachineState OF
+	
+E_MachineState.SYSTEM_POWER_UP:
+	
+	bMemoSystemReadyToStart:=FALSE;
+	(* Move to Immediate Stopped once Power Up Timer has completed *)
+	IF GVL_MASTER.stMasterControl.bPowerUpTimerComplete THEN			
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_STOPPED;
+	END_IF
+	
+E_MachineState.IMMEDIATE_STOPPED:	
+	(* Move to System Initialising once there is no Immediate Fault *)
+	IF GVL_MASTER.stMasterControl.bNoMachineImmediateFault  THEN	
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
+	(* Move to Immediate Fault once there is an Immediate Fault *)
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoMachineImmediateFault THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_FAULT;	
+	END_IF
+	
+E_MachineState.SYSTEM_INITIALISING:		
+	IF  GVL_MASTER.stMasterControl.bNoMachineImmediateFault	 AND GVL_MASTER.stMasterControl.bSystemInitialisingTimerComplete  THEN		
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
+	
+	//Move to Cycle Stopped once there is a Cycle Stop Request AND All Stations are Cycle Stopped AND there is No Immediate Fault*)
+	ELSIF GVL_HMI_GLOBAL.bStopButton
+		OR (GVL_MASTER.stMasterControl.bNoMachineImmediateFault 
+		AND (GVL_MASTER.stMasterControl.bSystemInitialisingTimeoutComplete OR GVL_MASTER.stMasterControl.bCycleStopRequest) AND GVL_MASTER.stMasterControl.bAllStationsCycledStopped)
+	THEN		
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED;			
+	ELSIF GVL_MASTER.stMasterControl.bNoMachineImmediateFault AND NOT GVL_MASTER.stMasterControl.bNoCycleStopFault THEN		
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOP_FAULT;	
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoStationImmediateFault THEN
+         GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_FAULT;
+      	
+	END_IF
+	
+E_MachineState.SYSTEM_READY_TO_START:
+	bMemoSystemReadyToStart := TRUE;
+	
+	//Move to System Auto if the Start Button has been pressed
+	IF GVL_MASTER.stMasterControl.bManualModeRequest THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.MANUAL_MODE;
+	
+	ELSIF GVL_HMI_GLOBAL.bStopButton THEN
+        GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.STOPPING; 
+	ELSIF GVL_HMI_GLOBAL.bStartButton AND NOT PRG_Mastercycle.biClamp AND NOT PRG_Mastercycle.biPartPresent   THEN			
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
+		
+	//Move to Cycle Stopped once there is a Cycle Stop Request AND All Stations are Cycle Stopped AND there is No Immediate Fault
+	ELSIF (GVL_MASTER.stMasterControl.bCycleStopRequest OR NOT	GVL_MASTER.stMasterControl.bNoCycleStopFault) 
+	AND GVL_MASTER.stMasterControl.bNoMachineImmediateFault
+	THEN				
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED;	
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoCycleStopFault THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOP_FAULT;
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoMachineImmediateFault OR NOT GVL_MASTER.stMasterControl.bNoStationImmediateFault THEN
+       GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_FAULT ;	
+	   
+	END_IF
+	
+
+	
+	
+	
+E_MachineState.SYSTEM_AUTO_CYCLE:	
+	//Move to System Dwell once there is a Dwell Request
+	IF GVL_MASTER.stMasterControl.bDwellRequest THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_DWELL;
+	
+	//Move to Cycle Stopped once there is a Cycle Stop Request AND All Stations are Cycle Stopped AND there is No Immediate Fault OR when cycle done
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoCycleStopFault THEN //Fast cycle stop	
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOP_FAULT;
+	(*ELSIF GVL_Master.bMachineCycleDone   THEN 
+	stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED; //Instant cycle stop???		*)
+	ELSIF GVL_HMI_GLOBAL.bStopButton OR GVL_MASTER.stMasterControl.bCycleStopRequest OR GVL_HMI_GLOBAL.nRegionMain <> 1 THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.STOPPING; //Stopping sequence 
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoStationImmediateFault OR NOT GVL_MASTER.stMasterControl.bNoMachineImmediateFault THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_FAULT;
+	END_IF	
+
+E_MachineState.SYSTEM_DWELL:		
+	(* Move to System Auto Cycle once the Start Button is Pressed AND there is No Dwell Request *)
+	IF NOT GVL_MASTER.stMasterControl.bDwellRequest THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;	
+	(* Move to Cycle Stopped once there is a Cycle Stop Request AND All Stations are Cycle Stopped AND there is No Immediate Fault*)
+	ELSIF (GVL_MASTER.stMasterControl.bCycleStopRequest OR	NOT	GVL_MASTER.stMasterControl.bNoCycleStopFault) 
+		AND GVL_MASTER.stMasterControl.bAllStationsCycledStopped AND GVL_MASTER.stMasterControl.bNoMachineImmediateFault
+	THEN				
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED;	
+	END_IF
+
+E_MachineState.STOPPING: 
+	IF  GVL_MASTER.stMasterControl.bAllStationsCycledStopped THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED;
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoCycleStopFault THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOP_FAULT;
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoMachineImmediateFault OR NOT GVL_MASTER.stMasterControl.bNoStationImmediateFault THEN
+        GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_FAULT ;
+	END_IF
+	
+E_MachineState.CYCLE_STOPPED:
+	IF GVL_MASTER.stMasterControl.bManualModeRequest THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.MANUAL_MODE;			
+	(* Move to System Initialising once there is no Cycle Stop Fault AND the Reset Button is Pressed *)
+	ELSIF (GVL_MASTER.stMasterControl.bNoCycleStopFault AND GVL_HMI_GLOBAL.bResetButton )THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;		
+	ELSIF NOT GVL_MASTER.stMasterControl.bNoStationImmediateFault THEN
+       	GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_FAULT;
+	END_IF	
+
+E_MachineState.CYCLE_STOP_FAULT:	
+	(* Move to Cycle Stopped once there no Cycle Stop Fault AND there is No Immediate Fault*)
+	IF GVL_MASTER.stMasterControl.bNoCycleStopFault THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED;
+	END_IF	
+ELSE 	
+	GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_POWER_UP;	
+	
+E_MachineState.MANUAL_MODE:
+
+	IF NOT GVL_MASTER.stMasterControl.bManualModeRequest THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.CYCLE_STOPPED;
+	END_IF
+	
+E_MachineState.IMMEDIATE_FAULT:		
+	(* Move to Immediate Stopped once there is an Immediate Fault *)
+	IF GVL_MASTER.stMasterControl.bNoMachineImmediateFault AND  GVL_MASTER.stMasterControl.bNoStationImmediateFault THEN
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.IMMEDIATE_STOPPED;		
+
+	END_IF
+END_CASE
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+								//CYCLE STOP REQUEST//
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+IF GVL_MASTER.stAlarms[0].bCycleStopRequest OR GVL_MASTER.stAlarms[1].bCycleStopRequest OR GVL_MASTER.stAlarms[2].bCycleStopRequest OR GVL_MASTER.stAlarms[3].bCycleStopRequest THEN
+				GVL_MASTER.stMasterControl.bCycleStopRequest	:=	TRUE;
+ELSE			GVL_MASTER.stMasterControl.bCycleStopRequest	:=	FALSE;
+END_IF
+
+
+
+
+(************************************* write all system states to variables ***********************)
+
+GVL_MASTER.stMachineStatus.bSystemPowerUp :=(GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_POWER_UP);
+GVL_MASTER.stMachineStatus.bImmediateStopped :=(GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.IMMEDIATE_STOPPED);
+GVL_MASTER.stMachineStatus.bSystemInitialising :=(GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING);
+GVL_MASTER.stMachineStatus.bSystemReadyToStart := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START);
+GVL_MASTER.stMachineStatus.bSystemAutoCycle := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE);
+GVL_MASTER.stMachineStatus.bSystemDwell := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_DWELL);
+GVL_MASTER.stMachineStatus.bSystemStopping := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.STOPPING);
+GVL_MASTER.stMachineStatus.bCycleStopped := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.CYCLE_STOPPED);
+GVL_MASTER.stMachineStatus.bManualMode := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.MANUAL_MODE);
+GVL_MASTER.stMachineStatus.bImmediateFault := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.IMMEDIATE_FAULT);
+GVL_MASTER.stMachineStatus.bCycleStopFault := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.CYCLE_STOP_FAULT);]]></ST>
+    </Implementation>
+    <Action Name="ACT_MachineStatusBaner" Id="{0dc7bcd3-753a-4f06-be0f-fec0a8964021}">
+      <Implementation>
+        <ST><![CDATA[//Machine status banner action
+//SYSTEM POWER UP
+IF GVL_MASTER.stMachineStatus.bSystemPowerUp THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'SYSTEM POWER UP';		// fill colour WHITE, text colour BLACK
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nWHITE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nBLACK;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sWHITE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sBLACK;
+END_IF
+
+(* IMMEDIATE STOPPED *)
+IF GVL_MASTER.stMachineStatus.bImmediateStopped THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'IMMEDIATE STOPPED';		// fill colour BLACK, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nBLACK;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sBLACK;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* SYSTEM INITIALISING *)
+IF GVL_MASTER.stMachineStatus.bSystemInitialising THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'SYSTEM INITIALIZING';		// fill colour YELLOW, text colour BLACK
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nYELLOW;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nBLACK;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sYELLOW;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sBLACK;
+END_IF
+(*
+(* SYSTEM IN STANDBY *)
+IF stMachineStatus.bSystemStandby THEN
+	stMachineStatus.sMachineStatusText := 'SYSTEM IN STANDBY';
+	stMachineStatus.nMachineStatusColour := nORANGE;
+	stMachineStatus.nMachineStatusTxtCol := nWHITE;
+END_IF
+*)
+(* SYSTEM READY TO START FLASH ON *)
+IF GVL_MASTER.stMachineStatus.bSystemReadyToStart AND GVL_MASTER.bFlash1Hz THEN
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'SYSTEM READY TO START';		// fill colour GREEN, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nGREEN;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sGREEN;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;
+END_IF
+
+(* SYSTEM READY TO START FLASH OFF *)
+IF GVL_MASTER.stMachineStatus.bSystemReadyToStart AND NOT GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'SYSTEM READY TO START';		// fill colour WHITE, text colour GREEN
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nWHITE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nGREEN;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sWHITE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sGREEN;
+END_IF
+
+(* SYSTEM AUTO CYCLE *)
+IF GVL_MASTER.stMachineStatus.bSystemAutoCycle THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'SYSTEM AUTO CYCLE';		// fill colour GREEN, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nGREEN;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sGREEN;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* SYSTEM DWELL *)
+IF GVL_MASTER.stMachineStatus.bSystemDwell THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'SYSTEM DWELL';		// fill colour ORANGE, text colourWHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nORANGE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sORANGE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* STOPPING *)
+IF GVL_MASTER.stMachineStatus.bSystemStopping AND GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'STOPPING';		// fill colour BLACK, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nBLACK;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sBLACK;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* STOPPING *)
+IF GVL_MASTER.stMachineStatus.bSystemStopping AND NOT GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'STOPPING';		// fill colour WHITE, text colour BLACK
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nWHITE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nBLACK;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sWHITE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sBLACK;	
+END_IF
+
+(* CYCLE STOPPED *)
+IF GVL_MASTER.stMachineStatus.bCycleStopped THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'CYCLE STOPPED';		// fill colour BLACK, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nBLACK;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sBLACK;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* IMMEDIATE FAULT FLASH ON *)
+IF GVL_MASTER.stMachineStatus.bImmediateFault AND GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'IMMEDIATE FAULT';		// fill colour RED, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nRED;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sRED;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* IMMEDIATE FAULT FLASH OFF *)
+IF GVL_MASTER.stMachineStatus.bImmediateFault AND NOT GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'IMMEDIATE FAULT';		// fill colour WHITE, text colour BLACK
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nWHITE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nBLACK;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sWHITE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sBLACK;	
+END_IF
+
+(* CYCLE STOP FAULT FLASH ON *)
+IF GVL_MASTER.stMachineStatus.bCycleStopFault AND GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'CYCLE STOP FAULT';		// fill colour RED, text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nRED;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sRED;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(* CYCLE STOP FAULT FLASH OFF *)
+IF GVL_MASTER.stMachineStatus.bCycleStopFault AND NOT GVL_MASTER.bFlash1Hz THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'CYCLE STOP FAULT';		// fill colour WHITE, text colour RED
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nWHITE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nRED;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sWHITE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sRED;	
+END_IF
+
+(* MANUAL MODE *)
+IF GVL_MASTER.stMachineStatus.bManualMode THEN	
+	GVL_MASTER.stMachineStatus.sMachineStatusText := 'MANUAL MODE';		// fill colour BLUE text colour WHITE
+	GVL_MASTER.stMachineStatus.nMachineStatusColour := nBLUE;
+	GVL_MASTER.stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	GVL_MASTER.stMachineStatus.sBannerBckColor := sBLUE;
+	GVL_MASTER.stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+
+(*
+(* SYSTEM READY TO START FLASH ON *)
+IF stMachineStatus.bSystemPurge AND bFlash1Hz THEN
+	stMachineStatus.sMachineStatusText := 'SYSTEM PURGE';		// fill colour GREEN, text colour WHITE
+	stMachineStatus.nMachineStatusColour := nORANGE;
+	stMachineStatus.nMachineStatusTxtCol := nBLACK;
+	stMachineStatus.sBannerBckColor := sORANGE;
+	stMachineStatus.sBannerTextColor := sBLACK;	
+END_IF
+
+(* SYSTEM READY TO START FLASH OFF *)
+IF stMachineStatus.bSystemPurge AND NOT bFlash1Hz THEN	
+	stMachineStatus.sMachineStatusText := 'SYSTEM PURGE';		// fill colour WHITE, text colour GREEN
+	stMachineStatus.nMachineStatusColour := nWHITE;
+	stMachineStatus.nMachineStatusTxtCol := nBLUE;
+	stMachineStatus.sBannerBckColor := sWHITE;
+	stMachineStatus.sBannerTextColor := sBLUE;	
+END_IF
+*)
+(*
+(* CALIBRATION *)
+IF stMachineStatus.bCalibrationFlag AND bFlash1Hz THEN	
+	stMachineStatus.sMachineStatusText := 'CALIBRATION MODE';		// fill colour BLUE text colour WHITE
+	stMachineStatus.nMachineStatusColour := nBLUE;
+	stMachineStatus.nMachineStatusTxtCol := nWHITE;
+	stMachineStatus.sBannerBckColor := sBLUE;
+	stMachineStatus.sBannerTextColor := sWHITE;	
+END_IF
+IF stMachineStatus.bCalibrationFlag AND NOT bFlash1Hz THEN	
+	stMachineStatus.sMachineStatusText := 'CALIBRATION MODE';		// fill colour BLUE text colour WHITE
+	stMachineStatus.nMachineStatusColour := nWHITE;
+	stMachineStatus.nMachineStatusTxtCol := nBLUE;
+	stMachineStatus.sBannerBckColor := sWHITE;
+	stMachineStatus.sBannerTextColor := sBLUE;	
+END_IF
+*)]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_ManualMode" Id="{9e3ca10a-0cf0-41d3-b9a1-67e3ba60ccb6}">
+      <Implementation>
+        <ST><![CDATA[IF	 GVL_MASTER.stMachineStatus.bSystemReadyToStart THEN
+	GVL_HMI_GLOBAL.bEnableManualMode := TRUE;
+ELSE GVL_HMI_GLOBAL.bEnableManualMode := FALSE;
+END_IF
+
+
+rtrigManualMode(CLK:= GVL_HMI_GLOBAL.nRegionMain=10);
+rtrigManualModeOFF[1](CLK:=GVL_Master.stMachineStatus.bManualMode AND (GVL_HMI_GLOBAL.nRegionMain <> 10));
+rtrigManualModeOFF[2](CLK:=GVL_Master.stMachineStatus.bManualMode AND GVL_HMI_GLOBAL.bStopButton);
+rtrigManualModeOFF[3](CLK:=GVL_Master.stMachineStatus.bManualMode AND NOT GVL_Master.stMasterControl.bNoStationImmediateFault );
+rtrigManualModeOff[4](CLK := GVL_HMI_GLOBAL.bManualModeOff[1], Q => GVL_HMI_GLOBAL.bManualModeOff[2]);
+
+IF rtrigManualMode.Q THEN 
+	GVL_Master.stMasterControl.bManualModeRequest := TRUE;
+	GVL_HMI_GLOBAL.bManualModeOff[1] := FALSE;
+ELSIF rtrigManualModeOFF[1].Q OR rtrigManualModeOFF[2].Q OR rtrigManualModeOFF[3].Q THEN
+	GVL_Master.stMasterControl.bManualModeRequest := FALSE ;
+	GVL_HMI_GLOBAL.bManualModeOff[1] := TRUE;
+	
+ELSE GVL_HMI_GLOBAL.bManualModeOff[1] := FALSE;
+	
+END_IF
+
+
+
+
+
+IF GVL_Master.stMachineStatus.bManualMode  THEN
+	GVL_Master.stStationSruct[1].bStationManualRequestHMI := TRUE;
+	GVL_Master.stStationSruct[2].bStationManualRequestHMI := TRUE;
+	GVL_Master.stStationSruct[3].bStationManualRequestHMI := TRUE;
+ELSE
+    GVL_Master.stStationSruct[1].bStationManualRequestHMI := FALSE;
+	GVL_Master.stStationSruct[2].bStationManualRequestHMI := FALSE;
+	GVL_Master.stStationSruct[3].bStationManualRequestHMI := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_MasterTime" Id="{00a94f1d-519a-4975-b138-c7e5b50fcf32}">
+      <Implementation>
+        <ST><![CDATA[//Aux functions call
+tonTimeUpdateGen(	IN := NOT bUpdateSysTime,
+					PT := tSysTimeUpdatePeriod,
+					Q => bUpdateSysTime);
+
+//bReadyToRead :=  Tc2_System.MEMCMP( ADR( stTimeStamp), ADR (stNullTimeStamp), SIZEOF(stTimeStamp)) <> 0 AND NOT  fbGetSystemTime.BUSY;	
+			(*keczi*)	(*zrobione po to zeby w wypadku jak po starcie PLC na HMI mial pokazywac czas alarmu '00:00:00', zebyb poczekal az faktycznie pokazuje date i czas*)
+
+//Get Current System Time
+fbGetSystemTime(NETID := ,
+				START := bFirstScan OR bUpdateSysTime,
+				TMOUT := ,
+				BUSY => ,
+				ERR => ,
+				ERRID => ,
+				TIMESTR => );
+				
+//Get system time done detection - one-shot
+rtrigSysTimeCollected(CLK := NOT fbGetSystemTime.BUSY);
+
+//Synchronize Real-Time clock with system time
+fbRTClock(	EN := rtrigSysTimeCollected.Q, 
+			PDT := fbGetSystemTime.TIMESTR,
+			CDT => stTimeStamp, 
+			Q => bReadyToRead);
+
+// System Date and Time in Proper Order 
+IF bReadyToRead THEN
+	sRawDateTime := SYSTEMTIME_TO_STRING(stTimeStamp);  // format: YYYY-MM-DD-hh:mm:ss.xxx
+	GVL_HMI_GLOBAL.sSystemDate := CONCAT(CONCAT(CONCAT(CONCAT(MID(sRawDateTime, 2, 9), '.'),  MID(sRawDateTime, 2, 6)), '.'), LEFT(sRawDateTime, 4));
+	GVL_HMI_GLOBAL.sSystemTime := MID(sRawDateTime, 8, 12);
+	sDateTime := CONCAT(CONCAT(GVL_HMI_GLOBAL.sSystemDate, '  '), GVL_HMI_GLOBAL.sSystemTime);
+	sDateTimeSpaces	:= CONCAT(sDateTime, '    ');
+END_IF;
+
+bFirstScan := FALSE;
+
+				
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="PRG_MachineStatus">
+      <LineId Id="238" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="35" Count="6" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="43" Count="4" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="48" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="56" Count="7" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="67" Count="13" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="90" Count="4" />
+      <LineId Id="97" Count="6" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="105" Count="5" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="132" Count="7" />
+      <LineId Id="149" Count="1" />
+      <LineId Id="143" Count="2" />
+      <LineId Id="617" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="162" Count="8" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="173" Count="7" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="200" Count="3" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="211" Count="6" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="493" Count="0" />
+      <LineId Id="496" Count="3" />
+      <LineId Id="495" Count="0" />
+      <LineId Id="500" Count="0" />
+      <LineId Id="502" Count="0" />
+      <LineId Id="504" Count="2" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="485" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="570" Count="0" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="565" Count="2" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="220" Count="11" />
+      <LineId Id="218" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_MachineStatus.ACT_MachineStatusBaner">
+      <LineId Id="2" Count="5" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="8" Count="6" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="15" Count="6" />
+      <LineId Id="147" Count="1" />
+      <LineId Id="22" Count="13" />
+      <LineId Id="149" Count="1" />
+      <LineId Id="36" Count="6" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="43" Count="6" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="50" Count="6" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="57" Count="6" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="64" Count="6" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="71" Count="6" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="78" Count="6" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="85" Count="6" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="92" Count="6" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="99" Count="6" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="106" Count="6" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="114" Count="5" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="120" Count="6" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="127" Count="1" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="129" Count="4" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="134" Count="4" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="141" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_MachineStatus.ACT_ManualMode">
+      <LineId Id="12" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="26" Count="7" />
+      <LineId Id="35" Count="3" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_MachineStatus.ACT_MasterTime">
+      <LineId Id="2" Count="36" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="114" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

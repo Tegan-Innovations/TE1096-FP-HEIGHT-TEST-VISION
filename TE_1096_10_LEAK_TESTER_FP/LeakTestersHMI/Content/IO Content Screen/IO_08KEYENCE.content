@@ -1,0 +1,366 @@
+<div id="IO_08KEYENCE" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1280" data-tchmi-height="465" data-tchmi-creator-viewport-width="800" data-tchmi-creator-viewport-height="600">
+
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_44" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="423" data-tchmi-height-unit="px" data-tchmi-left="21" data-tchmi-left-unit="px" data-tchmi-src="Images/ProbsPNG.png" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width="158" data-tchmi-width-unit="px">
+</div>
+<div id="TcHmiTextblock_9009" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="693" data-tchmi-left-unit="px" data-tchmi-text="Value (µm):" data-tchmi-top="53" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="25" data-tchmi-zindex="8" data-tchmi-height-mode="Value">
+</div>
+<div id="TcHmiTextblock_9010" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="862" data-tchmi-left-unit="px" data-tchmi-text="Warning Status" data-tchmi-top="53" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="25" data-tchmi-zindex="8" data-tchmi-height-mode="Value">
+</div>
+<div id="TcHmiTextblock_9011" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="1022" data-tchmi-left-unit="px" data-tchmi-text="Error status" data-tchmi-top="53" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="25" data-tchmi-zindex="8" data-tchmi-height-mode="Value">
+</div>
+<div id="TcHmiTextblock_9005" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="563" data-tchmi-left-unit="px" data-tchmi-text="Sensor I:" data-tchmi-top="109" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-size="25" data-tchmi-zindex="8">
+</div>
+<div id="TcHmiTextblock_9006" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-text="Sensor II:" data-tchmi-top="164" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-size="25" data-tchmi-zindex="7">
+</div>
+<div id="TcHmiTextblock_9007" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-text="Sensor III:" data-tchmi-top="221" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-size="25" data-tchmi-zindex="7">
+</div>
+<div id="TcHmiTextblock_9008" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-text="Sensor IV:" data-tchmi-top="276" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-size="25" data-tchmi-zindex="7">
+</div>
+<div id="SensorValSta_41" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="45" data-tchmi-height-unit="px" data-tchmi-left="693" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/SensorValSta.usercontrol" data-tchmi-top="108" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-stextdata="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_1CurrentValue%/s%">
+</div>
+<div id="SensorValSta_42" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="45" data-tchmi-height-unit="px" data-tchmi-left="693" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/SensorValSta.usercontrol" data-tchmi-top="163" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-stextdata="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_2CurrentValue%/s%">
+</div>
+<div id="SensorValSta_43" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="45" data-tchmi-height-unit="px" data-tchmi-left="693" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/SensorValSta.usercontrol" data-tchmi-top="218" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-stextdata="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_3CurrentValue%/s%">
+</div>
+<div id="SensorValSta_44" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="45" data-tchmi-height-unit="px" data-tchmi-left="693" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/SensorValSta.usercontrol" data-tchmi-top="273" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-stextdata="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_2CurrentValue%/s%">
+</div>
+<div id="RedIndicator_5" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="918" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="114" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_1WarningStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_6" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="1076" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="114" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_1ErrorStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_7" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="918" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="173" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_2WarningStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_8" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="1076" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="173" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_2ErrorStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_9" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="918" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="228" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_3WarningStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_10" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="1076" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="228" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_1_3ErrorStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_11" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="918" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="278" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_2WarningStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_12" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="1076" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="278" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.gt2_2WarningStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="TcHmiTextblock_9083" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-text="DL-PN1:" data-tchmi-top="333" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-size="25" data-tchmi-zindex="7">
+</div>
+<div id="RedIndicator_13" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="918" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="333" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.dldWarningStat%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="RedIndicator_14" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="1076" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="333" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B08_DL_PN1.dldErrorStt%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+<div id="TcHmiTextblock_9091" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="323" data-tchmi-height-unit="px" data-tchmi-left="196" data-tchmi-left-unit="px" data-tchmi-text="Manufacturer : Keyence
+Product No. : GT2-P12KLSO
+Product Type : Pen Type Probe
+Detection System : Scale Shot System II
+Measuring Range : 12 mm
+Resolution : 0.1 µm
+Indicated Accuracy*1 : 1 µm
+Downward Mounting : 1.0 N
+Side Mounting : 0.95 N
+Upward mounting : 0.9 N
+Sampling Cycle : 4 ms
+Mechanical Response*1 : 10 Hz
+Operation Indicator : 2-color LED (red, green)
+Weight : 0.045 Kg" data-tchmi-top="61" data-tchmi-top-unit="px" data-tchmi-width="327" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="17">
+</div>
+<div id="TcHmiTextblock_9092" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="Height Test System | GT2-71P, GT-72P, DL-PN1, GT2-P12F" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="1280" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="25">
+</div>
+</div>

@@ -1,0 +1,159 @@
+<div id="Content1_3" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1280" data-tchmi-height="465" data-tchmi-creator-viewport-width="800" data-tchmi-creator-viewport-height="600">
+
+<div id="TcHmiIFrame_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiIFrame" data-tchmi-height="410" data-tchmi-height-unit="px" data-tchmi-left="434" data-tchmi-left-unit="px" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width="736" data-tchmi-width-unit="px" data-tchmi-src="http://192.168.7.73">
+</div>
+<div id="TcHmiTextblock_9042" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="74" data-tchmi-left-unit="px" data-tchmi-text="Error" data-tchmi-top="63" data-tchmi-top-unit="px" data-tchmi-width="86" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-background-image-horizontal-alignment="Left" data-tchmi-zindex="17" data-tchmi-visibility="Visible" data-tchmi-height-mode="Value" data-tchmi-text-font-size="20">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 3,
+  "right": 3,
+  "top": 3,
+  "bottom": 3,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+</div>
+<div id="TcHmiTextblock_9043" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="74" data-tchmi-left-unit="px" data-tchmi-text="Error ID" data-tchmi-top="107" data-tchmi-top-unit="px" data-tchmi-width="86" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-background-image-horizontal-alignment="Left" data-tchmi-zindex="17" data-tchmi-visibility="Visible" data-tchmi-height-mode="Value" data-tchmi-text-font-size="20">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 3,
+  "right": 3,
+  "top": 3,
+  "bottom": 3,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+</div>
+<div id="SensorValSta_8" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="45" data-tchmi-height-unit="px" data-tchmi-left="176" data-tchmi-left-unit="px" data-tchmi-target-user-control="User Control/SensorValSta.usercontrol" data-tchmi-top="98" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-zindex="8" data-tchmi-stextdata="%s%PLC1.GVL_IO.dw_B06_IS2802M.isErrorID%/s%">
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_27" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="201" data-tchmi-height-unit="px" data-tchmi-left="-46" data-tchmi-left-unit="px" data-tchmi-src="Images/CameraPiece.PNG" data-tchmi-top="214" data-tchmi-top-unit="px" data-tchmi-width="519" data-tchmi-width-unit="px">
+</div>
+<div id="TcHmiRectangle_48" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="87" data-tchmi-height-unit="px" data-tchmi-left="224" data-tchmi-left-unit="px" data-tchmi-top="254" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px">
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 2,
+  "right": 2,
+  "top": 2,
+  "bottom": 2,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+</div>
+<div id="RedIndicator_4" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="176" data-tchmi-left-unit="px" data-tchmi-nheight="30" data-tchmi-nwidth="30" data-tchmi-target-user-control="User Control/Red_Reusable_Indicator.usercontrol" data-tchmi-top="63" data-tchmi-top-unit="px" data-tchmi-width="31" data-tchmi-width-unit="px" data-tchmi-variable="%s%PLC1.GVL_IO.dw_B06_IS2802M.isError%/s%">
+<script data-tchmi-target-attribute="data-tchmi-strokecol" type="application/json">
+{
+  "color": "rgba(220, 226, 218, 1)"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-on_col" type="application/json">
+{
+  "angle": 40.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 2, 23, 1)",
+      "stop": "60%"
+    },
+    {
+      "color": "rgba(220, 226, 218, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-off_col" type="application/json">
+{
+  "color": "rgba(255, 2, 23, 0.3921568)"
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-value" type="application/json">
+true
+</script>
+</div>
+</div>

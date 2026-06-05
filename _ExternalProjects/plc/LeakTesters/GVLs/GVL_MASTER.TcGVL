@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <GVL Name="GVL_MASTER" Id="{97dade9a-3f85-49a7-b23d-ce7fe1ab290f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	(*-----------------------------------------------------------------------------------------------------------------*)
+	// System Pulses 
+	bFlash1Hz						: BOOL;
+	bFlash2Hz						: BOOL;
+	bFlash4Hz				   		: BOOL;
+	bFlash10Hz						: BOOL;
+	bFlash10BHz        		  		: BOOL;
+	bFlash100Hz      	      		: BOOL;
+	bFlashScale       	      		: BOOL;
+	bFlashScale4       		  		: BOOL;
+	bFlashScale5        	  		: BOOL;
+	bFlashingFreq2			  		: BOOL;
+	bFlashScaleFast       	  		: BOOL;
+	
+//Master Control
+	stMachineStatus					: ST_MachineStatusStruct;	
+	stMasterControl					: ST_MasterControlStruct;
+  	stStationSruct                  : ARRAY[0..5] OF ST_StandardStationStruct; (* Station 0 - Master
+                                                                                  Station 1 - Height test 
+	                                                                              Station 2 - Leak test
+																				  Station 3 - Vision test 
+                                                                                   *)
+	bHeightTestacknowledge			: BOOL;
+	
+																				   
+	stNest							: ST_Nest;                                                                        
+	stAlarms                        : ARRAY [0..3] OF ST_Events;
+	
+	bManualModeTrigger				: BOOL;
+	abSensorStuck					: ARRAY[1..4] OF BOOL;
+	anValueBeforeMeasurement		: ARRAY[1..4] OF DINT;
+	aSensorCurrentValue				: ARRAY[1..4] OF DINT;
+	
+																				   
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

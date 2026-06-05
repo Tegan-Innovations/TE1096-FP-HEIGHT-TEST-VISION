@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "Button": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Button.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Button"
+    },
+    "Yellow_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Yellow_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Yellow_Reusable_Indicator"
+    },
+    "White_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\White_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/White_Reusable_Indicator"
+    },
+    "Red_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Red_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Red_Reusable_Indicator"
+    },
+    "Green_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Green_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Green_Reusable_Indicator"
+    },
+    "Blue_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Blue_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Blue_Reusable_Indicator"
+    },
+    "Amber_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Amber_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Amber_Reusable_Indicator"
+    },
+    "8_Ch_Analog_INT": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\8_Ch_Analog_INT.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/8_Ch_Analog_INT"
+    },
+    "4_Ch_Analog_INT": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\4_Ch_Analog_INT.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/4_Ch_Analog_INT"
+    },
+    "2_Ch_Analog_INT": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\2_Ch_Analog_INT.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/2_Ch_Analog_INT"
+    },
+    "1_Ch_Analog_INT": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\1_Ch_Analog_INT.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/1_Ch_Analog_INT"
+    },
+    "8_Ch_Digital": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\8_Ch_Digital.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/8_Ch_Digital"
+    },
+    "4_Ch_Digital": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\4_Ch_Digital.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/4_Ch_Digital"
+    },
+    "2_Ch_Digital": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\2_Ch_Digital.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/2_Ch_Digital"
+    },
+    "16_Ch_Digital1280_800_-_Copy": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\16_Ch_Digital1280_800 - Copy.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/16_Ch_Digital1280_800_-_Copy"
+    },
+    "SensorValSta": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\SensorValSta.usercontrol.json",
+      "id": "tchmi:project#/definitions/SensorValSta",
+      "type": "object"
+    },
+    "Background": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Background.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Background"
+    },
+    "Piece": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\Piece.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Piece"
+    },
+    "Green_Reusable_Indicator_-_Copy": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\GreenAndRed_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/Green_Reusable_Indicator_-_Copy"
+    },
+    "GreenAndRed_Reusable_Indicator": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\GreenAndRed_Reusable_Indicator.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/GreenAndRed_Reusable_Indicator"
+    },
+    "GreenIndicatorHome": {
+      "frameworkControlNamespace": "TcHmi.Controls.Beckhoff",
+      "frameworkControlType": "TcHmi.Controls.System.TcHmiUserControl",
+      "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+      "frameworkUserControlConfig": "User Control\\GreenIndicatorHome.usercontrol.json",
+      "type": "object",
+      "id": "tchmi:project#/definitions/GreenIndicatorHome"
+    }
+  }
+}

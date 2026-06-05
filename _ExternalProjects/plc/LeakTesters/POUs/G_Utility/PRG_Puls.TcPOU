@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_Puls" Id="{184ca599-d7ba-4e4e-888a-fbce5edd46cb}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Puls
+VAR
+    //=== Master Pulses ===//
+	fbScalingFlash  :FB_Pulse;
+	fbScalingFlash4 :FB_Pulse;
+	fbScalingFlash5 :FB_Pulse;
+	fbFlash100Hz    :FB_Pulse;
+	fbFlash10Hz		:FB_Pulse;
+	fbFlash10HzB    :FB_Pulse;
+	fbFlash4Hz		:FB_Pulse;
+	fbFlash2Hz		:FB_Pulse;
+	fbFlash1Hz		:FB_Pulse;			
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[    //=== Master Pulses ===//
+(**************************************************************************************************)
+fbScalingFlash(
+	bEnable	:=	TRUE,
+	tPulseOn	:=	T#2MS,
+	tPulseOff	:=	T#2MS,
+	bFlash		=>	GVL_MASTER.bFlashScale
+);
+
+fbScalingFlash4(
+     bEnable	:=	TRUE,
+	tPulseOn	:=	T#4MS,
+	tPulseOff	:=	T#4MS,
+	bFlash		=>	GVL_MASTER.bFlashScale4
+);
+fbScalingFlash5(
+     bEnable	:=	TRUE,
+	tPulseOn	:=	T#5MS,
+	tPulseOff	:=	T#5MS,
+	bFlash		=>	GVL_MASTER.bFlashScale5
+);
+
+
+
+fbFlash100Hz(
+	bEnable	:=	TRUE,
+	tPulseOn	:=	T#10MS,
+	tPulseOff	:=	T#10MS,
+	bFlash		=>	GVL_MASTER.bFlash100Hz
+);
+
+
+fbFlash10HzB ( 
+    bEnable	    :=	TRUE,
+	tPulseOn	:=	T#20MS,//  T#50MS,
+	tPulseOff	:=	T#20MS,//  T#50MS,
+	bFlash		=>	GVL_MASTER.bFlash10BHz
+);
+
+
+fbFlash10Hz(
+	bEnable	:=	TRUE,
+	tPulseOn	:=	T#100MS,
+	tPulseOff	:=	T#100MS,
+	bFlash		=>	GVL_MASTER.bFlash10Hz
+);
+
+
+fbFlash4Hz(
+	bEnable	:=	TRUE,
+	tPulseOn	:=	T#250MS,
+	tPulseOff	:=	T#250MS,
+	bFlash		=>	GVL_MASTER.bFlash4Hz
+);
+
+fbFlash2Hz(
+	bEnable	:=	TRUE,
+	tPulseOn	:=	T#500MS,
+	tPulseOff	:=	T#500MS,
+	bFlash		=>	GVL_MASTER.bFlash2Hz
+);
+
+fbFlash1Hz(
+	bEnable	:=	TRUE,
+	tPulseOn	:=	T#1000MS,
+	tPulseOff	:=	T#1000MS,
+	bFlash		=>	GVL_MASTER.bFlash1Hz
+);
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Puls">
+      <LineId Id="17" Count="67" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

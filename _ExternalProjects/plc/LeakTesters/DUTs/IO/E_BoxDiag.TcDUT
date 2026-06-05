@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="E_BoxDiag" Id="{031682fa-4776-447b-a6fd-1cc941be2bd3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_BoxDiag :
+(
+	No_diagnosis                                   :=0,
+    IOC_AR_is_not_established                      := 1,
+    IOC_AR_is_established                          := 2,
+    IOC_AR_is_established_but_no_application_ready := 4,
+    IOC_AR_is_established_but_module_difference    := 8,
+    At_least_one_AlarmCR_got_a_diagnosis_alarm     := 10,
+    At_least_one_InputCR_is_invalid                := 100,
+    At_least_one_InputCR_Provider_is_in_stop       := 200,
+    At_least_one_InputCR_Problemindicator_is_set   := 400,
+    At_least_one_OutputCR_is_invalid               := 1000,
+    At_least_one_OutputCR_Provider_is_in_stop      := 2000,
+    At_least_one_OutputCR_Problemindicator_is_set  := 4000
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

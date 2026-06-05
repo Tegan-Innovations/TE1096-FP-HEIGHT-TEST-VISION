@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="FB_BoxInfo" Id="{7d7bea02-1ff7-459d-a136-f4f0c9b6c322}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_BoxInfo
+VAR_INPUT
+	  nPnIoBoxState : UINT;    	
+      nPnIoBoxDiag  : UINT;
+END_VAR
+VAR_OUTPUT
+		sBoxState     : STRING;
+	  sBoxDiag      : STRING;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF nPnIoBoxState = 0 THEN 
+	sBoxState := 'No error';
+ELSIF nPnIoBoxState = 1 THEN 
+	sBoxState := 'Profinet device state machine is in boot mode';
+ELSIF nPnIoBoxState = 2 THEN 
+	sBoxState := 'Device not found';
+ELSIF nPnIoBoxState = 3 THEN 
+	sBoxState := 'The stationname is not unique';
+ELSIF nPnIoBoxState = 4 THEN 
+	sBoxState := 'IP could not be set';
+ELSIF nPnIoBoxState = 5 THEN 
+	sBoxState := 'IP conflict';
+ELSIF nPnIoBoxState = 6 THEN 
+	sBoxState := 'DCP set was not successful';
+ELSIF nPnIoBoxState = 7 THEN 
+	sBoxState := 'Watchdog error';
+ELSIF nPnIoBoxState = 8 THEN 
+	sBoxState := 'Datahold error';
+ELSIF nPnIoBoxState = 9 THEN 
+	sBoxState := 'RTC3: Sync mode could not be initiated';
+ELSIF nPnIoBoxState = 10 THEN 
+	sBoxState := 'Profinet controller has a link error';
+ELSIF nPnIoBoxState = 11 THEN 
+	sBoxState := 'The aliasname is not unique';
+ELSIF nPnIoBoxState = 12 THEN 
+	sBoxState := 'The automatic name assignement isnt possible - wrong device type';	
+ELSIF nPnIoBoxState = 13 THEN 
+	sBoxState := 'IOC-AR is established but no application ready';	
+ELSIF nPnIoBoxState = 14 THEN 
+	sBoxState := 'IOC-AR is established but module difference';	
+ELSIF nPnIoBoxState = 15 THEN 
+	sBoxState := 'At least one InputCR is invalid, provider in stop or problemindicator is set';
+ELSIF nPnIoBoxState = 16 THEN 
+	sBoxState := 'At least one OutputCR is invalid, provider in stop or problemindicator is set';
+ELSIF nPnIoBoxState = 31 THEN 
+	sBoxState := 'Only for EtherCAT gateways: WC-State of cyclic EtherCAT frame is 1';	
+END_IF
+
+IF nPnIoBoxDiag = 0 THEN
+   sBoxDiag := 'No diagnosis';
+ELSIF nPnIoBoxDiag = 16#0001 THEN
+   sBoxDiag := 'IOC-AR is not established'; 
+ELSIF nPnIoBoxDiag = 16#0002 THEN
+   sBoxDiag := 'IOC-AR is established'; 
+ELSIF nPnIoBoxDiag = 16#0004 THEN
+   sBoxDiag := 'IOC-AR is established but no application ready'; 
+ELSIF nPnIoBoxDiag = 16#0008 THEN
+   sBoxDiag := 'IOC-AR is established but module difference'; 
+ELSIF nPnIoBoxDiag = 16#0010 THEN
+   sBoxDiag := 'At least one AlarmCR got a diagnosis alarm'; 
+ELSIF nPnIoBoxDiag = 16#0100 THEN
+   sBoxDiag := 'At least one InputCR is invalid'; 
+ELSIF nPnIoBoxDiag = 16#0200 THEN
+   sBoxDiag := 'At least one InputCR Provider is in stop'; 
+ELSIF nPnIoBoxDiag = 16#0400 THEN
+   sBoxDiag := 'At least one InputCR Problemindicator is set';    
+ELSIF nPnIoBoxDiag = 16#1000 THEN
+   sBoxDiag := 'At least one OutputCR is invalid';    
+ELSIF nPnIoBoxDiag = 16#2000 THEN
+   sBoxDiag := 'At least one OutputCR Provider is in stop';    
+ELSIF nPnIoBoxDiag = 16#4000 THEN
+   sBoxDiag := 'At least one OutputCR Problemindicator is set';    
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_BoxInfo">
+      <LineId Id="10" Count="64" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

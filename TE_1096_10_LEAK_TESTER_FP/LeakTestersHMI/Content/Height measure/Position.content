@@ -1,0 +1,200 @@
+<div id="TargetTabContent_6" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="850" data-tchmi-height="350" data-tchmi-creator-viewport-width="800" data-tchmi-creator-viewport-height="600">
+<div id="TcHmiLinearGauge" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLinearGauge" data-tchmi-base-animation-time="1000" data-tchmi-height="240" data-tchmi-height-unit="px" data-tchmi-label-range="1" data-tchmi-left="14" data-tchmi-left-unit="px" data-tchmi-show-labels="true" data-tchmi-show-ticks="true" data-tchmi-show-value-text="true" data-tchmi-start-from-zero="true" data-tchmi-top="96" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-orientation="Vertical" data-tchmi-max-value="12" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::aScaledSensorCurrentValue[0]%/s%">
+<script data-tchmi-target-attribute="data-tchmi-range" type="application/json">
+[
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": 0.0,
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(0, 128, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%",
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%",
+    "end": 12.0
+  }
+]
+</script>
+<script data-tchmi-target-attribute="data-tchmi-value-format" type="application/json">
+{
+  "objectType": "Function",
+  "fn": "GaugeValueFormatter",
+  "fnParams": []
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-tick-definition" type="application/json">
+{
+  "mainTickRange": 1.0,
+  "subTickRange": 0.5
+}
+</script>
+
+</div>
+<div id="TcHmiTextblock_9326" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="13" data-tchmi-left-unit="px" data-tchmi-text="Probe 1" data-tchmi-top="33" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9327" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="168" data-tchmi-left-unit="px" data-tchmi-text="Probe 2" data-tchmi-top="33" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9328" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="323" data-tchmi-left-unit="px" data-tchmi-text="Probe 3" data-tchmi-top="33" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9329" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="478" data-tchmi-left-unit="px" data-tchmi-text="DATUM" data-tchmi-top="33" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9342" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="646" data-tchmi-left-unit="px" data-tchmi-text="HIGH" data-tchmi-top="89" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="18">
+</div>
+<div id="TcHmiNumericInput_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="646" data-tchmi-left-unit="px" data-tchmi-max-value="12" data-tchmi-min-value="%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="143" data-tchmi-top-unit="px" data-tchmi-value="%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh|BindingMode=TwoWay%/s%" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-auto-select-text="false" data-tchmi-value-horizontal-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiTextblock_9343" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="646" data-tchmi-left-unit="px" data-tchmi-text="LOW" data-tchmi-top="197" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="18">
+</div>
+<div id="TcHmiNumericInput_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="646" data-tchmi-left-unit="px" data-tchmi-max-value="%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%" data-tchmi-min-value="0" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="251" data-tchmi-top-unit="px" data-tchmi-value="%s%PLC1.GVL_PERSIST.stHeightLimits.nLow|BindingMode=TwoWay%/s%" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-value-horizontal-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiLinearGauge_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLinearGauge" data-tchmi-base-animation-time="1000" data-tchmi-height="240" data-tchmi-height-unit="px" data-tchmi-label-range="1" data-tchmi-left="169" data-tchmi-left-unit="px" data-tchmi-show-labels="true" data-tchmi-show-ticks="true" data-tchmi-show-value-text="true" data-tchmi-start-from-zero="true" data-tchmi-top="96" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-orientation="Vertical" data-tchmi-max-value="12" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::aScaledSensorCurrentValue[1]%/s%">
+<script data-tchmi-target-attribute="data-tchmi-range" type="application/json">
+[
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": 0.0,
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(0, 128, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%",
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%",
+    "end": 12.0
+  }
+]
+</script>
+<script data-tchmi-target-attribute="data-tchmi-value-format" type="application/json">
+{
+  "objectType": "Function",
+  "fn": "GaugeValueFormatter",
+  "fnParams": []
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-tick-definition" type="application/json">
+{
+  "mainTickRange": 1.0,
+  "subTickRange": 0.5
+}
+</script>
+
+</div>
+<div id="TcHmiLinearGauge_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLinearGauge" data-tchmi-base-animation-time="1000" data-tchmi-height="240" data-tchmi-height-unit="px" data-tchmi-label-range="1" data-tchmi-left="323" data-tchmi-left-unit="px" data-tchmi-show-labels="true" data-tchmi-show-ticks="true" data-tchmi-show-value-text="true" data-tchmi-start-from-zero="true" data-tchmi-top="96" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-orientation="Vertical" data-tchmi-max-value="12" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::aScaledSensorCurrentValue[2]%/s%">
+<script data-tchmi-target-attribute="data-tchmi-range" type="application/json">
+[
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": 0.0,
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(0, 128, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%",
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%",
+    "end": 12.0
+  }
+]
+</script>
+<script data-tchmi-target-attribute="data-tchmi-value-format" type="application/json">
+{
+  "objectType": "Function",
+  "fn": "GaugeValueFormatter",
+  "fnParams": []
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-tick-definition" type="application/json">
+{
+  "mainTickRange": 1.0,
+  "subTickRange": 0.5
+}
+</script>
+
+</div>
+<div id="TcHmiLinearGauge_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLinearGauge" data-tchmi-base-animation-time="1000" data-tchmi-height="240" data-tchmi-height-unit="px" data-tchmi-label-range="1" data-tchmi-left="479" data-tchmi-left-unit="px" data-tchmi-show-labels="true" data-tchmi-show-ticks="true" data-tchmi-show-value-text="true" data-tchmi-start-from-zero="true" data-tchmi-top="96" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-orientation="Vertical" data-tchmi-max-value="12" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::aScaledSensorCurrentValue[3]%/s%">
+<script data-tchmi-target-attribute="data-tchmi-range" type="application/json">
+[
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": 0.0,
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(0, 128, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nLow%/s%",
+    "end": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%"
+  },
+  {
+    "color": {
+      "color": "rgba(255, 0, 0, 1)"
+    },
+    "start": "%s%PLC1.GVL_PERSIST.stHeightLimits.nHigh%/s%",
+    "end": 12.0
+  }
+]
+</script>
+<script data-tchmi-target-attribute="data-tchmi-value-format" type="application/json">
+{
+  "objectType": "Function",
+  "fn": "GaugeValueFormatter",
+  "fnParams": []
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-tick-definition" type="application/json">
+{
+  "mainTickRange": 1.0,
+  "subTickRange": 0.5
+}
+</script>
+
+</div>
+</div>

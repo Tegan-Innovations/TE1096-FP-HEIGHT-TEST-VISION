@@ -1,0 +1,92 @@
+<div id="TargetTabContent_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="850" data-tchmi-height="350" data-tchmi-creator-viewport-width="800" data-tchmi-creator-viewport-height="600">
+<div id="TolValue_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="false" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="332" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="false" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-value-horizontal-alignment="Center" data-tchmi-zero-padding="0" data-tchmi-value-font-size="20" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::nDistanceBetweenPoints[0]|BindingMode=TwoWay%/s%" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+
+</div>
+<div id="TolValue_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="332" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="151" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-value-horizontal-alignment="Center" data-tchmi-zero-padding="0" data-tchmi-value-font-size="20" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::nDistanceBetweenPoints[1]|BindingMode=TwoWay%/s%" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+
+</div>
+<div id="TolValue_7" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="332" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="222" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-value-horizontal-alignment="Center" data-tchmi-zero-padding="0" data-tchmi-value-font-size="20" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::nDistanceBetweenPoints[2]|BindingMode=TwoWay%/s%" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+
+</div>
+<div id="TolValue_8" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="false" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="508" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="false" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-value-horizontal-alignment="Center" data-tchmi-zero-padding="0" data-tchmi-value-font-size="20" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::anDistanceSetPoint[0]|BindingMode=TwoWay%/s%" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+
+</div>
+<div id="TolValue_10" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="508" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="222" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-value-horizontal-alignment="Center" data-tchmi-zero-padding="0" data-tchmi-value-font-size="20" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::anDistanceSetPoint[2]|BindingMode=TwoWay%/s%" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+
+</div>
+<div id="TcHmiTextblock_9266" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="28" data-tchmi-left-unit="px" data-tchmi-text="Distance I - P1 => Datum (um)" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="238" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9267" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="48" data-tchmi-height-unit="px" data-tchmi-left="508" data-tchmi-left-unit="px" data-tchmi-text="Expected by Drawing (mm)" data-tchmi-top="16" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9277" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="28" data-tchmi-left-unit="px" data-tchmi-text="Distance 2 - P2 => Datum (um)" data-tchmi-top="151" data-tchmi-top-unit="px" data-tchmi-width="238" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+Datum (um)" data-tchmi-top="124" data-tchmi-top-unit="px" data-tchmi-width="238" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9278" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="28" data-tchmi-left-unit="px" data-tchmi-text="Distance 3 - P3 => Datum (um)" data-tchmi-top="222" data-tchmi-top-unit="px" data-tchmi-width="238" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+Datum (um)" data-tchmi-top="134" data-tchmi-top-unit="px" data-tchmi-width="238" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TcHmiTextblock_9279" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="322" data-tchmi-left-unit="px" data-tchmi-text="Fixed by Calibration Part (mm)" data-tchmi-top="16" data-tchmi-top-unit="px" data-tchmi-width="147" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-right-unit="px" data-tchmi-bottom-unit="px" data-tchmi-text-font-size-unit="px" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="18" data-tchmi-zindex="9">
+</div>
+<div id="TolValue_17" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="false" data-tchmi-decimal-digits="3" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left="508" data-tchmi-left-unit="px" data-tchmi-reset-to-last-valid-value="false" data-tchmi-top="151" data-tchmi-top-unit="px" data-tchmi-width="120" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-value-horizontal-alignment="Center" data-tchmi-zero-padding="0" data-tchmi-value-font-size="20" data-tchmi-value="%s%PLC1.PRG_HeightTest.stHeightMeasurement2::anDistanceSetPoint[1]|BindingMode=TwoWay%/s%" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+
+</div>
+</div>

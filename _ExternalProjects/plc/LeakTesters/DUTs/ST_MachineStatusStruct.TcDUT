@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_MachineStatusStruct" Id="{204df2a4-ae20-4f4a-b5af-2d858708a1ed}">
+    <Declaration><![CDATA[TYPE ST_MachineStatusStruct :
+STRUCT
+	nState						: INT;
+	//nStateBuffer				: INT;
+	eMachineState				:E_MachineState;	
+	bSystemPowerUp 				:BOOL;
+	bImmediateStopped 			:BOOL;
+	bSystemInitialising 		:BOOL;
+	bSystemReadyToStart 		:BOOL;
+	bSystemAutoCycle 			:BOOL;
+	bSystemDwell 				:BOOL;
+	bSystemStopping				:BOOL;	
+	bCycleStopped 				:BOOL;
+	bImmediateFault 			:BOOL;
+	bCycleStopFault 			:BOOL;
+	bManualMode					:BOOL;
+    bSystemStandby              :BOOL;		
+	
+	sMachineStatusText			:STRING;
+	nMachineStatusTxtCol		:DWORD;
+	nMachineStatusColour		:DWORD;
+	sBannerTextColor			:STRING ;
+	sBannerBckColor				:STRING ;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

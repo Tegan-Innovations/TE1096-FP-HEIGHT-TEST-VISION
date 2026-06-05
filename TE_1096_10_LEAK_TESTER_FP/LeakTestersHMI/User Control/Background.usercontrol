@@ -1,0 +1,64 @@
+<div id="Background" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControl" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1288" data-tchmi-height="875" data-tchmi-width-unit="px" data-tchmi-height-unit="px" data-tchmi-creator-viewport-width="500" data-tchmi-creator-viewport-height="500" data-tchmi-creator-locked="True" data-tchmi-zindex="27">
+<div id="Polygon_InfeedNest_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiPolygon" data-tchmi-height="208" data-tchmi-height-unit="px" data-tchmi-left="-139" data-tchmi-left-unit="px" data-tchmi-points="0,50 120,0 120,0 200,80 200,200 0,200" data-tchmi-scale-mode="ScaleToFill" data-tchmi-top="267" data-tchmi-top-unit="px" data-tchmi-width="731" data-tchmi-width-unit="px" data-tchmi-zindex="0">
+<script data-tchmi-target-attribute="data-tchmi-fill-color" type="application/json">
+{
+  "angle": 0.0,
+  "stopPoints": [
+    {
+      "color": "rgba(109, 100, 100, 1)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(214, 210, 210, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+
+
+</div>
+<div id="WelderPolygon_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiPolygon" data-tchmi-height="395" data-tchmi-height-unit="px" data-tchmi-left="226" data-tchmi-left-unit="px" data-tchmi-points="0,0 200,0 200,200 120,200 120,150 110,100 20,30 0
+" data-tchmi-scale-mode="ScaleToFill" data-tchmi-top="80" data-tchmi-top-unit="px" data-tchmi-width="1054" data-tchmi-width-unit="px" data-tchmi-zindex="2">
+<script data-tchmi-target-attribute="data-tchmi-fill-color" type="application/json">
+{
+  "angle": 0.0,
+  "stopPoints": [
+    {
+      "color": "rgba(109, 100, 100, 1)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(214, 210, 210, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+</div>
+<div id="InspectionPolygon_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiPolygon" data-tchmi-height="299" data-tchmi-height-unit="px" data-tchmi-left="364" data-tchmi-left-unit="px" data-tchmi-points="0,0 200,40 200,40 200,200 50,200 50,120 0,60" data-tchmi-scale-mode="ScaleToFill" data-tchmi-top="176" data-tchmi-top-unit="px" data-tchmi-width="750" data-tchmi-width-unit="px" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-fill-color" type="application/json">
+{
+  "angle": 0.0,
+  "stopPoints": [
+    {
+      "color": "rgba(109, 100, 100, 1)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(214, 210, 210, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+</div>
+<div id="TcHmiLine_157" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLine" data-tchmi-height="212" data-tchmi-height-unit="px" data-tchmi-left="705" data-tchmi-left-unit="px" data-tchmi-top="81" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-x2="100" data-tchmi-y2="195" data-tchmi-zindex="28" data-tchmi-x1="100">
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_22" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="95" data-tchmi-height-unit="px" data-tchmi-left="875" data-tchmi-left-unit="px" data-tchmi-src="Images/CameraPNG.png" data-tchmi-top="368" data-tchmi-top-unit="px" data-tchmi-width="96" data-tchmi-width-unit="px" data-tchmi-zindex="30">
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_24" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="95" data-tchmi-height-unit="px" data-tchmi-left="409" data-tchmi-left-unit="px" data-tchmi-src="Images/ProbsPNG.png" data-tchmi-top="323" data-tchmi-top-unit="px" data-tchmi-width="73" data-tchmi-width-unit="px" data-tchmi-zindex="30">
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_25" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="95" data-tchmi-height-unit="px" data-tchmi-left="510" data-tchmi-left-unit="px" data-tchmi-src="Images/LeakTesterPNG.png" data-tchmi-top="223" data-tchmi-top-unit="px" data-tchmi-width="96" data-tchmi-width-unit="px" data-tchmi-zindex="30">
+</div>
+</div>

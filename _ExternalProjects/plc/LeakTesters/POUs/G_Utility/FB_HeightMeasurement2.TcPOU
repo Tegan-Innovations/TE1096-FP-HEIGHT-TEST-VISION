@@ -1,0 +1,417 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="FB_HeightMeasurement2" Id="{46e18333-d1f7-4aac-b31b-53a6366d4c44}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HeightMeasurement2
+VAR_INPUT
+	
+	aSensorCurrentValue							: ARRAY[1..4] OF REAL;		
+	bEnable										: BOOL;
+	bMeasurementRequest							: BOOL;
+	bManualMode									: BOOL;
+	bSetFixedPoints								: BOOL;
+	aTolerance									: ARRAY[1..3] OF REAL;
+	
+	bAcknowledge								: BOOL;
+	
+	//Calibration block
+	
+	nDistanceBetweenPoints						: ARRAY[1..3] OF REAL;
+	anDistanceSetPoint							: ARRAY[1..3] OF REAL;
+	
+	
+	
+	
+					
+END_VAR
+VAR_OUTPUT
+	
+	bBusy										: BOOL;
+	bComplete									: BOOL;
+	bEnableo									: BOOL;
+	aPass										: ARRAY[1..5] OF BOOL; //5 Final Result
+	aFail										: ARRAY[1..5] OF BOOL; //5 Final Result
+	aMinLimitCalibrationBlock					: ARRAY[1..3] OF REAL;
+	aMaxLimitCalibrationBlock					: ARRAY[1..3] OF REAL;
+	
+	aDistanceBetweenProbes						: ARRAY[1..3] OF REAL; //1 Probe 1 to probe zero
+	abSensorStuck								: ARRAY[1..4] OF BOOL;
+	nFixedPoint									: ARRAY[1..4] OF REAL;
+	aScaledSensorCurrentValue					: ARRAY[1..4] OF REAL;
+	
+	nHeightMeasureStateValue					: ARRAY[1..4] OF DINT;
+
+	
+
+END_VAR
+VAR PERSISTENT
+	
+	nSensorSetPoint								: ARRAY[1..4] OF REAL;
+	
+END_VAR
+VAR
+	
+	i											: INT;
+	j											: INT;
+	tonTestingTime								: TON;
+	rMeasurementRequest							: R_TRIG;
+	nHeightOffset								: REAL;
+	
+	EHeighttMeasureProcess						: E_HeighttMeasureProcess;
+	anValueBeforeMeasurement					: ARRAY[1..4] OF REAL;
+	
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_ScaleMinMax();
+ACT_SetPoints();
+
+IF NOT bEnable THEN
+	EHeighttMeasureProcess						:= E_HeighttMeasureProcess.WAITING_ENABLE;
+ELSIF bManualMode AND bEnable THEN
+	EHeighttMeasureProcess						:= E_HeighttMeasureProcess.Manual_Mode;
+END_IF
+bEnableo										:= bEnable;
+tonTestingTime( IN := (EHeighttMeasureProcess = E_HeighttMeasureProcess.WAITING_FOR_MEASURE), PT := T#3S);
+rMeasurementRequest( CLK := bMeasurementRequest);
+
+CASE EHeighttMeasureProcess OF
+
+E_HeighttMeasureProcess.WAITING_ENABLE:
+
+	IF bEnable THEN
+		EHeighttMeasureProcess					:= E_HeighttMeasureProcess.WAITING_MEASURING_REQUEST;
+	END_IF
+
+E_HeighttMeasureProcess.WAITING_MEASURING_REQUEST:	
+
+	bComplete									:= FALSE;
+	IF rMeasurementRequest.Q THEN
+		EHeighttMeasureProcess					:= E_HeighttMeasureProcess.RESET;
+	END_IF
+	
+	anValueBeforeMeasurement					:= aSensorCurrentValue;
+
+E_HeighttMeasureProcess.RESET:
+	
+	
+	abSensorStuck[1]							:= FALSE;
+	
+	FOR i := 1 TO 5 DO
+		aPass[i]								:= FALSE;	
+		aFail[i]								:= FALSE;
+	END_FOR
+	FOR j := 1 TO 3 DO
+		nHeightMeasureStateValue[j]				:= 0;
+	END_FOR
+		EHeighttMeasureProcess					:= E_HeighttMeasureProcess.WAITING_FOR_MEASURE;
+	
+E_HeighttMeasureProcess.SENSOR_STUCK_EVALUATION:
+
+	ACT_SensorStuck();
+	
+E_HeighttMeasureProcess.WAITING_FOR_MEASURE:
+
+	IF tonTestingTime.Q  THEN
+		EHeighttMeasureProcess					:= E_HeighttMeasureProcess.CALIBRATIONBLOCK_METHOD;
+	END_IF
+
+E_HeighttMeasureProcess.CALIBRATIONBLOCK_METHOD:
+
+		ACT_CalibrationBlockMethod();
+		bComplete								:= TRUE;
+		IF bAcknowledge THEN
+			EHeighttMeasureProcess					:= E_HeighttMeasureProcess.WAITING_MEASURING_REQUEST;
+		END_IF
+
+E_HeighttMeasureProcess.Manual_Mode:
+		
+		ACT_ManualMode();		
+
+END_CASE
+
+
+bBusy				:= 	(EHeighttMeasureProcess	<> E_HeighttMeasureProcess.WAITING_ENABLE AND
+						EHeighttMeasureProcess  <> E_HeighttMeasureProcess.WAITING_MEASURING_REQUEST) AND
+						NOT bComplete;
+						]]></ST>
+    </Implementation>
+    <Action Name="ACT_CalibrationBlockMethod" Id="{b9a3cda6-aa2b-4bef-a9fd-5776bf0537cb}">
+      <Implementation>
+        <ST><![CDATA[aDistanceBetweenProbes[1] 	:= (nFixedPoint[4] - aScaledSensorCurrentValue[4])+ (aScaledSensorCurrentValue[1] - (nFixedPoint[1])) + nDistanceBetweenPoints[1];
+aDistanceBetweenProbes[2] 	:= (nFixedPoint[4] - aScaledSensorCurrentValue[4])+ (aScaledSensorCurrentValue[2] - (nFixedPoint[2])) + nDistanceBetweenPoints[2];
+aDistanceBetweenProbes[3] 	:= (nFixedPoint[4] - aScaledSensorCurrentValue[4])+ (aScaledSensorCurrentValue[3] - (nFixedPoint[3])) + nDistanceBetweenPoints[3];
+
+FOR i := 1 TO 3 DO
+	IF (aDistanceBetweenProbes[i] <= aMaxLimitCalibrationBlock[i]) AND (aDistanceBetweenProbes[i] >= aMinLimitCalibrationBlock[i]) THEN
+		
+		aPass[i]			:= TRUE;
+		nHeightMeasureStateValue[i] := 1;
+	ELSE 
+		aFail[i]			:= TRUE;
+		nHeightMeasureStateValue[i] := 2;
+	END_IF
+END_FOR
+
+IF aPass[1] AND aPass[2] AND aPass[3] THEN
+	aPass[5]			:= TRUE;
+ELSIF aFail[1] OR aFail[2] OR aFail[3] THEN
+	aFail[5]			:= TRUE;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_ManualMode" Id="{4dc37cac-4f9f-4d57-97db-a1bcf016dafb}">
+      <Implementation>
+        <ST><![CDATA[aDistanceBetweenProbes[1] 	:= (nFixedPoint[4] - aScaledSensorCurrentValue[4])+ (aScaledSensorCurrentValue[1] - (nFixedPoint[1])) + nDistanceBetweenPoints[1];
+aDistanceBetweenProbes[2] 	:= (nFixedPoint[4] - aScaledSensorCurrentValue[4])+ (aScaledSensorCurrentValue[2] - (nFixedPoint[2])) + nDistanceBetweenPoints[2];
+aDistanceBetweenProbes[3] 	:= (nFixedPoint[4] - aScaledSensorCurrentValue[4])+ (aScaledSensorCurrentValue[3] - (nFixedPoint[3])) + nDistanceBetweenPoints[3];
+
+IF (aDistanceBetweenProbes[1] <= aMaxLimitCalibrationBlock[1]) AND (aDistanceBetweenProbes[1] >= aMinLimitCalibrationBlock[1]) THEN
+	
+		nHeightMeasureStateValue[1] := 1;
+ELSE 
+		nHeightMeasureStateValue[1] := 2;
+END_IF
+
+IF (aDistanceBetweenProbes[2] <= aMaxLimitCalibrationBlock[2]) AND (aDistanceBetweenProbes[2] >= aMinLimitCalibrationBlock[2]) THEN
+	
+		nHeightMeasureStateValue[2] := 1;
+ELSE 
+		nHeightMeasureStateValue[2] := 2;
+END_IF
+
+IF (aDistanceBetweenProbes[3] <= aMaxLimitCalibrationBlock[3]) AND (aDistanceBetweenProbes[3] >= aMinLimitCalibrationBlock[3]) THEN
+	
+		nHeightMeasureStateValue[3] := 1;
+ELSE 
+		nHeightMeasureStateValue[3] := 2;
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_ScaleMinMax" Id="{c6383b02-bb9e-45e4-85ac-68840cd6851a}">
+      <Implementation>
+        <ST><![CDATA[//Current value SCALE
+IF aSensorCurrentValue[1] <> 0 THEN
+	
+	aScaledSensorCurrentValue[1]		:= aSensorCurrentValue[1]/10000;
+	
+ELSE aScaledSensorCurrentValue[1]		:= 0;
+
+END_IF
+
+IF aSensorCurrentValue[2] <> 0 THEN
+	
+	aScaledSensorCurrentValue[2]		:= aSensorCurrentValue[2]/10000;
+	
+ELSE aScaledSensorCurrentValue[2]		:= 0;
+
+END_IF
+
+IF aSensorCurrentValue[3] <> 0 THEN
+	
+	aScaledSensorCurrentValue[3]		:= aSensorCurrentValue[3]/10000;
+	
+ELSE aScaledSensorCurrentValue[3]		:= 0;
+
+END_IF
+
+IF aSensorCurrentValue[4] <> 0 THEN
+	
+	aScaledSensorCurrentValue[4]		:= aSensorCurrentValue[4]/10000;
+	
+ELSE aScaledSensorCurrentValue[4]		:= 0;
+
+END_IF
+
+aMaxLimitCalibrationBlock[1]			:= anDistanceSetPoint[1] + aTolerance[1];
+aMaxLimitCalibrationBlock[2]			:= anDistanceSetPoint[2] + aTolerance[2];
+aMaxLimitCalibrationBlock[3]			:= anDistanceSetPoint[3] + aTolerance[3];
+
+aMinLimitCalibrationBlock[1]			:= anDistanceSetPoint[1] - aTolerance[1];
+aMinLimitCalibrationBlock[2]			:= anDistanceSetPoint[2] - aTolerance[2];
+aMinLimitCalibrationBlock[3]			:= anDistanceSetPoint[3] - aTolerance[3];
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_SensorStuck" Id="{97d66adc-213d-4544-88ac-fa4ee0417671}">
+      <Implementation>
+        <ST><![CDATA[IF (anValueBeforeMeasurement[1] <= (aSensorCurrentValue[1] + 0.5)) AND (anValueBeforeMeasurement[1] >= (aSensorCurrentValue[1] - 0.5)) THEN
+		abSensorStuck[1]							:= TRUE;
+	END_IF
+
+IF (anValueBeforeMeasurement[2] <= (aSensorCurrentValue[2] + 0.5)) AND (anValueBeforeMeasurement[2] >= (aSensorCurrentValue[2] - 0.5)) THEN
+		abSensorStuck[2]							:= TRUE;
+	END_IF
+
+IF (anValueBeforeMeasurement[3] <= (aSensorCurrentValue[3] + 0.5)) AND (anValueBeforeMeasurement[3] >= (aSensorCurrentValue[3] - 0.5)) THEN
+		abSensorStuck[3]							:= TRUE;
+	END_IF
+
+IF (anValueBeforeMeasurement[4] <= (aSensorCurrentValue[4] + 0.5)) AND (anValueBeforeMeasurement[4] >= (aSensorCurrentValue[4] - 0.5)) THEN
+		abSensorStuck[4]							:= TRUE;
+	END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_SetPoints" Id="{f1eba2c3-d13a-4104-821d-56df975234b4}">
+      <Implementation>
+        <ST><![CDATA[IF bSetFixedPoints THEN
+	
+	nSensorSetPoint[1]						:= aScaledSensorCurrentValue[1];
+	nSensorSetPoint[2]						:= aScaledSensorCurrentValue[2];
+	nSensorSetPoint[3]						:= aScaledSensorCurrentValue[3];
+	nSensorSetPoint[4]						:= aScaledSensorCurrentValue[4];
+ELSE
+	
+	nFixedPoint[1]							:= nSensorSetPoint[1];
+	nFixedPoint[2]							:= nSensorSetPoint[2];
+	nFixedPoint[3]							:= nSensorSetPoint[3];
+	nFixedPoint[4]							:= nSensorSetPoint[4];
+
+
+
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_HeightMeasurement2">
+      <LineId Id="151" Count="2" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="314" Count="1" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="141" Count="1" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="144" Count="2" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="318" Count="1" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="105" Count="1" />
+      <LineId Id="128" Count="2" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="167" Count="1" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="170" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HeightMeasurement2.ACT_CalibrationBlockMethod">
+      <LineId Id="1" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HeightMeasurement2.ACT_ManualMode">
+      <LineId Id="2" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="13" Count="2" />
+      <LineId Id="24" Count="13" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HeightMeasurement2.ACT_ScaleMinMax">
+      <LineId Id="52" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="57" Count="2" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="61" Count="6" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="69" Count="6" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="77" Count="6" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="92" Count="1" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HeightMeasurement2.ACT_SensorStuck">
+      <LineId Id="2" Count="2" />
+      <LineId Id="9" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HeightMeasurement2.ACT_SetPoints">
+      <LineId Id="1" Count="1" />
+      <LineId Id="5" Count="3" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="14" Count="3" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

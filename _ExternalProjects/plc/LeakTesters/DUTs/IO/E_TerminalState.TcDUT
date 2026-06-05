@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="E_TerminalState" Id="{edb8c3af-f329-4daf-835f-820ce012d597}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_TerminalState :
+(
+	 INIT   := 0 ,
+     PREOP  := 2 ,
+     BOOT   := 3 ,
+     SAFEOP := 4 ,
+     OP     := 8 
+
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

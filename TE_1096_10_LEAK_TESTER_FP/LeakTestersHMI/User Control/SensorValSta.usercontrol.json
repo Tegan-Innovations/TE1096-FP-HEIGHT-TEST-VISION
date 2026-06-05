@@ -1,0 +1,58 @@
+{
+  "parameters": [
+    {
+      "name": "data-tchmi-stextdata",
+      "displayName": "sTextData",
+      "allowSymbolExpressionsInObject": false,
+      "visible": true,
+      "type": "tchmi:general#/definitions/String",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "sTextData",
+      "propertySetterName": "setSTextData",
+      "propertyGetterName": "getSTextData",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-breference",
+      "displayName": "bReference",
+      "allowSymbolExpressionsInObject": false,
+      "visible": true,
+      "type": "tchmi:general#/definitions/BOOL",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "bReference",
+      "propertySetterName": "setBReference",
+      "propertyGetterName": "getBReference",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-nstatus",
+      "displayName": "nStatus",
+      "allowSymbolExpressionsInObject": false,
+      "visible": true,
+      "type": "tchmi:general#/definitions/INT",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "nStatus",
+      "propertySetterName": "setNStatus",
+      "propertyGetterName": "getNStatus",
+      "refTo": ""
+    }
+  ],
+  "virtualRights": [],
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.760.59/runtimes/native1.12-tchmi/Schema/UserControlConfig.Schema.json",
+  "description": ""
+}

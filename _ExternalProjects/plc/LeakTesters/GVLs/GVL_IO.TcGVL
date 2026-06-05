@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <GVL Name="GVL_IO" Id="{cbdca183-ea0e-4e4b-b1b8-af58ef1ad05e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+    //--------------------------------------------------------------------------------------------------------
+
+    dwTerminalInfo                                          : ARRAY[0..20] OF  st_Terminal_Info; // all terminal's status information 
+	dwBoxInfo                                               : ARRAY[15..17] OF st_Box_Info;//Camera, Leak, Height
+	//--------------------------------------------------------------------------------------------------------
+	
+	(* Terminal *)
+	
+	//	dw_T01_EK1100                                                	| EtherCAT Coupler 
+	//	dw_T02_EL6070-0033                                           	| EtherCAT Terminal, license key for TwinCAT 3.1
+	
+	dw_T02_EL1809                                                		: st_EL1809; //16 Channel Digital Input ( 24VDC ) 
+	dw_T03_EL2809                                                		: st_EL2809; // 16 Channel Digital Output ( 24VDC )
+	//dw_T04_EL6631                                                	| EtherCAT Terminal, 2-port communication interface, PROFINET RT, controller - Data for Box's MDU1020 and SR2000W
+ 	//  dw_T05_EL9011                                                	| Bus end cover for E-bus contacts
+	dw_B06_IS2802M                                               		: st_IS2802M;
+	
+	dw_B07_i28General_I_O												: st_i28General_I_O;
+	dw_B07_i28LastResult												: st_i28LasResult;
+	dw_B07_i28LiveMeasurement											: st_i28LiveMeasurement;
+	
+	dw_B08_DL_PN1                                                		: ST_DL_PN1; // Keyence GT2 Position Sensors 
+	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

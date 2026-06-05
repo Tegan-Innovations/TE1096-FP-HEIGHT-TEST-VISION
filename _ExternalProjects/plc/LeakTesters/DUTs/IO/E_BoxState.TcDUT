@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="E_BoxState" Id="{940cebcd-d56d-42c2-bcd3-089135a08cb6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_BoxState :
+(
+	No_error                                                                     := 0,
+    Profinet_device_state_machine_is_in_boot_mode                                := 1,
+    Device_NOT_found                                                             := 2,
+    The_stationname_is_not_unique                                                := 3,
+    IP_could_not_be_set                                                          := 4,
+    IP_conflict                                                                  := 5,
+    DCP_set_was_not_successful                                                   := 6,
+    Watchdog_error                                                               := 7,
+    Datahold_error                                                               := 8,
+    RTC3_Sync_mode_could_NOT_be_initiated                                        := 9,
+    Profinet_controller_has_a_link_error                                         := 10,
+    The_aliasname_is_not_unique                                                  := 11,
+    The_automatic_name_assignement_isnt_possible_wrong_device_type               := 12,
+    IOC_AR_is_established_but_no_application_ready                               := 13,
+    IOC_AR_is_established_but_module_difference                                  := 14,
+    At_least_one_InputCR_is_invalid_provider_in_stop_OR_problemindicator_is_set  := 15,
+    At_least_one_OutputCR_is_invalid_provider_in_stop_OR_problemindicator_is_set := 16,
+    Only_for_EtherCAT_gateways_WC_State_OF_cyclic_EtherCAT_frame_is_1            := 31
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

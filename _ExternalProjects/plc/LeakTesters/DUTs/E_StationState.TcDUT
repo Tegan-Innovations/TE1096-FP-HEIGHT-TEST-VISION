@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="E_StationState" Id="{8f1e7d01-9d52-49b1-9877-3243d56a1736}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_StationState :
+(
+	RESETTING := 0,
+	PRE_ELIMINARY_CHECKS,
+	TRY_HOMING,
+	HOMING,
+	HOMING_DONE,
+	READY,
+	STARTING,
+	DWELL,
+	OPERATING,
+	
+//VALUES FOR UCB
+	
+//standard steps
+	ERROR,
+	COMPLETE
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

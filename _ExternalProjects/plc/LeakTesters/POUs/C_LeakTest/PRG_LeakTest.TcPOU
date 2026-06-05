@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_LeakTest" Id="{ca60b217-7945-4663-afa3-e825e25002a7}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_LeakTest
+VAR
+	
+		TonCaseDelay  		: ARRAY[1..10] OF Tc2_Standard.TON;
+		rtrigCaseTriger  	: ARRAY [1..10] OF Tc2_Standard.R_TRIG;
+		
+		bLeakTesterNoError	: BOOL;
+		uCurrentProgramID	: USINT;
+		uSetProgramID		: USINT;
+		bProgramAccepted	: BOOL;
+		bProgramRejected	: BOOL;
+		bInstrumentReady	: BOOL;
+		bStart				: BOOL;
+		bStop				: BOOL;
+		bClearErrorIns		: BOOL;
+		bTestActiveLiveData	: BOOL;
+		nLiveMeasID			: UDINT;
+		nLastMeasID			: UDINT;
+		bJobPass			: BOOL;
+		bJobFailed			: BOOL;
+		nConsParts			: INT;
+
+
+
+
+
+
+END_VAR
+VAR_IN_OUT
+	stStationStruct          : ST_StandardStationStruct;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_IOLink();
+ACT_TimTrig();
+
+(************** Station in Home Position **************************)
+stStationStruct.bStationHomed :=  (stStationStruct.nState = 1000);
+
+(******************************************************************)
+stStationStruct.bStationComplete := stStationStruct.nState = 1900;
+stStationStruct.bStationHomingRequest := stStationStruct.nState = 200;
+stStationStruct.bStationWaitOnRequest := stStationStruct.nState = 1000; 
+stStationStruct.bStationInitDone := stStationStruct.nState = 900;
+stStationStruct.bStationInProgressInit := stStationStruct.nState >= 200 AND stStationStruct.nState <= 900;
+stStationStruct.bStationInProgress :=  stStationStruct.nState > 1000 AND stStationStruct.nState < 1900;
+stStationStruct.bStationWaitOnInit := stStationStruct.nState = 100; 
+//stStationStruct.bStationAcknowledge := stStationStruct.nState = 200 OR stStationStruct.nState = 1100;
+stStationStruct.bStationNotMoving := stStationStruct.nState = 100 OR stStationStruct.nState = 1000 OR stStationStruct.nState = 1900;
+(******************************************************************)
+(***************** Counter *************)
+IF rtrigCaseTriger[1].Q THEN
+GVL_PERSIST.stPartsInspection.nLeakPartsGood:= GVL_PERSIST.stPartsInspection.nLeakPartsGood +1;
+GVL_PERSIST.stPartsInspection.nLeakTotalPartsGood := GVL_PERSIST.stPartsInspection.nLeakTotalPartsGood+1;
+ELSIF GVL_HMI_GLOBAL.bResetLeakGoodParts THEN
+GVL_PERSIST.stPartsInspection.nLeakPartsGood:=0;	
+END_IF
+
+
+IF rtrigCaseTriger[2].Q THEN
+	GVL_PERSIST.stPartsInspection.nLeakPartsFailed:=GVL_PERSIST.stPartsInspection.nLeakPartsFailed+1;
+	GVL_PERSIST.stPartsInspection.nLeakTotalPartsFailed:= GVL_PERSIST.stPartsInspection.nLeakTotalPartsFailed+1;
+ELSIF GVL_HMI_GLOBAL.bResetLeakBadParts THEN
+	GVL_PERSIST.stPartsInspection.nLeakPartsFailed:=0;
+END_IF
+
+
+bClearErrorIns := GVL_HMI_GLOBAL.bResetButton;
+
+(***************************************)
+
+IF rtrigCaseTriger[3].Q THEN
+	stStationStruct.nState := 100;
+END_IF
+
+(***************************************)
+
+
+CASE stStationStruct.nState OF
+100: 
+bStart							:= FALSE;
+IF stStationStruct.bStationInitRequest THEN
+	 stStationStruct.nState := 120;
+END_IF
+120:
+bClearErrorIns := TRUE;
+IF bClearErrorIns THEN
+	stStationStruct.nState := 160;
+END_IF
+160:
+IF tonCaseDelay[2].Q THEN
+	bClearErrorIns := FALSE;
+	stStationStruct.nState := 180;
+END_IF
+180: // Check if error 
+IF bLeakTesterNoError THEN
+	 stStationStruct.nState := 400;
+END_IF
+400:
+IF tonCaseDelay[1].Q THEN
+	stStationStruct.nState := 800;
+END_IF
+800:
+IF bInstrumentReady THEN
+	stStationStruct.nState := 900;
+END_IF
+900:
+IF stStationStruct.bStationAcknowledge THEN
+	stStationStruct.nState := 1000;
+END_IF
+
+1000: // Waiting for request 
+IF GVL_HMI_GLOBAL.bResetPassAndFail THEN
+	GVL_MASTER.stNest.bLeakPass 	:= FALSE;
+   GVL_MASTER.stNest.sLeakHMI 	:= "";
+   GVL_MASTER.stNest.bLeakReject := FALSE;
+END_IF
+
+IF stStationStruct.bStationRequest AND stStationStruct.bNoCycleStopRequest THEN
+   stStationStruct.nState := 1100;  
+ELSIF (stStationStruct.bStationManualRequestHMI OR GVL_MASTER.bManualModeTrigger) AND stStationStruct.bNoCycleStopRequest THEN
+   stStationStruct.nState := 4000; // Manual Mode
+ELSIF stStationStruct.bStationAbort THEN
+	   stStationStruct.nState := 100;	   
+END_IF
+1100: // Check Ready
+bStart						:= FALSE;
+GVL_MASTER.stNest.bLeakPass := FALSE;
+GVL_MASTER.stNest.sLeakHMI 	:= "";
+IF bInstrumentReady THEN
+	stStationStruct.nState := 1140; 
+ELSE
+	stStationStruct.nState := 100;
+END_IF
+1140://Check status of intrument
+IF bLeakTesterNoError THEN
+	stStationStruct.nState := 1200;
+END_IF
+1200: 
+bStart := TRUE;
+IF  tonCaseDelay[3].Q THEN
+	stStationStruct.nState := 1220;
+END_IF
+1220:
+bStart := FALSE;
+IF  NOT bTestActiveLiveData THEN
+	stStationStruct.nState := 1280;
+END_IF
+
+
+1280: // JOB PASS / JOB FAIL
+IF bJobPass  THEN
+	GVL_MASTER.stNest.bLeakPass := TRUE;
+	GVL_MASTER.stNest.sLeakHMI 	:= "Pass";
+	GVL_MASTER.stNest.bLeakReject := FALSE;
+   	stStationStruct.nState := 1900;
+ELSIF bJobFailed  THEN
+   stStationStruct.nState := 1900;
+   GVL_MASTER.stNest.bLeakPass := FALSE;
+   GVL_MASTER.stNest.sLeakHMI 	:= "Fail";
+   GVL_MASTER.stNest.bLeakReject := TRUE;
+END_IF
+
+1900:
+IF (tonCaseDelay[4].Q AND NOT stStationStruct.bStationManualRequestHMI) OR stStationStruct.bNoCycleStopRequest THEN
+	stStationStruct.nState := 1000;
+ELSIF tonCaseDelay[4].Q AND stStationStruct.bStationManualRequestHMI THEN
+	stStationStruct.nState := 4000;
+ELSIF stStationStruct.bStationAbort AND tonCaseDelay[2].Q THEN
+	stStationStruct.nState := 100;
+
+END_IF
+//=== Manual Mode ===
+4000:
+IF NOT stStationStruct.bStationManualRequestHMI AND NOT GVL_MASTER.bManualModeTrigger THEN
+	stStationStruct.nState := 1000;
+ELSIF stStationStruct.bStationAbort THEN
+	   stStationStruct.nState := 100;	
+END_IF
+IF GVL_HMI_GLOBAL.bStartLeakMan THEN
+	
+	bStart 						:= TRUE;
+ELSIF GVL_HMI_GLOBAL.bStopLeakMan THEN
+	
+	bStop						:= TRUE;
+
+ELSE 
+	bStart						:= FALSE;
+	bStop						:= FALSE;
+END_IF
+ACT_ChangeJOB();
+
+9000:
+
+bClearErrorIns 					:= FALSE;
+bStart							:= FALSE;
+GVL_MASTER.stNest.bLeakPass 	:= FALSE;
+
+
+stStationStruct.nState := 9100;	
+9100:
+IF tonCaseDelay[5].Q THEN
+	stStationStruct.nState := 9200;
+END_IF
+9200:
+bClearErrorIns := TRUE;
+IF tonCaseDelay[6].Q THEN
+	stStationStruct.nState := 9300;
+END_IF
+9300: 
+IF bLeakTesterNoError THEN
+   stStationStruct.nState := 1000;
+END_IF
+
+	
+END_CASE
+
+IF NOT bLeakTesterNoError AND NOT stStationStruct.nState >= 9000 THEN
+stStationStruct.nState := 9000;
+END_IF
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_ChangeJob" Id="{494ca92e-ad72-4a7d-bd32-ec62131c021e}">
+      <Implementation>
+        <ST><![CDATA[	
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[0] := GVL_HMI_GLOBAL.uNewLeakProgID.0;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[1] := GVL_HMI_GLOBAL.uNewLeakProgID.1;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[2] := GVL_HMI_GLOBAL.uNewLeakProgID.2;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[3] := GVL_HMI_GLOBAL.uNewLeakProgID.3;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[4] := GVL_HMI_GLOBAL.uNewLeakProgID.4;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[5] := GVL_HMI_GLOBAL.uNewLeakProgID.5;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[6] := GVL_HMI_GLOBAL.uNewLeakProgID.6;
+GVL_IO.dw_B07_i28General_I_O.bSetProgram[7] := GVL_HMI_GLOBAL.uNewLeakProgID.7;
+
+
+IF GVL_HMI_GLOBAL.bSetLeakProgramID THEN 
+	
+		uSetProgramID := GVL_HMI_GLOBAL.uNewLeakProgID;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_IOLINK" Id="{1282d683-e9e9-4e71-b9a9-8e6f5d3182f8}">
+      <Implementation>
+        <ST><![CDATA[
+
+bLeakTesterNoError				:= NOT GVL_IO.dw_B07_i28General_I_O.bMalfunction;
+uCurrentProgramID				:= GVL_IO.dw_B07_i28General_I_O.nCurrentProgramNumber;
+bProgramAccepted				:= GVL_IO.dw_B07_i28General_I_O.bProgramAccept;
+bInstrumentReady				:= GVL_IO.dw_B07_i28General_I_O.bInstrumentReady;
+bProgramRejected				:= GVL_IO.dw_B07_i28General_I_O.bProgramReject;
+bTestActiveLiveData				:= GVL_IO.dw_B07_i28General_I_O.bTestActiveLiveData;
+nLiveMeasID						:= GVL_IO.dw_B07_i28LiveMeasurement.inUniqueID;
+nLastMeasID						:= GVL_IO.dw_B07_i28LastResult.inUniqueID;
+bJobPass						:= GVL_IO.dw_B07_i28General_I_O.bProgramAccept;
+bJobFailed						:= GVL_IO.dw_B07_i28General_I_O.bProgramReject;
+
+
+
+GVL_IO.dw_B07_i28General_I_O.bStart 			:= bStart;
+GVL_IO.dw_B07_i28General_I_O.bStop				:= bStop;
+GVL_IO.dw_B07_i28General_I_O.bChangeProgram := GVL_HMI_GLOBAL.bSetLeakProgramID;
+GVL_IO.dw_B07_i28General_I_O.bReset := bClearErrorIns OR GVL_HMI_GLOBAL.bResetLeakMan;
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_TimTrig" Id="{340a25b8-0736-4ab3-be38-8c1db7f00260}">
+      <Implementation>
+        <ST><![CDATA[
+
+tonCaseDelay[1](IN:= (stStationStruct.nState=400),PT:=T#50MS);
+tonCaseDelay[2](IN:= (stStationStruct.nState=160),PT:=T#50MS);
+tonCaseDelay[3](IN:= (stStationStruct.nState=1200),PT:=T#10S);
+tonCaseDelay[4](IN:= (stStationStruct.nState=1900),PT:=T#1S);
+tonCaseDelay[5](IN:= (stStationStruct.nState=9100),PT:=T#200MS);
+tonCaseDelay[6](IN:= (stStationStruct.nState=9200),PT:=T#250MS);
+tonCaseDelay[7](IN:= ,PT:=T#500MS);
+
+
+
+rtrigCaseTriger[1](clk:= (stStationStruct.nState=1900) AND bJobPass);
+rtrigCaseTriger[2](clk:= (stStationStruct.nState=1900) AND bJobFailed);
+rtrigCaseTriger[3](clk:= stStationStruct.bStationAbort);
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="PRG_LeakTest">
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="30" />
+      <LineId Id="481" Count="0" />
+      <LineId Id="39" Count="13" />
+      <LineId Id="728" Count="0" />
+      <LineId Id="53" Count="2" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="395" Count="2" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="399" Count="3" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="74" Count="3" />
+      <LineId Id="403" Count="0" />
+      <LineId Id="405" Count="1" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="78" Count="3" />
+      <LineId Id="407" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="649" Count="0" />
+      <LineId Id="653" Count="1" />
+      <LineId Id="652" Count="0" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="90" Count="6" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="443" Count="0" />
+      <LineId Id="584" Count="0" />
+      <LineId Id="120" Count="3" />
+      <LineId Id="125" Count="3" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="138" Count="4" />
+      <LineId Id="433" Count="0" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="435" Count="1" />
+      <LineId Id="434" Count="0" />
+      <LineId Id="152" Count="3" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="582" Count="0" />
+      <LineId Id="517" Count="0" />
+      <LineId Id="158" Count="1" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="583" Count="0" />
+      <LineId Id="518" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="550" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="247" Count="1" />
+      <LineId Id="447" Count="1" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="446" Count="0" />
+      <LineId Id="251" Count="4" />
+      <LineId Id="688" Count="0" />
+      <LineId Id="687" Count="0" />
+      <LineId Id="256" Count="1" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="685" Count="0" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="693" Count="2" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="696" Count="1" />
+      <LineId Id="686" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="322" Count="3" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="327" Count="1" />
+      <LineId Id="334" Count="13" />
+      <LineId Id="350" Count="9" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_LeakTest.ACT_ChangeJob">
+      <LineId Id="18" Count="7" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="3" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_LeakTest.ACT_IOLINK">
+      <LineId Id="2" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_LeakTest.ACT_TimTrig">
+      <LineId Id="3" Count="1" />
+      <LineId Id="1" Count="1" />
+      <LineId Id="5" Count="3" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

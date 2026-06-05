@@ -1,0 +1,672 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_MasterCycle" Id="{b14bd733-545d-49f3-8554-8f69ba8d0550}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_MasterCycle
+VAR
+	
+		tonCaseTimDelay    	: ARRAY [1..20] OF Tc2_Standard.TON;
+	    rtrigCaseTriger    	: ARRAY [1..10] OF Tc2_Standard.R_TRIG;
+		ftrigCaseTriger		: ARRAY [1..10] OF Tc2_Standard.F_TRIG;
+	   	rtrigFaultMachine  	: Tc2_Standard.R_TRIG;	
+		
+		biClamp				: BOOL;
+		biPartPresent		: BOOL;
+		
+
+
+		bAutoCycleStop		: BOOL;
+		
+		bCycleFlag			: BOOL;
+		bGreenLED			: BOOL;
+		bRedLED				: BOOL;
+		bEndCycleFlag		: BOOL;
+		bStationsStopped	: BOOL;
+		bHeighTestCompleteFlag : BOOL;
+		bLeakTestCompleteFlag : BOOL;
+		i					: DINT;
+		
+		
+
+
+END_VAR
+VAR_IN_OUT
+	stStationStruct          : ST_StandardStationStruct;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_LinkIO();
+ACT_TimTrig();
+stStationStruct.bStationInProgress := stStationStruct.nState>=1100 AND stStationStruct.nState<=1600;
+
+IF stStationStruct.nState <700 OR  stStationStruct.nState > 4000 THEN
+	GVL_HMI_GLOBAL.sActualProcess := ""; 
+	GVL_MASTER.stNest.bPiecePass 	:= FALSE;
+	GVL_MASTER.stNest.bPieceReject 	:= FALSE;
+	bGreenLED						:= FALSE;
+	bRedLED							:= FALSE;
+	GVL_MASTER.stNest.bHeightPass 	:= FALSE;
+	GVL_MASTER.stNest.bLeakPass 	:= FALSE;
+	GVL_MASTER.stNest.bVisionPass 	:= FALSE;
+	GVL_MASTER.stNest.bHeightReject := FALSE;
+	GVL_MASTER.stNest.bLeakReject	:= FALSE;
+	GVL_MASTER.stNest.bVisionReject := FALSE;
+END_IF
+
+IF rtrigCaseTriger[3].Q THEN
+GVL_PERSIST.stPartsInspection.nPartsGood:= GVL_PERSIST.stPartsInspection.nPartsGood +1;
+GVL_PERSIST.stPartsInspection.nTotalPartsGood := GVL_PERSIST.stPartsInspection.nTotalPartsGood+1;
+ELSIF GVL_HMI_GLOBAL.bResetGoodParts THEN
+GVL_PERSIST.stPartsInspection.nPartsGood:=0;	
+END_IF
+
+
+IF rtrigCaseTriger[4].Q THEN
+	GVL_PERSIST.stPartsInspection.nPartsFailed:=GVL_PERSIST.stPartsInspection.nPartsFailed+1;
+	GVL_PERSIST.stPartsInspection.nTotalPartsFailed:= GVL_PERSIST.stPartsInspection.nTotalPartsFailed+1;
+ELSIF GVL_HMI_GLOBAL.bResetFailedParts THEN
+	GVL_PERSIST.stPartsInspection.nPartsFailed:=0;
+END_IF
+
+IF stStationStruct.nState < 700 THEN
+	 GVL_HMI_GLOBAL.sMessageToOperator := "Press Reset Button to Home Machine";
+END_IF
+
+CASE stStationStruct.nState OF
+	
+100: 
+   bAutoCycleStop := FALSE;
+IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp THEN
+	stStationStruct.nState := 200;
+END_IF
+200:
+IF GVL_MASTER.stMachineStatus.bSystemInitialising THEN
+	stStationStruct.nState := 300;
+END_IF
+300:
+   GVL_Master.stStationSruct[1].bStationInitRequest := TRUE;
+   GVL_Master.stStationSruct[2].bStationInitRequest := TRUE;
+   GVL_Master.stStationSruct[3].bStationInitRequest := TRUE;
+   
+IF GVL_Master.stStationSruct[1].bStationInitRequest AND GVL_Master.stStationSruct[2].bStationInitRequest AND
+   GVL_Master.stStationSruct[3].bStationInitRequest  THEN
+	stStationStruct.nState := 400;
+END_IF
+400:
+IF NOT GVL_Master.stStationSruct[1].bStationInitRequest AND NOT GVL_Master.stStationSruct[2].bStationInitRequest AND
+   NOT GVL_Master.stStationSruct[3].bStationInitRequest THEN
+	stStationStruct.nState := 500;   
+END_IF 
+500:
+   GVL_Master.stStationSruct[1].bStationAcknowledge := TRUE;
+   GVL_Master.stStationSruct[2].bStationAcknowledge := TRUE;
+   GVL_Master.stStationSruct[3].bStationAcknowledge := TRUE;
+IF   GVL_Master.stStationSruct[1].bStationAcknowledge AND  GVL_Master.stStationSruct[2].bStationAcknowledge AND
+     GVL_Master.stStationSruct[3].bStationAcknowledge THEN
+     stStationStruct.nState := 600;
+END_IF
+600:
+IF GVL_Master.stStationSruct[1].bStationHomed AND GVL_Master.stStationSruct[2].bStationHomed AND GVL_Master.stStationSruct[3].bStationHomed  THEN
+   GVL_Master.stStationSruct[1].bStationAcknowledge := FALSE;
+   GVL_Master.stStationSruct[2].bStationAcknowledge := FALSE;
+   GVL_Master.stStationSruct[3].bStationAcknowledge := FALSE;
+   stStationStruct.nState := 700;
+END_IF
+700: // All Station Homed and waiting for Autocycle 
+   bAutoCycleStop := FALSE;
+   GVL_HMI_GLOBAL.sActualProcess := "Waiting for Autocycle";
+   IF GVL_MASTER.stMachineStatus.bSystemReadyToStart THEN 
+	  GVL_HMI_GLOBAL.sMessageToOperator := "Press Start Button to Autocycle";
+   ELSE GVL_HMI_GLOBAL.sMessageToOperator := "Press Reset Button to Reset machine";
+   END_IF
+   
+IF GVL_Master.stMachineStatus.bSystemAutoCycle THEN
+	stStationStruct.nState := 800;
+ELSIF GVL_Master.stMachineStatus.bManualMode THEN
+      stStationStruct.nState := 4000;
+ELSIF GVL_Master.stMachineStatus.bSystemStopping AND NOT bStationsStopped  THEN
+      stStationStruct.nState := 5000;
+ELSIF GVL_Master.stMachineStatus.bCycleStopFault OR GVL_Master.stMachineStatus.bImmediateFault THEN
+      stStationStruct.nState := 6000;	  
+END_IF
+
+IF tonCaseTimDelay[9].Q THEN
+	stStationStruct.nState := 1000;
+END_IF
+800:
+stStationStruct.nState := 1000;
+1000: // System Autocycle
+
+IF biPartPresent THEN
+	GVL_HMI_GLOBAL.sMessageToOperator := "Remove Nest";
+ELSE GVL_HMI_GLOBAL.sMessageToOperator := "Insert Nest to begin process";
+END_IF
+
+
+IF  rtrigCaseTriger [5].Q  AND NOT bEndCycleFlag THEN
+	GVL_MASTER.stNest.bHeightPass 	:= FALSE;
+	GVL_MASTER.stNest.bLeakPass 	:= FALSE;
+	GVL_MASTER.stNest.bVisionPass 	:= FALSE;
+	GVL_MASTER.stNest.bHeightReject := FALSE;
+	GVL_MASTER.stNest.bLeakReject	:= FALSE;
+	GVL_MASTER.stNest.bVisionReject := FALSE;
+	GVL_MASTER.stNest.bPiecePass 	:= FALSE;
+	GVL_MASTER.stNest.bPieceReject 	:= FALSE;
+	GVL_MASTER.stNest.bNestPartProced := FALSE;
+	GVL_MASTER.stNest.sHeightHMI 	:= "";
+	GVL_MASTER.stNest.sLeakHMI 		:= "";
+	GVL_MASTER.stNest.sVisionHMI 	:= "";
+	GVL_MASTER.stNest.sPieceHMI 	:= "";
+	bCycleFlag						:= TRUE;
+	GVL_HMI_GLOBAL.sMessageToOperator := "Process in progress";
+	GVL_HMI_GLOBAL.bResetPassAndFail:= TRUE;
+	GVL_HMI_GLOBAL.sActualProcess := "";
+	bGreenLED						:= FALSE;
+	bRedLED							:= FALSE;
+	GVL_HMI_GLOBAL.bRejectPieceAcknowledge := FALSE;
+	stStationStruct.nState 			:= 1130;
+	
+ELSIF GVL_Master.stMachineStatus.bSystemStopping  THEN
+      stStationStruct.nState := 5000;
+ELSIF tonCaseTimDelay[10].Q THEN
+	  bAutoCycleStop := TRUE;
+      stStationStruct.nState := 5000;	
+END_IF
+1130:
+IF tonCaseTimDelay[13].Q THEN
+	GVL_HMI_GLOBAL.bResetPassAndFail:= FALSE;
+	stStationStruct.nState 			:= 1132;
+END_IF
+
+
+//Vision Test
+1132: 
+	GVL_MASTER.anValueBeforeMeasurement := GVL_MASTER.aSensorCurrentValue;
+	GVL_HMI_GLOBAL.sActualProcess := "Vision process"; 
+	GVL_Master.stStationSruct[3].bStationRequest := TRUE;
+	stStationStruct.nState := 1134;
+1134:
+IF GVL_Master.stStationSruct[3].bStationInProgress THEN
+	stStationStruct.nState := 1136;
+END_IF
+1136:
+IF GVL_Master.stStationSruct[3].bStationComplete AND NOT GVL_Master.stMachineStatus.bSystemStopping THEN
+	stStationStruct.nState := 1138;
+ELSIF GVL_Master.stMachineStatus.bSystemStopping OR ftrigCaseTriger [1].Q THEN
+	stStationStruct.nState := 5000;
+END_IF
+1138:
+GVL_HMI_GLOBAL.sMessageToOperator := "Toggle Clamp to continue the process";
+IF rtrigCaseTriger [1].Q  THEN
+	stStationStruct.nState := 1142;
+ELSIF GVL_Master.stMachineStatus.bSystemStopping  THEN
+      stStationStruct.nState := 5000;
+ELSIF tonCaseTimDelay[10].Q THEN
+	  bAutoCycleStop := TRUE;
+      stStationStruct.nState := 5000;	
+
+END_IF
+//Leak test
+1142: 
+	GVL_HMI_GLOBAL.sMessageToOperator := "Process in progress";
+	GVL_HMI_GLOBAL.sActualProcess := "Leak And Height test process"; 
+	GVL_Master.stStationSruct[2].bStationRequest := TRUE;
+	GVL_Master.stStationSruct[1].bStationRequest := TRUE;
+	stStationStruct.nState := 1144;
+1144:
+IF GVL_Master.stStationSruct[2].bStationInProgress AND GVL_Master.stStationSruct[1].bStationInProgress THEN
+	stStationStruct.nState := 1146;
+END_IF
+1146:
+IF GVL_Master.stStationSruct[2].bStationComplete THEN
+	bHeighTestCompleteFlag := TRUE;
+END_IF
+IF GVL_Master.stStationSruct[1].bStationComplete THEN
+	bLeakTestCompleteFlag := TRUE;
+END_IF
+
+IF bHeighTestCompleteFlag AND bLeakTestCompleteFlag AND NOT GVL_Master.stMachineStatus.bSystemStopping THEN
+	stStationStruct.nState := 1152;
+	GVL_MASTER.bHeightTestacknowledge := TRUE;
+ELSIF GVL_Master.stMachineStatus.bSystemStopping THEN
+	stStationStruct.nState := 5000;
+END_IF
+
+1152: 
+	GVL_MASTER.stNest.bNestPartProced 	:= TRUE;
+	bHeighTestCompleteFlag				:= FALSE;
+	bLeakTestCompleteFlag				:= FALSE;
+IF tonCaseTimDelay[12].Q THEN
+	GVL_MASTER.bHeightTestacknowledge := FALSE;
+	stStationStruct.nState := 1220;
+END_IF
+	
+1220:
+IF GVL_MASTER.stNest.bHeightPass AND GVL_MASTER.stNest.bLeakPass AND GVL_MASTER.stNest.bVisionPass THEN
+	GVL_MASTER.stNest.bPiecePass 	:= TRUE;
+	GVL_MASTER.stNest.bPieceReject 	:= FALSE;
+	GVL_MASTER.stNest.sPieceHMI 	:= "Pass";
+	bGreenLED						:= TRUE;
+	bRedLED							:= FALSE;
+ELSE GVL_MASTER.stNest.bNestPartOK := FALSE;
+	GVL_MASTER.stNest.sPieceHMI 	:= "Fail";
+	GVL_MASTER.stNest.bPiecePass 	:= FALSE;
+	GVL_MASTER.stNest.bPieceReject 	:= TRUE;
+	bGreenLED						:= FALSE;
+	bRedLED							:= TRUE;
+END_IF
+GVL_MASTER.stNest.sDate := GVL_HMI_GLOBAL.sSystemDate;
+GVL_MASTER.stNest.sTime := GVL_HMI_GLOBAL.sSystemTime;
+
+IF rtrigCaseTriger [8].Q THEN	
+	
+	FOR i :=200 TO 2 BY (-1) DO
+		GVL_HMI_GLOBAL.aStatistics[i]	:= GVL_HMI_GLOBAL.aStatistics[i-1];
+	END_FOR
+	
+	GVL_HMI_GLOBAL.aStatistics[1] := GVL_MASTER.stNest;
+END_IF
+
+IF tonCaseTimDelay[11].Q THEN
+	stStationStruct.nState := 1500;
+END_IF
+
+1500:
+IF GVL_Master.stStationSruct[1].bStationNotMoving AND GVL_Master.stStationSruct[2].bStationNotMoving AND GVL_Master.stStationSruct[3].bStationNotMoving THEN
+	stStationStruct.nState := 1550;
+END_IF
+1550:
+IF  GVL_MASTER.stNest.bPiecePass THEN	
+	stStationStruct.nState := 1600;
+ELSIF  GVL_MASTER.stNest.bPieceReject AND GVL_HMI_GLOBAL.bRejectPieceAcknowledge THEN
+	stStationStruct.nState := 1600;
+END_IF
+
+1600:
+GVL_HMI_GLOBAL.sMessageToOperator 				:= "Cycle Complete";   // **LAA 17092025
+bEndCycleFlag	:= TRUE;
+IF NOT GVL_MASTER.stMachineStatus.bSystemStopping  THEN 
+	stStationStruct.nState := 1700;
+ELSE 
+    stStationStruct.nState := 5000;	
+END_IF
+1700:
+GVL_HMI_GLOBAL.sMessageToOperator 				:= "Release Clamp";    // **LAA 17092025
+IF rtrigCaseTriger [7].Q  THEN 
+	stStationStruct.nState := 1000; 
+END_IF
+
+4000: 
+IF NOT GVL_MASTER.stMachineStatus.bManualMode THEN
+	stStationStruct.nState := 700;	
+ELSIF GVL_MASTER.stMachineStatus.bCycleStopFault OR GVL_MASTER.stMachineStatus.bImmediateFault THEN
+      stStationStruct.nState := 6000;		
+END_IF
+
+//stopping
+5000:
+	GVL_Master.stStationSruct[1].bNoCycleStopRequest := FALSE;
+    GVL_Master.stStationSruct[2].bNoCycleStopRequest := FALSE;
+	GVL_Master.stStationSruct[3].bNoCycleStopRequest := FALSE;
+	
+
+IF tonCaseTimDelay[6].Q AND (GVL_Master.stStationSruct[1].nState = 1000) AND (GVL_Master.stStationSruct[2].nState = 1000) 
+                        AND (GVL_Master.stStationSruct[3].nState = 1000) THEN
+	bAutoCycleStop := FALSE;
+	
+	stStationStruct.nState := 700;
+
+	
+END_IF
+
+6000:
+IF tonCaseTimDelay[1].Q THEN
+	GVL_Master.stStationSruct[1].bStationInitRequest := FALSE;
+	GVL_Master.stStationSruct[2].bStationInitRequest := FALSE;
+	GVL_Master.stStationSruct[3].bStationInitRequest := FALSE;
+	GVL_Master.stStationSruct[1].bStationRequest := FALSE;
+	GVL_Master.stStationSruct[2].bStationRequest := FALSE;
+    GVL_Master.stStationSruct[3].bStationRequest := FALSE;
+	GVL_Master.stStationSruct[1].bStationAbort := TRUE;
+    GVL_Master.stStationSruct[2].bStationAbort := TRUE;
+	GVL_Master.stStationSruct[3].bStationAbort := TRUE;
+	stStationStruct.nState := 100;
+END_IF
+
+
+END_CASE
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+IF rtrigFaultMachine.Q THEN
+   stStationStruct.nState := 6000;	  
+END_IF
+
+IF  (stStationStruct.nState = 4000) OR (stStationStruct.nState = 5000) OR (stStationStruct.nState = 6000) THEN
+   GVL_Master.stStationSruct[1].bStationAcknowledge := FALSE;
+   GVL_Master.stStationSruct[2].bStationAcknowledge := FALSE;
+   GVL_Master.stStationSruct[3].bStationAcknowledge := FALSE;
+   GVL_Master.stStationSruct[1].bStationInitRequest := FALSE;
+   GVL_Master.stStationSruct[2].bStationInitRequest := FALSE;
+   GVL_Master.stStationSruct[3].bStationInitRequest := FALSE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_LinkIO" Id="{06593384-a51e-4e83-9963-7bd33731aa41}">
+      <Implementation>
+        <ST><![CDATA[// Initialisation Progres
+IF GVL_Master.stStationSruct[1].bStationInProgressInit THEN
+	GVL_Master.stStationSruct[1].bStationInitRequest := FALSE;
+END_IF
+IF GVL_Master.stStationSruct[2].bStationInProgressInit THEN
+	GVL_Master.stStationSruct[2].bStationInitRequest := FALSE;
+END_IF
+IF GVL_Master.stStationSruct[3].bStationInProgressInit THEN
+	GVL_Master.stStationSruct[3].bStationInitRequest := FALSE;
+END_IF
+
+// Cycle Progres
+IF GVL_Master.stStationSruct[1].bStationInProgress THEN
+	GVL_Master.stStationSruct[1].bStationRequest := FALSE;
+END_IF
+IF GVL_Master.stStationSruct[2].bStationInProgress THEN
+	GVL_Master.stStationSruct[2].bStationRequest := FALSE;
+END_IF
+IF GVL_Master.stStationSruct[3].bStationInProgress THEN
+	GVL_Master.stStationSruct[3].bStationRequest := FALSE;
+END_IF
+
+// Abort Station
+IF GVL_Master.stStationSruct[1].nState = 100 THEN
+	GVL_Master.stStationSruct[1].bStationAbort := FALSE;
+END_IF
+IF GVL_Master.stStationSruct[2].nState = 100 THEN	
+    GVL_Master.stStationSruct[2].bStationAbort := FALSE;
+END_IF	
+IF GVL_Master.stStationSruct[3].nState = 100 THEN
+	GVL_Master.stStationSruct[3].bStationAbort := FALSE;
+END_IF
+
+IF (GVL_Master.stStationSruct[1].nState = 100) OR (GVL_Master.stStationSruct[1].nState = 1000) THEN
+	GVL_Master.stStationSruct[1].bNoCycleStopRequest := TRUE;
+END_IF
+IF (GVL_Master.stStationSruct[2].nState = 100) OR (GVL_Master.stStationSruct[2].nState = 1000) THEN	
+    GVL_Master.stStationSruct[2].bNoCycleStopRequest := TRUE;
+END_IF
+IF (GVL_Master.stStationSruct[3].nState = 100) OR (GVL_Master.stStationSruct[3].nState = 1000) THEN	
+	GVL_Master.stStationSruct[3].bNoCycleStopRequest := TRUE;
+END_IF
+
+IF  (GVL_Master.stStationSruct[1].nState = 1000) AND (GVL_Master.stStationSruct[2].nState = 1000) 
+                        AND (GVL_Master.stStationSruct[3].nState = 1000) THEN
+	bStationsStopped := TRUE;
+ELSE bStationsStopped := FALSE;
+
+END_IF
+
+GVL_MASTER.stMasterControl.bAllStationsCycledStopped := (GVL_Master.stStationSruct[1].nState = 1000) AND (GVL_Master.stStationSruct[2].nState = 1000) 
+                                         AND (GVL_Master.stStationSruct[3].nState = 1000)
+										 AND  stStationStruct.nState=700;
+										 
+	biClamp									:= GVL_IO.dw_T02_EL1809.iCalmpClosed;
+	biPartPresent							:=  GVL_IO.dw_T02_EL1809.iPartPresent;
+	GVL_MASTER.stNest.bNestPresent			:= GVL_IO.dw_T02_EL1809.iCalmpClosed;
+	GVL_IO.dw_T03_EL2809.qPassIndicatorGreen:= bGreenLED;
+	GVL_IO.dw_T03_EL2809.qRejectIndicatorRed:= bRedLED;
+	
+IF ftrigCaseTriger[1].Q THEN
+	bEndCycleFlag							:= FALSE;
+END_IF
+	
+GVL_MASTER.aSensorCurrentValue[1] 					:= GVL_IO.dw_B08_DL_PN1.gt2_1_1CurrentValue;
+GVL_MASTER.aSensorCurrentValue[2] 					:= GVL_IO.dw_B08_DL_PN1.gt2_1_2CurrentValue;
+GVL_MASTER.aSensorCurrentValue[3] 					:= GVL_IO.dw_B08_DL_PN1.gt2_1_3CurrentValue;
+GVL_MASTER.aSensorCurrentValue[4] 					:= GVL_IO.dw_B08_DL_PN1.gt2_2CurrentValue;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_TimTrig" Id="{f0836fdf-c0d8-40ee-b7c7-a5b5ff4f0cd6}">
+      <Implementation>
+        <ST><![CDATA[tonCaseTimDelay[1](IN:= (stStationStruct.nState = 6000),PT:=T#100MS); //
+tonCaseTimDelay[2](IN:= (stStationStruct.nState = 5000),PT:=T#100MS); //
+tonCaseTimDelay[3](IN:= (stStationStruct.nState = 1100),PT:=T#40MS);  //
+tonCaseTimDelay[4](IN:= (stStationStruct.nState = 1140),PT:=T#250MS);
+tonCaseTimDelay[5](IN:= (stStationStruct.nState = 1900),PT:=T#250MS);
+tonCaseTimDelay[6](IN:= (stStationStruct.nState = 5000),PT:=T#250MS);
+tonCaseTimDelay[7](IN:= (stStationStruct.nState = 1340),PT:=T#200MS);
+tonCaseTimDelay[8](IN:= (stStationStruct.nState = 1320),PT:=T#500MS);
+tonCaseTimDelay[9](IN:= (stStationStruct.nState = 800),PT:=T#3S);
+tonCaseTimDelay[10](IN:= (stStationStruct.nState = 1000),PT:=T#10M);
+tonCaseTimDelay[11](IN:= (stStationStruct.nState = 1220),PT:=T#1S);
+tonCaseTimDelay[12](IN:= stStationStruct.nState = 1152,PT:=T#1S );
+tonCaseTimDelay[13](IN:=(stStationStruct.nState = 1130),PT:=T#1S );
+tonCaseTimDelay[14](IN:=,PT:=T#1S);
+tonCaseTimDelay[15](IN:= );
+tonCaseTimDelay[16](IN:= );
+tonCaseTimDelay[17](IN:= );
+tonCaseTimDelay[18](IN:= );
+tonCaseTimDelay[19](IN:= );
+tonCaseTimDelay[20](IN:= );
+
+rtrigCaseTriger [1](CLK:= biClamp);
+rtrigCaseTriger [2](CLK:= tonCaseTimDelay[2].Q);
+rtrigCaseTriger [3](CLK:= GVL_MASTER.stNest.bPiecePass);
+rtrigCaseTriger [4](CLK:= GVL_MASTER.stNest.bPieceReject);
+rtrigCaseTriger [5](CLK:= biPartPresent );
+rtrigCaseTriger [6](CLK:= );
+rtrigCaseTriger [7](CLK:= NOT biClamp);  // **LAA 17092025);
+rtrigCaseTriger [8](CLK:= stStationStruct.nState = 1220);
+rtrigCaseTriger [9](CLK:= );
+rtrigCaseTriger [10](CLK:= );
+rtrigFaultMachine(CLK:= GVL_MASTER.stMachineStatus.bCycleStopFault OR GVL_MASTER.stMachineStatus.bImmediateFault);
+
+ftrigCaseTriger [1](CLK:= biPartPresent );
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="PRG_MasterCycle">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="363" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="592" Count="1" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="591" Count="0" />
+      <LineId Id="601" Count="1" />
+      <LineId Id="600" Count="0" />
+      <LineId Id="607" Count="1" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="387" Count="13" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="428" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="36" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="50" Count="2" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="53" Count="3" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="58" Count="3" />
+      <LineId Id="63" Count="3" />
+      <LineId Id="73" Count="4" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="779" Count="1" />
+      <LineId Id="783" Count="0" />
+      <LineId Id="781" Count="0" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="84" Count="2" />
+      <LineId Id="613" Count="1" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="661" Count="1" />
+      <LineId Id="664" Count="0" />
+      <LineId Id="663" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="432" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="257" Count="1" />
+      <LineId Id="603" Count="2" />
+      <LineId Id="404" Count="1" />
+      <LineId Id="684" Count="0" />
+      <LineId Id="348" Count="3" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="549" Count="0" />
+      <LineId Id="579" Count="0" />
+      <LineId Id="586" Count="1" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="659" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="103" Count="4" />
+      <LineId Id="489" Count="0" />
+      <LineId Id="550" Count="0" />
+      <LineId Id="553" Count="1" />
+      <LineId Id="556" Count="0" />
+      <LineId Id="555" Count="0" />
+      <LineId Id="552" Count="0" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="490" Count="1" />
+      <LineId Id="814" Count="0" />
+      <LineId Id="492" Count="9" />
+      <LineId Id="609" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="816" Count="0" />
+      <LineId Id="820" Count="0" />
+      <LineId Id="817" Count="1" />
+      <LineId Id="852" Count="4" />
+      <LineId Id="890" Count="0" />
+      <LineId Id="819" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="665" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="668" Count="0" />
+      <LineId Id="153" Count="6" />
+      <LineId Id="676" Count="0" />
+      <LineId Id="675" Count="0" />
+      <LineId Id="679" Count="0" />
+      <LineId Id="681" Count="0" />
+      <LineId Id="680" Count="0" />
+      <LineId Id="683" Count="0" />
+      <LineId Id="682" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="669" Count="0" />
+      <LineId Id="612" Count="0" />
+      <LineId Id="611" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="670" Count="0" />
+      <LineId Id="685" Count="1" />
+      <LineId Id="671" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="673" Count="0" />
+      <LineId Id="273" Count="1" />
+      <LineId Id="264" Count="1" />
+      <LineId Id="401" Count="0" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="582" Count="1" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="402" Count="1" />
+      <LineId Id="584" Count="1" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="956" Count="10" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="276" Count="2" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="175" Count="3" />
+      <LineId Id="623" Count="0" />
+      <LineId Id="620" Count="0" />
+      <LineId Id="626" Count="3" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="921" Count="0" />
+      <LineId Id="180" Count="5" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="923" Count="2" />
+      <LineId Id="922" Count="0" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="186" Count="4" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="192" Count="4" />
+      <LineId Id="748" Count="0" />
+      <LineId Id="197" Count="3" />
+      <LineId Id="617" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="618" Count="0" />
+      <LineId Id="616" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="204" Count="5" />
+      <LineId Id="211" Count="2" />
+      <LineId Id="215" Count="2" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="223" Count="4" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="228" Count="4" />
+      <LineId Id="234" Count="2" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="260" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_MasterCycle.ACT_LinkIO">
+      <LineId Id="2" Count="9" />
+      <LineId Id="15" Count="10" />
+      <LineId Id="29" Count="10" />
+      <LineId Id="43" Count="9" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="56" Count="2" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="65" Count="2" />
+      <LineId Id="70" Count="3" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="83" Count="2" />
+      <LineId Id="82" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_MasterCycle.ACT_TimTrig">
+      <LineId Id="2" Count="9" />
+      <LineId Id="23" Count="9" />
+      <LineId Id="12" Count="10" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

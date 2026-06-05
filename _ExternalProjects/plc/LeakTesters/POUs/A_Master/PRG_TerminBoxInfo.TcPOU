@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_TerminBoxInfo" Id="{065a04fa-15dd-4ce4-b762-b796da589b85}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_TerminBoxInfo
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Terminal 0
+GVL_IO.dwTerminalInfo[1].fbTerminalInfo(nTerminalState:= 8,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[0].sTerminalInfo);
+//Terminal 1
+GVL_IO.dwTerminalInfo[1].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[1].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[1].sTerminalInfo);  
+//Terminal 2
+GVL_IO.dwTerminalInfo[2].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[2].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[2].sTerminalInfo); 
+//Terminal 3
+GVL_IO.dwTerminalInfo[3].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[3].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[3].sTerminalInfo); 
+//Terminal 4
+GVL_IO.dwTerminalInfo[4].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[4].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[4].sTerminalInfo); 
+//Terminal 5
+GVL_IO.dwTerminalInfo[5].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[5].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[5].sTerminalInfo); 
+//Terminal 6
+GVL_IO.dwTerminalInfo[6].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[6].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[6].sTerminalInfo); 
+//Terminal 7
+GVL_IO.dwTerminalInfo[7].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[7].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[7].sTerminalInfo); 
+//Terminal 8
+GVL_IO.dwTerminalInfo[8].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[8].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[8].sTerminalInfo); 
+//Terminal 9
+GVL_IO.dwTerminalInfo[9].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[9].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[9].sTerminalInfo); 
+//Terminal 10
+GVL_IO.dwTerminalInfo[10].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[10].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[10].sTerminalInfo); 
+//Terminal 11
+GVL_IO.dwTerminalInfo[11].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[11].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[11].sTerminalInfo); 
+//Terminal 12
+GVL_IO.dwTerminalInfo[12].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[12].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[12].sTerminalInfo); 										
+//Terminal 13
+GVL_IO.dwTerminalInfo[13].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[13].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[13].sTerminalInfo); 
+//Terminal 14
+GVL_IO.dwTerminalInfo[14].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[14].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[14].sTerminalInfo);
+										
+//Terminal 15
+GVL_IO.dwTerminalInfo[15].fbTerminalInfo(nTerminalState:= GVL_IO.dwTerminalInfo[15].nTerminal_State,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[15].sTerminalInfo); 
+//Terminal 16
+GVL_IO.dwTerminalInfo[16].fbTerminalInfo(nTerminalState:= 8,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[16].sTerminalInfo);										
+
+//Terminal 17
+GVL_IO.dwTerminalInfo[17].fbTerminalInfo(nTerminalState:= 8,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[17].sTerminalInfo);
+
+//Terminal 18
+GVL_IO.dwTerminalInfo[18].fbTerminalInfo(nTerminalState:= 8,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[18].sTerminalInfo);
+
+//Terminal 19
+GVL_IO.dwTerminalInfo[19].fbTerminalInfo(nTerminalState:= 8,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[19].sTerminalInfo);
+
+//Terminal 20
+GVL_IO.dwTerminalInfo[20].fbTerminalInfo(nTerminalState:= 8,
+                                        sTerminalState => GVL_IO.dwTerminalInfo[20].sTerminalInfo);
+																				
+// Box 15
+GVL_IO.dwBoxInfo[15].fbBoxInfo(nPnIoBoxState := GVL_IO.dwBoxInfo[15].nPnIoBoxState,    	
+                               nPnIoBoxDiag  := GVL_IO.dwBoxInfo[15].nPnIoBoxDiag,
+							   sBoxState      => GVL_IO.dwBoxInfo[15].sBoxState,
+                               sBoxDiag       => GVL_IO.dwBoxInfo[15].sBoxDiag);
+							   
+//===========================================================================================================
+
+							   
+							   ]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_TerminBoxInfo">
+      <LineId Id="94" Count="1" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="87" Count="4" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="100" Count="1" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="110" Count="1" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="112" Count="2" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="50" Count="2" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="62" Count="3" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

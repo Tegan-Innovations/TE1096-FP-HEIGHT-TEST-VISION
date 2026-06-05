@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="st_IS2802M" Id="{2ae80b38-297e-4c55-9c83-696b456315a9}">
+    <Declaration><![CDATA[TYPE st_IS2802M :
+STRUCT
+	
+// Camera Output 
+    aqcTriggerEnable               AT%Q*       : BOOL;
+    aqcTrigger                     AT%Q*       : BOOL;
+    aqcClearExposureComplete       AT%Q*       : BOOL;
+    aqcSetOffline                  AT%Q*       : BOOL;
+	eecExternalEventControl        AT%Q*       : ARRAY[0..7] OF BOOL;
+    icBufferResultsEnable          AT%Q*       : BOOL;
+    icInspectionResultsAcknowledge AT%Q*       : BOOL;
+    icSetUserData                  AT%Q*       : BOOL;
+    icExecuteCommand               AT%Q*       : BOOL;
+    icClearError                   AT%Q*       : BOOL;
+	cciCommandID                   AT%Q*       : UINT;
+// Camera Input	
+    aqsTriggerReady                AT%I*       : BOOL; 
+    aqsTriggerAcknowledge          AT%I*       : BOOL; 
+    aqsExposureComplete            AT%I*       : BOOL; 
+    aqsAcquisitionError            AT%I*       : BOOL; 
+    aqsOfflineReason               AT%I*       : BOOL; 
+    aqsOnline                      AT%I*       : BOOL; 
+    aqsAcquisitionID               AT%I*       : UINT; 
+    ccoCurrentJobID                AT%I*       : UINT;
+    ccoCommandResultCode           AT%I*       : UINT;		
+	eesExternalEventStatus         AT%I*       : ARRAY[0..7] OF BOOL;
+    isInspectionCompleted          AT%I*       : BOOL; 
+    isResultsBufferOverrun         AT%I*       : BOOL; 
+    isResultsValid                 AT%I*       : BOOL; 
+    isCommandExecuting             AT%I*       : BOOL; 
+    isCommandCompleted             AT%I*       : BOOL; 
+    isCommandFailed                AT%I*       : BOOL; 
+    isSetUserDataAcknowledge       AT%I*       : BOOL; 
+    isJobPassed                    AT%I*       : BOOL; 
+    isError                        AT%I*       : BOOL; 
+    isErrorID                      AT%I*       : UINT; 
+	irInspectionID                 AT%I*       : UINT; 
+    irInspectionResultsCode        AT%I*       : UINT; 
+    irInspectionResults            AT%I*       : ARRAY[0..63]OF BYTE; 
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

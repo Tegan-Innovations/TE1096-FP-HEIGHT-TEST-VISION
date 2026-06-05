@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_PartsInspection" Id="{cdc82d65-f819-45d1-ac8f-b338ee07c630}">
+    <Declaration><![CDATA[TYPE ST_PartsInspection :
+STRUCT
+	
+	nVisionPartsGood				: DINT;
+	nVisionTotalPartsGood			: DINT;
+	nVisionPartsFailed				: DINT;
+	nVisionTotalPartsFailed			: DINT;
+	
+	nHeightPartsGood				: DINT;
+	nHeightTotalPartsGood			: DINT;
+	nHeightPartsFailed				: DINT;
+	nHeightTotalPartsFailed			: DINT;
+	
+	nHeightDistancePartsGood		: ARRAY[1..4] OF DINT;
+	nHeightDistanceTotalPartsGood	: ARRAY[1..4] OF DINT;
+	nHeightDistancePartsFailed		: ARRAY[1..4] OF DINT;
+	nHeightDistanceTotalPartsFailed	: ARRAY[1..4] OF DINT;
+	
+	nLeakPartsGood					: DINT;
+	nLeakTotalPartsGood				: DINT;
+	nLeakPartsFailed				: DINT;
+	nLeakTotalPartsFailed			: DINT;
+	
+	nPartsGood						: DINT;
+	nTotalPartsGood					: DINT;
+	nPartsFailed					: DINT;
+	nTotalPartsFailed				: DINT;					
+	
+	bPartok							: BOOL;
+	bPartFail						: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

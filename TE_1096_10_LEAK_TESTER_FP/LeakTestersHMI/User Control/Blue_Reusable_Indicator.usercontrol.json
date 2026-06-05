@@ -1,0 +1,161 @@
+{
+  "parameters": [
+    {
+      "name": "data-tchmi-variable",
+      "displayName": "Variable",
+      "visible": true,
+      "type": "tchmi:general#/definitions/Any",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "Variable",
+      "propertySetterName": "setVariable",
+      "propertyGetterName": "getVariable",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-value",
+      "displayName": "Value",
+      "visible": true,
+      "type": "tchmi:general#/definitions/Any",
+      "category": "",
+      "description": "",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "Value",
+      "propertySetterName": "setValue",
+      "propertyGetterName": "getValue",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-nheight",
+      "displayName": "nHeight",
+      "visible": true,
+      "type": "tchmi:general#/definitions/Number",
+      "category": "",
+      "description": "",
+      "defaultValue": 30.0,
+      "defaultValueInternal": 30.0,
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "nHeight",
+      "propertySetterName": "setNHeight",
+      "propertyGetterName": "getNHeight",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-nwidth",
+      "displayName": "nWidth",
+      "visible": true,
+      "type": "tchmi:general#/definitions/Number",
+      "category": "",
+      "description": "",
+      "defaultValue": 30.0,
+      "defaultValueInternal": 30.0,
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "nWidth",
+      "propertySetterName": "setNWidth",
+      "propertyGetterName": "getNWidth",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-strokecol",
+      "displayName": "StrokeCol",
+      "visible": true,
+      "type": "tchmi:framework#/definitions/Color",
+      "category": "",
+      "description": "",
+      "defaultValue": {
+        "color": "rgba(220, 226, 218, 1)"
+      },
+      "defaultValueInternal": {
+        "color": "rgba(220, 226, 218, 1)"
+      },
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "StrokeCol",
+      "propertySetterName": "setStrokeCol",
+      "propertyGetterName": "getStrokeCol",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-on_col",
+      "displayName": "On_Col",
+      "visible": true,
+      "type": "tchmi:framework#/definitions/Color",
+      "category": "",
+      "description": "",
+      "defaultValue": {
+        "angle": 40.0,
+        "stopPoints": [
+          {
+            "color": "rgba(1, 128, 229, 1)",
+            "stop": "60%"
+          },
+          {
+            "color": "rgba(220, 226, 218, 1)",
+            "stop": "100%"
+          }
+        ]
+      },
+      "defaultValueInternal": {
+        "angle": 40.0,
+        "stopPoints": [
+          {
+            "color": "rgba(1, 128, 229, 1)",
+            "stop": "60%"
+          },
+          {
+            "color": "rgba(220, 226, 218, 1)",
+            "stop": "100%"
+          }
+        ]
+      },
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "On_Col",
+      "propertySetterName": "setOn_Col",
+      "propertyGetterName": "getOn_Col",
+      "refTo": ""
+    },
+    {
+      "name": "data-tchmi-off_col",
+      "displayName": "Off_Col",
+      "visible": true,
+      "type": "tchmi:framework#/definitions/Color",
+      "category": "",
+      "description": "",
+      "defaultValue": {
+        "color": "rgba(1, 128, 229, 0.3921568)"
+      },
+      "defaultValueInternal": {
+        "color": "rgba(1, 128, 229, 0.3921568)"
+      },
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "propertyName": "Off_Col",
+      "propertySetterName": "setOff_Col",
+      "propertyGetterName": "getOff_Col",
+      "refTo": ""
+    }
+  ],
+  "virtualRights": [],
+  "$schema": "../Packages/Beckhoff.TwinCAT.HMI.Framework.12.744.3/runtimes/native1.12-tchmi/Schema/UserControlConfig.Schema.json",
+  "description": ""
+}

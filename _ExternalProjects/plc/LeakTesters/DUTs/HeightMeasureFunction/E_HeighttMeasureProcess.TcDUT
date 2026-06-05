@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="E_HeighttMeasureProcess" Id="{0eba7a1e-70db-4de3-b7b8-da56b32048dc}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_HeighttMeasureProcess :
+(
+	WAITING_ENABLE 					:= 0,
+	WAITING_MEASURING_REQUEST		:= 20,
+	CALIBRATIONBLOCK_METHOD			:= 40,
+	GLODENPART_METHOD				:= 60,
+	WAITING_FOR_MEASURE				:= 80,
+	RESET							:= 100,
+	SENSOR_STUCK_EVALUATION			:= 120,
+	Manual_Mode						:= 140
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

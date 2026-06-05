@@ -1,0 +1,632 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="PRG_VisionTest" Id="{db67c2a0-94f8-47ac-a331-390b475feacc}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_VisionTest
+VAR
+
+	biClamp				: BOOL;
+
+	rTrigJobChangeReq	: R_TRIG;
+	rTrigProdJob		: R_TRIG;
+	rTrigCalibJob		: R_TRIG;
+
+	bCommandExecuting	: BOOL;
+	bCommandFailed		: BOOL;
+	bCommandCompleted 	: BOOL;
+	bCommandExecute		: BOOL;
+	nCommandID			: UINT;
+	bCamerraNoError     : BOOL;
+	bCameraBufOverR     : BOOL;
+	bInspectionCompleted: RS;
+	bResultValid        : BOOL;
+	bJobPass            : BOOL;
+	bAqusError          : BOOL;
+	bExposComplete      : BOOL;
+	bAqusTriggerReady   : BOOL;
+	bOnline             : BOOL;
+	bOffline            : BOOL;
+	bEnableTrigger      : BOOL;
+	bTriggerCam         : BOOL;
+	bComplete           : BOOL;
+	bClearCamError      : BOOL;
+	bAcnwResult         : BOOL;
+	nCammeraErrorID     : UINT;	
+	nAqusID             : UINT;
+	nCurrentJobID       : UINT;	
+	nRempAqusID         : UINT;
+	nCameraJob          : UINT := 1;
+	nAqusID_Temp        : UINT := 0;
+	bManPass            : BOOL;
+	bManFail            : BOOL;
+	bManEnablTrig       : BOOL;
+	bManTrigCam         : BOOL;
+	bManAknwResult      : BOOL;
+	bManComplResl       : BOOL;	
+	
+	nCoutAqErr			: INT;
+
+		
+	TonCaseDelay  		: ARRAY[1..10] OF Tc2_Standard.TON;
+	rtrigCaseTriger  	: ARRAY [1..10] OF Tc2_Standard.R_TRIG;
+	adbCaseFlag      	: ARRAY [1..10] OF BOOL;
+	eCamJobState		: E_CameraJobChange;
+
+	nConsParts			: INT;
+END_VAR
+
+VAR_IN_OUT
+	stStationStruct     : ST_StandardStationStruct;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_IOLink();
+ACT_ChangeJob();
+ACT_TimTrig();
+
+(************** Station in Home Position **************************)
+stStationStruct.bStationHomed :=  (stStationStruct.nState = 1000);
+
+(******************************************************************)
+stStationStruct.bStationComplete := stStationStruct.nState = 1900;
+stStationStruct.bStationHomingRequest := stStationStruct.nState = 200;
+stStationStruct.bStationWaitOnRequest := stStationStruct.nState = 1000; 
+stStationStruct.bStationInitDone := stStationStruct.nState = 900;
+stStationStruct.bStationInProgressInit := stStationStruct.nState >= 200 AND stStationStruct.nState <= 900;
+stStationStruct.bStationInProgress :=  stStationStruct.nState > 1000 AND stStationStruct.nState < 1900;
+stStationStruct.bStationWaitOnInit := stStationStruct.nState = 100; 
+//stStationStruct.bStationAcknowledge := stStationStruct.nState = 200 OR stStationStruct.nState = 1100;
+stStationStruct.bStationNotMoving := stStationStruct.nState = 100 OR stStationStruct.nState = 1000 OR stStationStruct.nState = 1900;
+(******************************************************************)
+(***************** Counter *************)
+IF rtrigCaseTriger[3].Q THEN
+GVL_PERSIST.stPartsInspection.nVisionPartsGood:= GVL_PERSIST.stPartsInspection.nVisionPartsGood +1;
+GVL_PERSIST.stPartsInspection.nVisionTotalPartsGood := GVL_PERSIST.stPartsInspection.nVisionTotalPartsGood+1;
+ELSIF GVL_HMI_GLOBAL.bResetVisionGoodParts THEN
+GVL_PERSIST.stPartsInspection.nVisionPartsGood:=0;	
+END_IF
+
+
+IF rtrigCaseTriger[4].Q THEN
+	GVL_PERSIST.stPartsInspection.nVisionPartsFailed:=GVL_PERSIST.stPartsInspection.nVisionPartsFailed+1;
+	GVL_PERSIST.stPartsInspection.nVisionTotalPartsFailed:= GVL_PERSIST.stPartsInspection.nVisionTotalPartsFailed+1;
+ELSIF GVL_HMI_GLOBAL.bResetVisionBadParts THEN
+	GVL_PERSIST.stPartsInspection.nVisionPartsFailed:=0;
+END_IF
+
+IF rtrigCaseTriger[4].Q THEN
+	nConsParts:= nConsParts+1;
+ELSIF rtrigCaseTriger[3].Q OR GVL_HMI_GLOBAL.bResetButton THEN
+    nConsParts:=0;	
+END_IF
+
+bClearCamError := GVL_HMI_GLOBAL.bResetButton;
+
+(***************************************)
+
+IF rtrigCaseTriger[5].Q THEN
+	stStationStruct.nState := 100;
+END_IF
+
+(***************************************)
+
+
+CASE stStationStruct.nState OF
+100: 
+IF stStationStruct.bStationInitRequest THEN
+	 stStationStruct.nState := 140;
+END_IF
+140:
+bClearCamError := TRUE;
+IF bClearCamError THEN
+	stStationStruct.nState := 160;
+END_IF
+160:
+IF tonCaseDelay[8].Q THEN
+	bClearCamError := FALSE;
+	stStationStruct.nState := 200;
+END_IF
+200: // Check if error 
+IF bCamerraNoError THEN
+	 stStationStruct.nState := 400;
+END_IF
+300: // Check ID job
+IF nCurrentJobID = nCameraJob THEN
+	stStationStruct.nState := 400;
+END_IF
+400:
+IF tonCaseDelay[1].Q THEN
+	stStationStruct.nState := 900;
+END_IF
+900:
+IF stStationStruct.bStationAcknowledge THEN
+	stStationStruct.nState := 1000;
+END_IF
+1000: // Waiting for request 
+adbCaseFlag[1] := FALSE;
+adbCaseFlag[2] := FALSE;
+bEnableTrigger := FALSE;
+bTriggerCam    := FALSE;
+
+bAcnwResult := FALSE;
+bComplete:= FALSE;
+IF GVL_HMI_GLOBAL.bResetPassAndFail THEN
+	GVL_MASTER.stNest.bVisionPass := FALSE;
+	GVL_MASTER.stNest.sVisionHMI := "";
+	GVL_MASTER.stNest.bVisionReject := FALSE;
+END_IF
+IF stStationStruct.bStationRequest AND stStationStruct.bNoCycleStopRequest THEN
+   stStationStruct.nState := 1100;  
+ELSIF (stStationStruct.bStationManualRequestHMI OR GVL_MASTER.bManualModeTrigger) AND stStationStruct.bNoCycleStopRequest THEN
+   stStationStruct.nState := 4000; // Manual Mode
+ELSIF stStationStruct.bStationAbort THEN
+	   stStationStruct.nState := 100;	   
+END_IF
+1100:// Check Buffer
+IF NOT bCameraBufOverR THEN
+	stStationStruct.nState := 1160;
+ELSIF bCameraBufOverR THEN
+	stStationStruct.nState := 1120;  
+END_IF
+1120: 
+bOffline := TRUE;
+IF NOT bOnline THEN
+	bClearCamError := TRUE;
+	stStationStruct.nState := 1130; 
+END_IF
+1130:
+IF bClearCamError THEN
+	bClearCamError := FALSE;
+	stStationStruct.nState := 1140;
+END_IF
+1140:
+IF NOT bClearCamError THEN
+       bOffline := FALSE;
+       stStationStruct.nState := 1160; 
+END_IF
+1160: // Check ofline/online
+IF bOnline THEN
+	stStationStruct.nState := 1200; 
+ELSE
+	adbCaseFlag[1] := TRUE;
+    stStationStruct.nState := 1200; 
+END_IF
+1180://Check status if Cam
+IF nCammeraErrorID =0 THEN
+	stStationStruct.nState := 1200;
+ELSE
+    adbCaseFlag[2] := TRUE;	
+	stStationStruct.nState := 2000;
+END_IF
+1200://Enable Trigger
+bEnableTrigger := TRUE;
+IF bAqusTriggerReady THEN
+	stStationStruct.nState := 1220;
+END_IF
+1220: 
+bTriggerCam := TRUE;
+IF  bExposComplete THEN
+	stStationStruct.nState := 1240;
+END_IF
+1240:
+IF bResultValid THEN
+	bEnableTrigger := FALSE;
+	bTriggerCam := FALSE;
+	stStationStruct.nState := 1260;
+END_IF
+1260:// Check Aqusition
+IF nAqusID<> nAqusID_Temp AND bInspectionCompleted.Q1 THEN
+	stStationStruct.nState := 1270;
+END_IF
+1270:
+IF tonCaseDelay[9].Q THEN
+	stStationStruct.nState := 1280;
+END_IF
+
+1280: // JOB PASS / JOB FAIL
+IF bJobPass  THEN
+//   nPartStatus := 1;
+	GVL_MASTER.stNest.bVisionPass 	:= TRUE;
+	GVL_MASTER.stNest.sVisionHMI 	:= "Pass";
+   stStationStruct.nState := 1300;
+ELSIF NOT bJobPass  THEN
+	//Added checks here not initial for bNestFail or bNestPartReject	
+//   nPartStatus := 0;
+   GVL_MASTER.stNest.bVisionReject := TRUE;
+   GVL_MASTER.stNest.sVisionHMI 	:= "Fail";
+   stStationStruct.nState := 1282;
+END_IF
+1282:
+bAcnwResult := TRUE;
+IF NOT bResultValid THEN
+	stStationStruct.nState := 1284;
+END_IF
+1284:
+bAcnwResult := FALSE;
+IF NOT bAcnwResult AND NOT bResultValid THEN
+	nAqusID_Temp:= nAqusID;
+	stStationStruct.nState := 1286;
+END_IF
+1286:
+bComplete:= TRUE;
+IF NOT bExposComplete THEN
+	stStationStruct.nState := 1288;
+END_IF
+1288:
+bComplete:= FALSE;
+IF NOT bComplete AND NOT bExposComplete THEN
+	stStationStruct.nState := 1290;
+END_IF	
+1290:
+adbCaseFlag[1] := FALSE;
+adbCaseFlag[2] := FALSE;
+bEnableTrigger := FALSE;
+bTriggerCam    := FALSE;
+bAcnwResult := FALSE;
+bComplete:= FALSE;
+stStationStruct.nState := 1292;
+1292:
+bEnableTrigger := TRUE;
+IF bEnableTrigger AND tonCaseDelay[7].Q THEN
+	stStationStruct.nState := 1294;
+END_IF
+1294:
+bTriggerCam := TRUE;
+IF  bExposComplete THEN
+	stStationStruct.nState := 1296;
+END_IF
+1296:
+IF bResultValid THEN
+	bEnableTrigger := FALSE;
+    bTriggerCam := FALSE;
+    stStationStruct.nState := 1298;
+END_IF
+1298:
+IF bJobPass  THEN
+//   nPartStatus := 1;
+   stStationStruct.nState := 1300;
+ELSIF NOT  bJobPass THEN
+//   nPartStatus := 0;
+   stStationStruct.nState := 1300;
+END_IF
+
+1300:
+bAcnwResult := TRUE;
+IF NOT bResultValid THEN
+	stStationStruct.nState := 1320;
+END_IF
+1320:
+bAcnwResult := FALSE;
+IF NOT bAcnwResult AND NOT bResultValid THEN
+	nAqusID_Temp:= nAqusID;
+	stStationStruct.nState := 1340;
+END_IF
+1340:
+bComplete:= TRUE;
+IF NOT bExposComplete THEN
+	stStationStruct.nState := 1360;
+END_IF
+1360:
+bComplete:= FALSE;
+IF NOT bComplete AND NOT bExposComplete THEN
+	stStationStruct.nState := 1900;
+END_IF	
+1900:
+adbCaseFlag[1] := FALSE;
+adbCaseFlag[2] := FALSE;
+bEnableTrigger := FALSE;
+bTriggerCam    := FALSE;
+bAcnwResult := FALSE;
+bComplete:= FALSE;
+IF tonCaseDelay[2].Q AND rtrigCaseTriger[7].Q THEN
+	stStationStruct.nState := 1000;
+ELSIF NOT stStationStruct.bNoCycleStopRequest AND tonCaseDelay[2].Q THEN
+	stStationStruct.nState := 1000;
+END_IF
+//=== Manual Mode ===
+4000:
+IF NOT stStationStruct.bStationManualRequestHMI  AND NOT GVL_MASTER.bManualModeTrigger THEN
+	stStationStruct.nState := 1000;
+END_IF
+IF GVL_HMI_GLOBAL.bEnableTrigerMan THEN
+	bManEnablTrig := TRUE;
+	bManPass:= FALSE;
+	bManFail:= FALSE;
+	stStationStruct.nState := 4100;
+ELSIF stStationStruct.bStationAbort THEN
+	   stStationStruct.nState := 100;		
+END_IF
+4100:
+	bManPass:= FALSE;
+	bManFail:= FALSE;
+IF NOT stStationStruct.bStationManualRequestHMI THEN
+	bManEnablTrig := FALSE;
+	stStationStruct.nState := 1000;
+ELSIF stStationStruct.bStationAbort THEN
+	   bManEnablTrig := FALSE;
+	   stStationStruct.nState := 100;		
+ELSIF GVL_HMI_GLOBAL.bTrigerCamMan THEN
+	GVL_HMI_GLOBAL.bEnableTrigerMan:= FALSE;
+	bManTrigCam := TRUE;
+	stStationStruct.nState := 4200;
+END_IF
+4200:
+GVL_HMI_GLOBAL.bTrigerCamMan := FALSE;
+IF  bExposComplete THEN
+	stStationStruct.nState := 4300;
+END_IF
+4300:
+IF bResultValid THEN
+	bManEnablTrig := FALSE;
+    bManTrigCam := FALSE;
+    stStationStruct.nState := 4400;
+END_IF
+4400:
+IF bJobPass THEN
+	bManPass := TRUE;
+	bManFail := FALSE;
+//	nPartStatus := 1;
+	stStationStruct.nState := 4500;
+ELSIF NOT bJobPass  THEN
+	bManPass := FALSE;
+	bManFail := TRUE;
+//	nPartStatus := 0;
+	stStationStruct.nState := 4500;
+END_IF
+4500:
+bManAknwResult := TRUE;
+IF NOT bResultValid THEN
+	stStationStruct.nState := 4600;
+END_IF
+4600:
+bManAknwResult := FALSE;
+bManComplResl := TRUE;
+IF NOT bExposComplete THEN
+	stStationStruct.nState := 4700;
+END_IF
+4700:
+bManAknwResult := FALSE;
+bManComplResl  := FALSE;
+bManEnablTrig  := FALSE;
+bManTrigCam    := FALSE;
+IF NOT stStationStruct.bStationManualRequestHMI THEN
+stStationStruct.nState := 4000;
+ELSE
+stStationStruct.nState := 1000;	
+END_IF
+9000:
+
+bManAknwResult := FALSE;
+bManComplResl  := FALSE;
+bManEnablTrig  := FALSE;
+bManTrigCam    := FALSE;	
+bOffline       := FALSE;
+bEnableTrigger := FALSE;
+bTriggerCam    := FALSE;
+bComplete      := FALSE;
+bClearCamError := FALSE;
+bAcnwResult    := FALSE;
+stStationStruct.nState := 9100;	
+9100:
+IF tonCaseDelay[5].Q THEN
+	stStationStruct.nState := 9200;
+END_IF
+9200:
+bClearCamError := TRUE;
+IF tonCaseDelay[6].Q THEN
+	stStationStruct.nState := 9300;
+END_IF
+9300: 
+IF nCoutAqErr >3 THEN
+   stStationStruct.nState := 1000;
+ELSIF nCoutAqErr <=3 THEN
+   stStationStruct.nState := 1100;
+END_IF
+
+	
+END_CASE
+
+IF bAqusError AND NOT stStationStruct.nState >= 9000 THEN
+stStationStruct.nState := 9000;
+END_IF
+
+
+IF rtrigCaseTriger[6].Q THEN
+   nCoutAqErr := nCoutAqErr +1;
+ELSIF  stStationStruct.nState = 1000 THEN
+    nCoutAqErr := 0;
+END_IF   
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_ChangeJob" Id="{d14a0bc6-7fb4-46a5-9312-a70aa862afc2}">
+      <Implementation>
+        <ST><![CDATA[rTrigProdJob(CLK := GVL_HMI_GLOBAL.bLoadProductionJob);
+rTrigCalibJob(CLK := GVL_HMI_GLOBAL.bLoadCalibrationJob);
+
+IF rTrigProdJob.Q THEN
+	eCamJobState := E_CameraJobChange.LOAD_PROD_JOB;
+END_IF
+
+IF rTrigCalibJob.Q THEN
+	eCamJobState := E_CameraJobChange.LOAD_CALB_JOB;
+END_IF
+
+CASE eCamJobState OF
+	
+E_CameraJobChange.WAITING_FOR_REQUEST:
+//Do nothing
+
+E_CameraJobChange.LOAD_PROD_JOB:
+	(*Load Production Job*)
+	nCommandID := 1;
+	eCamJobState := E_CameraJobChange.GO_OFFLINE;
+
+E_CameraJobChange.LOAD_CALB_JOB:
+	(*Load Calibration Job*)
+	nCommandID := 101;
+	eCamJobState := E_CameraJobChange.GO_OFFLINE;
+
+E_CameraJobChange.GO_OFFLINE:
+	bOffline := TRUE;
+	eCamJobState := E_CameraJobChange.EXECUTE_COMMAND;
+
+E_CameraJobChange.EXECUTE_COMMAND:
+	bCommandExecute := TRUE;
+	eCamJobState := E_CameraJobChange.RESET_FLAG;
+	
+E_CameraJobChange.RESET_FLAG:
+IF bCommandCompleted THEN
+	bCommandExecute := FALSE;
+	bOffline := FALSE;
+	GVL_HMI_GLOBAL.bLoadProductionJob := FALSE;
+	GVL_HMI_GLOBAL.bLoadCalibrationJob := FALSE;
+	eCamJobState := E_CameraJobChange.WAITING_FOR_REQUEST;
+END_IF
+END_CASE]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_IOLink" Id="{ffaba691-fdfe-4227-a9c2-0e8d83004a57}">
+      <Implementation>
+        <ST><![CDATA[
+bCamerraNoError      := NOT GVL_IO.dw_B06_IS2802M.isError;//==
+nCammeraErrorID      := GVL_IO.dw_B06_IS2802M.isErrorID;//--nchamera UI
+bCameraBufOverR      := GVL_IO.dw_B06_IS2802M.isResultsBufferOverrun;
+bInspectionCompleted(SET := GVL_IO.dw_B06_IS2802M.isInspectionCompleted, RESET1 := stStationStruct.nState > 1260);
+bResultValid         := GVL_IO.dw_B06_IS2802M.isResultsValid;
+bJobPass             := GVL_IO.dw_B06_IS2802M.isJobPassed;
+bAqusError           := GVL_IO.dw_B06_IS2802M.aqsAcquisitionError;
+bExposComplete       := GVL_IO.dw_B06_IS2802M.aqsExposureComplete;
+bAqusTriggerReady    := GVL_IO.dw_B06_IS2802M.aqsTriggerReady;
+bOnline              := GVL_IO.dw_B06_IS2802M.aqsOnline;
+nAqusID              := GVL_IO.dw_B06_IS2802M.aqsAcquisitionID;
+nCurrentJobID        := GVL_IO.dw_B06_IS2802M.ccoCurrentJobID;
+bCommandExecuting	 := GVL_IO.dw_B06_IS2802M.isCommandExecuting;
+bCommandFailed		 := GVL_IO.dw_B06_IS2802M.isCommandFailed;
+bCommandCompleted    := GVL_IO.dw_B06_IS2802M.isCommandCompleted;
+GVL_IO.dw_B06_IS2802M.aqcSetOffline                  := bOffline;
+GVL_IO.dw_B06_IS2802M.aqcTriggerEnable               := bEnableTrigger OR bManEnablTrig;
+GVL_IO.dw_B06_IS2802M.aqcTrigger                     := bTriggerCam OR bManTrigCam;
+GVL_IO.dw_B06_IS2802M.aqcClearExposureComplete       := bComplete OR bManComplResl;
+GVL_IO.dw_B06_IS2802M.icClearError                   := bClearCamError OR GVL_HMI_GLOBAL.bResetCamMan ;//--
+GVL_IO.dw_B06_IS2802M.icInspectionResultsAcknowledge := bAcnwResult OR bManAknwResult ;
+GVL_IO.dw_B06_IS2802M.cciCommandID					 := nCommandID;
+GVL_IO.dw_B06_IS2802M.icExecuteCommand				 := bCommandExecute;
+
+biClamp					:= GVL_IO.dw_T02_EL1809.iCalmpClosed;
+
+IF tonCaseDelay[4].Q THEN
+	GVL_HMI_GLOBAL.bResetCamMan:= FALSE;
+END_IF
+
+IF NOT bExposComplete THEN
+   bComplete:= FALSE;
+END_IF
+IF bExposComplete THEN
+	bTriggerCam := FALSE;
+END_IF
+IF NOT bResultValid THEN
+	bAcnwResult := FALSE;
+END_IF
+
+IF NOT GVL_Master.stMachineStatus.bManualMode THEN
+   GVL_HMI_GLOBAL.sInfoCamMan:= 'Machine not in Manual Mode';
+ELSIF GVL_Master.stMachineStatus.bManualMode AND stStationStruct.nState>4100 THEN
+   GVL_HMI_GLOBAL.sInfoCamMan:= 'Camera in Process';
+ELSIF  GVL_Master.stMachineStatus.bManualMode AND stStationStruct.nState=4000 THEN
+   GVL_HMI_GLOBAL.sInfoCamMan:= 'Waiting for Enable'; 
+ELSIF  GVL_Master.stMachineStatus.bManualMode AND stStationStruct.nState=4100 THEN
+   GVL_HMI_GLOBAL.sInfoCamMan:= 'Waiting for Trigger';		   
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_TimTrig" Id="{3c276bbe-28e6-4d0f-8ed3-9e2604015f1a}">
+      <Implementation>
+        <ST><![CDATA[tonCaseDelay[1](IN:= (stStationStruct.nState=400),PT:=T#50MS);
+tonCaseDelay[2](IN:= (stStationStruct.nState=1900),PT:=T#100MS);
+tonCaseDelay[3](IN:= (stStationStruct.nState=1),PT:=T#100MS);
+tonCaseDelay[4](IN:= GVL_HMI_GLOBAL.bResetCamMan,PT:=T#100MS);
+tonCaseDelay[5](IN:= (stStationStruct.nState=9100),PT:=T#250MS);
+tonCaseDelay[6](IN:= (stStationStruct.nState=9200),PT:=T#250MS);
+tonCaseDelay[7](IN:= (stStationStruct.nState=1292),PT:=T#50MS);
+tonCaseDelay[8](IN:= (stStationStruct.nState=160),PT:=T#250MS);
+tonCaseDelay[9](IN:=stStationStruct.nState=1270 ,PT:=T#1S);
+tonCaseDelay[10](IN:= ,PT:=T#250MS);
+
+rtrigCaseTriger[1](clk:= stStationStruct.nState>1100);
+rtrigCaseTriger[2](clk:= adbCaseFlag[1]);
+rtrigCaseTriger[3](clk:= (stStationStruct.nState=1900) AND bJobPass );
+rtrigCaseTriger[4](clk:= (stStationStruct.nState=1900) AND NOT bJobPass );
+rtrigCaseTriger[5](clk:= stStationStruct.bStationAbort);
+rtrigCaseTriger[6](clk:= (stStationStruct.nState=1240) AND  bAqusError );
+rtrigCaseTriger[7](clk:= biClamp);
+rtrigCaseTriger[8](clk:= );
+rtrigCaseTriger[9](clk:= );
+rtrigCaseTriger[10](clk:= );]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="PRG_VisionTest">
+      <LineId Id="377" Count="1" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="398" Count="18" />
+      <LineId Id="423" Count="7" />
+      <LineId Id="612" Count="0" />
+      <LineId Id="608" Count="3" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="438" Count="5" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="20" Count="39" />
+      <LineId Id="833" Count="0" />
+      <LineId Id="837" Count="1" />
+      <LineId Id="836" Count="0" />
+      <LineId Id="832" Count="0" />
+      <LineId Id="60" Count="62" />
+      <LineId Id="894" Count="3" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="497" Count="0" />
+      <LineId Id="721" Count="0" />
+      <LineId Id="128" Count="2" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="498" Count="0" />
+      <LineId Id="722" Count="0" />
+      <LineId Id="667" Count="0" />
+      <LineId Id="135" Count="47" />
+      <LineId Id="184" Count="2" />
+      <LineId Id="189" Count="25" />
+      <LineId Id="216" Count="19" />
+      <LineId Id="238" Count="85" />
+      <LineId Id="326" Count="5" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="381" Count="5" />
+      <LineId Id="551" Count="3" />
+      <LineId Id="391" Count="1" />
+      <LineId Id="380" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_VisionTest.ACT_ChangeJob">
+      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="7" Count="38" />
+      <LineId Id="3" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_VisionTest.ACT_IOLink">
+      <LineId Id="2" Count="22" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="30" Count="8" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="40" Count="8" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+    <LineIds Name="PRG_VisionTest.ACT_TimTrig">
+      <LineId Id="2" Count="19" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

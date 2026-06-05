@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="FB_DayOfYear" Id="{07fdf643-4db5-4464-a738-0c324860cd61}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DayOfYear
+VAR_INPUT
+	nMonth : UINT;
+	nDay : UINT;
+END_VAR
+VAR_OUTPUT
+	nDayOfYear : UINT;
+END_VAR
+VAR
+	nDayTemp : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF nMonth =1 THEN
+	nDayTemp := 0;
+ELSIF nMonth =2 THEN
+	nDayTemp := 31;
+ELSIF nMonth =3 THEN
+	nDayTemp := 59;
+ELSIF nMonth =4 THEN
+	nDayTemp := 90;
+ELSIF nMonth =5 THEN
+	nDayTemp := 120;	
+ELSIF nMonth =6 THEN
+	nDayTemp := 151;
+ELSIF nMonth =7 THEN
+	nDayTemp := 161;
+ELSIF nMonth =8 THEN
+	nDayTemp := 212;
+ELSIF nMonth =9 THEN
+	nDayTemp := 243;
+ELSIF nMonth =10 THEN
+	nDayTemp := 273;
+ELSIF nMonth =11 THEN
+	nDayTemp := 304;
+ELSIF nMonth =12 THEN
+	nDayTemp := 334;	
+END_IF
+nDayOFYear := nDayTemp + nDay;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_DayOfYear">
+      <LineId Id="15" Count="24" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <POU Name="FB_Alarms" Id="{9692cb57-caf1-482e-b488-a322cd2b915c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Alarms
+VAR_INPUT
+	evEntry			: TcEventEntry;
+	bEvt			: BOOL;
+	bConfirm		: BOOL;
+END_VAR
+VAR_OUTPUT
+	Q							: BOOL;
+END_VAR
+VAR
+	bInit			: BOOL :=	TRUE;
+	rAlarmActivation: Tc2_Standard.R_TRIG;
+	rReset			: Tc2_Standard.RS;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF bInit THEN
+	
+	SUPER^.CreateEx(evEntry, TRUE, 0);
+	bInit := FALSE;
+
+END_IF
+
+
+IF bEvt  THEN
+	SUPER^.Raise (0);
+ELSE SUPER^.Clear (0, FALSE);
+END_IF
+
+
+IF bConfirm AND NOT bEvt THEN
+	
+	SUPER^.Confirm(0);
+
+END_IF
+
+
+Q := SUPER^.bRaised;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Alarms">
+      <LineId Id="63" Count="6" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="84" Count="8" />
+      <LineId Id="50" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

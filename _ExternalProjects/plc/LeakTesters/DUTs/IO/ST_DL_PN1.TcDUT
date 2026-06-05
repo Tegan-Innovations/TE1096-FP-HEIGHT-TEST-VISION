@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_DL_PN1" Id="{6ad410c9-8177-4220-93c6-7345b5e0ba69}">
+    <Declaration><![CDATA[TYPE ST_DL_PN1 :
+STRUCT
+// Terminal 	
+dldCurrValProp   AT %I*  :BOOL;
+dldWarningStat   AT %I*  :BOOL;
+dldErrorStt      AT %I*  :BOOL;
+dldExtInpResp    AT %I*  :ARRAY[1..5] OF BOOL;
+dldExtInpRespOut AT %Q*  :ARRAY[1..5] OF BOOL;
+//GT2 Keyence Sensor 1
+gt2_1_1Output       AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_1_1CurrValInv   AT %I*  :BOOL;
+gt2_1_1CurrValUndR  AT %I*  :BOOL;
+gt2_1_1CurrValOvrR  AT %I*  :BOOL;
+gt2_1_1WarningStat  AT %I*  :BOOL;
+gt2_1_1ErrorStat    AT %I*  :BOOL;
+gt2_1_1ExtInpRes    AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_1_1CurrentValue AT %I*  :DINT;
+gt2_1_1ExtInpResOut AT %Q*  :ARRAY[1..5] OF BOOL;
+//GT2 Keyence Sensor 2	
+gt2_1_2Output       AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_1_2CurrValInv   AT %I*  :BOOL;
+gt2_1_2CurrValUndR  AT %I*  :BOOL;
+gt2_1_2CurrValOvrR  AT %I*  :BOOL;
+gt2_1_2WarningStat  AT %I*  :BOOL;
+gt2_1_2ErrorStat    AT %I*  :BOOL;
+gt2_1_2ExtInpRes    AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_1_2CurrentValue AT %I*  :DINT;
+gt2_1_2ExtInpResOut AT %Q*  :ARRAY[1..5] OF BOOL;
+//GT2 Keyence Sensor 3
+gt2_1_3Output       AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_1_3CurrValInv   AT %I*  :BOOL;
+gt2_1_3CurrValUndR  AT %I*  :BOOL;
+gt2_1_3CurrValOvrR  AT %I*  :BOOL;
+gt2_1_3WarningStat  AT %I*  :BOOL;
+gt2_1_3ErrorStat    AT %I*  :BOOL;
+gt2_1_3ExtInpRes    AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_1_3CurrentValue AT %I*  :DINT;
+gt2_1_3ExtInpResOut AT %Q*  :ARRAY[1..5] OF BOOL;
+//GT2 Keyence Sensor 4
+gt2_2Output       AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_2CurrValInv   AT %I*  :BOOL;
+gt2_2CurrValUndR  AT %I*  :BOOL;
+gt2_2CurrValOvrR  AT %I*  :BOOL;
+gt2_2WarningStat  AT %I*  :BOOL;
+gt2_2ErrorStat    AT %I*  :BOOL;
+gt2_2ExtInpRes    AT %I*  :ARRAY[1..5] OF BOOL;
+gt2_2CurrentValue AT %I*  :DINT;
+gt2_2ExtInpResOut AT %Q*  :ARRAY[1..5] OF BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <GVL Name="GVL_HMI_GLOBAL" Id="{c69d1b5f-68bd-4781-a35c-f9a036e43abc}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+	//User Log, Shut down, Quit HMI
+	bQuitHmi						: BOOL;
+	sUserGroup						: STRING;
+	sUserGroup2						: STRING;
+	sUserName						: STRING;
+	bLogOut							: BOOL;
+	bUserLogedIntSignal				: BOOL;
+	bShutDown						: BOOL;
+	
+	
+	
+	
+	
+	//General
+	bStopButton						: BOOL;
+	bStartButton					: BOOL;
+	bResetButton					: BOOL;
+	nRegionMain						: INT;
+	bTrigerCamMan					: BOOL;
+	bResetGoodParts					: BOOL;
+	bResetFailedParts				: BOOL;
+	
+	aEventTexts						: ARRAY [0..767] OF T_MaxSTring; //Event texts - set only once
+	bEventTextsSet					: BOOL;
+	aEventFlags						: ARRAY [0..767] OF BOOL;		//All event states combined from master na stations
+	aActiveEvents					: ARRAY [0..39] OF T_MaxSTring;	//Active events - connected to Alarm scree in HMI	
+	stActiveEventsHMI				: ARRAY [0..39] OF ST_ActiveEventsHMI;
+	
+	sMessageToOperator				: WSTRING(200);
+	sActualProcess					: WSTRING(200);
+	aIOScreen						: ARRAY [0..10] OF STRING(200);
+	aManualScreen					: ARRAY [0..2] OF STRING(200);
+	bResetPassAndFail				: BOOL;
+	bEnableManualMode				: BOOL;
+	bRejectPieceAcknowledge			: BOOL;
+	bRejectPieceDialogTrig			: BOOL;
+	bAutocycleFaultDialog			: BOOL;
+	
+	
+	
+	// ------ Screen Info / Data -----------	
+	sSystemDate					: STRING;
+	sSystemTime					: STRING;
+	ntAMSNetID					: T_AmsNetId := '172.18.237.82.1.1';
+	
+	
+	
+	//Camera
+	bManualModeOff					: ARRAY[1..2] OF BOOL;
+	bResetCamMan					: BOOL;
+	sInfoCamMan						: STRING;
+	bLoadProductionJob				: BOOL;
+	bLoadCalibrationJob				: BOOL;
+	bEnableTrigerMan				: BOOL;
+	bVisionPass						: BOOL;
+	bResetVisionGoodParts			: BOOL;
+	bResetVisionBadParts			: BOOL;
+	
+	
+	//Leak Tester
+	bLeakTestPass					: BOOL;
+	uSetLeakProgramID				: USINT;
+	bSetLeakProgramID				: BOOL;
+	bResetLeakMan					: BOOL;
+	bStartLeakMan					: BOOL;
+	bStopLeakMan					: BOOL;
+	bLoadLeakProg					: BOOL;
+	uNewLeakProgID					: USINT;
+	
+	
+	
+	bResetLeakGoodParts				: BOOL;
+	bResetLeakBadParts				: BOOL;
+	
+	
+	
+	
+	//Height Tester
+	bHeightTestPass					: BOOL;
+	bResetHeightGoodParts			: BOOL;
+	bResetHeightFailParts			: BOOL;
+	bManualHeightTrigger			: BOOL;
+	aResetHeightSensorGoodParts		: ARRAY[1..4] OF BOOL;
+	aResetHeightSensorBadParts		: ARRAY[1..4] OF BOOL;
+	
+	
+	bSetSetPointsHeightTest			: BOOL;
+	bManualMeasureHeightTest		: BOOL;
+	aGeneralPassHeightTest			: ARRAY[1..5] OF BOOL;
+	aGeneralFailHeightTest			: ARRAY[1..5] OF BOOL;
+	
+	anValueScaledHeightTest			: ARRAY[1..4] OF DINT;
+	
+	aSensorSetPointsHeightTest		: ARRAY[1..4] OF DINT;
+	
+	nHeightMeasureStateValue		: ARRAY[1..4] OF DINT;
+	bProbesPositionOk				: BOOL;
+	
+
+	
+
+	
+	
+
+END_VAR
+VAR_GLOBAL PERSISTENT
+	
+	aStatistics					: ARRAY [1..201] OF ST_Nest;//LA** 04092025 >> : ARRAY [1..200] OF ST_Nest;
+	stAlarmHistory				:ARRAY [00..250] OF ST_AlarmHistory;
+	aEventLog					:ARRAY [0..250] OF T_MaxSTring;	//Event log - connected to alarm history in HMI	
+	aTimeLog					:ARRAY [0..250] OF T_MaxSTring;
+	aDateLog					:ARRAY [0..250] OF T_MaxSTring;
+	aMinLimitHeightTest				: ARRAY[1..4] OF DINT;
+	aMaxLimitHeightTest				: ARRAY[1..4] OF DINT;	
+		
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

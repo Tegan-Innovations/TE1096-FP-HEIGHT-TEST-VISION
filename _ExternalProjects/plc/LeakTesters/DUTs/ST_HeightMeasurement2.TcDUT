@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.13">
+  <DUT Name="ST_HeightMeasurement2" Id="{4bd6fe4c-8edb-4fdd-94d3-f5f9003aed17}">
+    <Declaration><![CDATA[TYPE ST_HeightMeasurement2 :
+STRUCT
+	//INPUTS
+	aSensorCurrentValue							: ARRAY[1..4] OF REAL;		
+	bEnable										: BOOL;
+	bMeasurementRequest							: BOOL;
+	aTolerance									: ARRAY[1..3] OF REAL;
+	bAcknowledge								: BOOL;
+	nDistanceBetweenPoints						: ARRAY[1..3] OF REAL;
+	anDistanceSetPoint							: ARRAY[1..3] OF REAL;
+	EHeighttMeasureProcess						: E_HeighttMeasureProcess;
+	//OUTPUTS
+	bBusy										: BOOL;
+	bComplete									: BOOL;
+	bEnableo									: BOOL;
+	aPass										: ARRAY[1..5] OF BOOL; //5 Final Result
+	aFail										: ARRAY[1..5] OF BOOL; //5 Final Result
+	aMinLimitCalibrationBlock					: ARRAY[1..3] OF REAL;
+	aMaxLimitCalibrationBlock					: ARRAY[1..3] OF REAL;
+	aDistanceBetweenProbes						: ARRAY[1..3] OF REAL; //1 Probe 1 to probe zero
+	abSensorStuck								: ARRAY[1..4] OF BOOL;
+	nFixedPoint									: ARRAY[1..4] OF REAL;
+	aScaledSensorCurrentValue					: ARRAY[1..4] OF REAL;
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
