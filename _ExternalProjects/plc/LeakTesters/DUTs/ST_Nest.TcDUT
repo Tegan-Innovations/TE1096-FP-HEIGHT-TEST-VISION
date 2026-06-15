@@ -13,17 +13,14 @@ STRUCT
 	 
 	 bHeightPass		: BOOL;
 	 bVisionPass		: BOOL;
-	 bLeakPass			: BOOL;
 	 bPiecePass			: BOOL;
 	 
 	 bHeightReject		: BOOL;
-	 bVisionReject		: BOOL;
-	 bLeakReject		: BOOL;	
+	 bVisionReject		: BOOL;	
 	 bPieceReject		: BOOL; 
 	 
 	 sHeightHMI			: WSTRING;
 	 sVisionHMI			: WSTRING;
-	 sLeakHMI			: WSTRING;
 	 sPieceHMI			: WSTRING;
 
 	 nDistance			: ARRAY[1..3] OF REAL;

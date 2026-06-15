@@ -19,12 +19,8 @@ VAR_GLOBAL
 	dw_T03_EL2809                                                		: st_EL2809; // 16 Channel Digital Output ( 24VDC )
 	//dw_T04_EL6631                                                	| EtherCAT Terminal, 2-port communication interface, PROFINET RT, controller - Data for Box's MDU1020 and SR2000W
  	//  dw_T05_EL9011                                                	| Bus end cover for E-bus contacts
-	dw_B06_IS2802M                                               		: st_IS2802M;
-	
-	dw_B07_i28General_I_O												: st_i28General_I_O;
-	dw_B07_i28LastResult												: st_i28LasResult;
-	dw_B07_i28LiveMeasurement											: st_i28LiveMeasurement;
-	
+	dw_B06_KeyenceCamera                                             	: st_KeyenceCamera;
+		
 	dw_B08_DL_PN1                                                		: ST_DL_PN1; // Keyence GT2 Position Sensors 
 	
 	

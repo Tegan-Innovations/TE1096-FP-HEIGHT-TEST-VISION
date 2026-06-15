@@ -27,7 +27,7 @@
     "bin/"
   ],
   "include": [
-    "../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.762.54/runtimes/native1.12-tchmi/TcHmi.d.ts"
+    "../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.762.57/runtimes/native1.12-tchmi/TcHmi.d.ts"
   ],
   "files": [
     "CSS_JV/MyRowClassesProvider.ts"

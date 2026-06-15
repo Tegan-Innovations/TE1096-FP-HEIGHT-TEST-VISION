@@ -41,9 +41,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[PRG_FaultHandling(aAlarms := GVL_Master.stAlarms );
+      <ST><![CDATA[ PRG_FaultHandling(aAlarms := GVL_Master.stAlarms );
 PRG_Fault_HeightTest(aAlarms := GVL_Master.stAlarms);
-PRG_Fault_LeakTest(aAlarms := GVL_Master.stAlarms);
 PRG_Fault_VisionTest(aAlarms := GVL_Master.stAlarms);
 
 PRG_MachineStatus();
@@ -57,20 +56,8 @@ PRG_Puls();
 ACT_FirstScan();
 PRG_TerminBoxInfo();
 
-//gfggf
-
-
-
-
-PRG_LeakTestEvents_Info();
-
-
-
-
-
 //Stations
 PRG_HeightTest(stStationStruct:= GVL_Master.stStationSruct[1]);
-PRG_LeakTest(stStationStruct:= GVL_Master.stStationSruct[2]);
 PRG_VisionTest(stStationStruct:= GVL_Master.stStationSruct[3]);
 
 
@@ -207,7 +194,6 @@ END_VAR
         <ST><![CDATA[//Set event texts first
 IF GVL_Master.stAlarms[0].bEventTextsSet AND
    GVL_Master.stAlarms[1].bEventTextsSet AND
-   GVL_Master.stAlarms[2].bEventTextsSet AND
    GVL_Master.stAlarms[3].bEventTextsSet AND
    NOT GVL_HMI_GLOBAL.bEventTextsSet 
 THEN
@@ -267,11 +253,10 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Main_Master">
-      <LineId Id="469" Count="14" />
-      <LineId Id="571" Count="0" />
-      <LineId Id="570" Count="0" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="484" Count="47" />
+      <LineId Id="469" Count="1" />
+      <LineId Id="472" Count="11" />
+      <LineId Id="492" Count="2" />
+      <LineId Id="496" Count="35" />
       <LineId Id="255" Count="0" />
     </LineIds>
     <LineIds Name="Main_Master.ACT_FirstScan">
@@ -330,7 +315,8 @@ END_FOR]]></ST>
       <LineId Id="72" Count="0" />
     </LineIds>
     <LineIds Name="Main_Master.MapUnitEventsToHMI">
-      <LineId Id="6" Count="4" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="10" Count="0" />
       <LineId Id="12" Count="16" />
       <LineId Id="5" Count="0" />
     </LineIds>

@@ -58,33 +58,22 @@ END_FOR
 (**************************** Master Immediate Fault Stop *****************************************)
 (**************************************************************************************************)
 (* Copy Safety Immediate Stop Faults to Master Immediate Stop Faults *)
-(* *)
 
-//Camera Station Not Homed Timeout
-GVL_MASTER.stAlarms[3].aEventTimers[0](IN:= (GVL_Master.stStationSruct[3].nState>=200 AND GVL_Master.stStationSruct[3].nState<=900) ,PT:=T#5S);																	
-IF GVL_MASTER.stAlarms[3].aEventTimers[0].Q THEN //
-	GVL_MASTER.stAlarms[3].aEventFlags[0] := TRUE;
-END_IF
 //Camera Station Cycle Timeout
-GVL_MASTER.stAlarms[3].aEventTimers[1](IN:= (GVL_Master.stStationSruct[3].nState>=1100 AND GVL_Master.stStationSruct[3].nState<1900) ,PT:=T#5S);
+(*GVL_MASTER.stAlarms[3].aEventTimers[1](IN:= (GVL_Master.stStationSruct[3].nState>=1100 AND GVL_Master.stStationSruct[3].nState<1900) ,PT:=T#5S);
 IF GVL_MASTER.stAlarms[3].aEventTimers[1].Q THEN // 
 	GVL_MASTER.stAlarms[3].aEventFlags[1] := TRUE;
-END_IF
+END_IF*)
 //Camera Error
 GVL_MASTER.stAlarms[3].aEventTimers[2](IN := (NOT PRG_VisionTest.bCamerraNoError),PT:=T#100MS);
 IF GVL_MASTER.stAlarms[3].aEventTimers[2].Q THEN //
 	GVL_MASTER.stAlarms[3].aEventFlags[2] := TRUE;
 END_IF
-//Consecutive part rejects
-(*IF PRG_VisionTest.nConsParts>2 THEN // 
-	GVL_MASTER.stAlarms[3].aEventFlags[3] := TRUE;
-END_IF*)
 
-//Adquisition error
-IF GVL_IO.dw_B06_IS2802M.aqsAcquisitionError  THEN
-	GVL_MASTER.stAlarms[3].aEventFlags[100] := TRUE;
-ELSIF NOT GVL_IO.dw_B06_IS2802M.aqsAcquisitionError THEN
-   	GVL_MASTER.stAlarms[3].aEventFlags[100] := FALSE;
+//Camera No Running
+GVL_MASTER.stAlarms[3].aEventTimers[3](IN := (NOT PRG_VisionTest.bOnline),PT:=T#100MS);
+IF GVL_MASTER.stAlarms[3].aEventTimers[3].Q THEN //
+	GVL_MASTER.stAlarms[3].aEventFlags[3] := TRUE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -95,10 +84,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[//Immediate Faults
-GVL_MASTER.stAlarms[3].aEventTexts[0] := 'Camera Station Not Homed Timeout';
+GVL_MASTER.stAlarms[3].aEventTexts[0] := '';
 GVL_MASTER.stAlarms[3].aEventTexts[1] := 'Camera Station Cycle Timeout';
 GVL_MASTER.stAlarms[3].aEventTexts[2] := 'Camera Error';
-//GVL_MASTER.stAlarms[3].aEventTexts[3] := 'More than 2 Consecutive rejects';
+GVL_MASTER.stAlarms[3].aEventTexts[3] := 'Camera No Running';
 GVL_MASTER.stAlarms[3].aEventTexts[4] := '';
 GVL_MASTER.stAlarms[3].aEventTexts[5] := '';
 GVL_MASTER.stAlarms[3].aEventTexts[6] := '';
@@ -137,7 +126,7 @@ GVL_MASTER.stAlarms[3].aEventTexts[89] := '';
 
 //Master Messages
 
-GVL_MASTER.stAlarms[3].aEventTexts[100] := 'Acquisition Error';
+GVL_MASTER.stAlarms[3].aEventTexts[100] := '';
 GVL_MASTER.stAlarms[3].aEventTexts[101] := '';
 GVL_MASTER.stAlarms[3].aEventTexts[102] := '';
 GVL_MASTER.stAlarms[3].aEventTexts[103] := '';
@@ -153,19 +142,11 @@ GVL_MASTER.stAlarms[3].aEventTexts[106] := '';]]></ST>
     </LineIds>
     <LineIds Name="PRG_Fault_VisionTest.ACT_FaultTrig">
       <LineId Id="2" Count="4" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="7" Count="2" />
-      <LineId Id="1" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="13" Count="2" />
       <LineId Id="12" Count="0" />
-      <LineId Id="18" Count="5" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="30" Count="3" />
+      <LineId Id="18" Count="4" />
+      <LineId Id="34" Count="4" />
       <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="PRG_Fault_VisionTest.SetEventTexts">

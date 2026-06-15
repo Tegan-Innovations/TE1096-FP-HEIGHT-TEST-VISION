@@ -29,10 +29,10 @@
     <HmiViewportUserScaleable>Default</HmiViewportUserScaleable>
     <HmiPostProcessing>True</HmiPostProcessing>
     <Name>TE-1096-FA-HMI</Name>
-    <HmiCommunicationRouterPort>10116</HmiCommunicationRouterPort>
+    <HmiCommunicationRouterPort>10118</HmiCommunicationRouterPort>
     <HmiCommunicationServerAuthPort>13006</HmiCommunicationServerAuthPort>
     <HmiInitial>1.12.762.42</HmiInitial>
-    <HmiRecent>1.12.762.46</HmiRecent>
+    <HmiRecent>1.12.762.57</HmiRecent>
     <HmiServerNodeAdvancedView>False</HmiServerNodeAdvancedView>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -177,13 +177,10 @@
     <Content Include="Content\IO Content Screen\IO_08KEYENCE.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Content\IO Content Screen\IO_09COGNEX.content">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Content\IO Content Screen\IO_10I28.content">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Content\IO.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Content\keyboard.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Content\Leak Test.content">
@@ -218,6 +215,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="CSS_JV\Stylesheet1.css">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Adobe Express - file.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\box.svg">
@@ -271,6 +271,9 @@
     <Content Include="Images\IO Beckhoff\RJ45A.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\keyence_camera.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Images\LeakTesterPNG.png">
       <SubType>Content</SubType>
     </Content>
@@ -283,13 +286,22 @@
     <Content Include="Images\MenuButton.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\part.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Images\PartType5_2.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\piece.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\probes_down.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Images\ProbsPNG.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\SensorsPosition.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Shutdown_Box_Red.png">

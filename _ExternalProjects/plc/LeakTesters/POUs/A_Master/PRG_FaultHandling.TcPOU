@@ -85,7 +85,7 @@ GVL_MASTER.stMasterControl.bNoCycleStopFault := NOT GVL_MASTER.stAlarms[0].bCycl
     </Implementation>
     <Action Name="ACT_FaultTrig" Id="{f82952b9-10cd-47a6-a8aa-cbbe9096c605}">
       <Implementation>
-        <ST><![CDATA[(**************************************************************************************************)
+        <ST><![CDATA[ (**************************************************************************************************)
 (**************************** Master Immediate Fault Stop *****************************************)
 (**************************************************************************************************)
 
@@ -101,10 +101,7 @@ END_IF
 IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp AND GVL_IO.dwBoxInfo[15].nPnIoBoxState<>0 THEN
 	GVL_MASTER.stAlarms[0].aEventFlags[35] := TRUE;
 END_IF
-//External Error - Cognex Camera ERROR
-IF GVL_IO.dw_B06_IS2802M.isError   THEN // 
-	GVL_MASTER.stAlarms[0].aEventFlags[36] := TRUE;
-END_IF
+
 //Cognex  IS2801M Diagnostic Error
 IF NOT GVL_MASTER.stMachineStatus.bSystemPowerUp AND GVL_IO.dwBoxInfo[15].nPnIoBoxDiag=1 THEN
 	GVL_MASTER.stAlarms[0].aEventFlags[37] := TRUE;
@@ -133,10 +130,10 @@ IF PRG_MasterCycle.bAutoCycleStop  THEN //
 	GVL_MASTER.stAlarms[0].aEventFlags[80] := TRUE;
 END_IF
 //Autocyle Timeout 
-GVL_MASTER.stAlarms[0].aEventTimers[42](IN:= GVL_MASTER.stStationSruct[0].bStationInProgress, PT :=T#10M ); 
+(*GVL_MASTER.stAlarms[0].aEventTimers[42](IN:= GVL_MASTER.stStationSruct[0].bStationInProgress, PT :=T#10M ); 
 IF GVL_MASTER.stAlarms[0].aEventTimers[42].Q THEN
 	GVL_MASTER.stAlarms[0].aEventFlags[42] := TRUE;
-END_IF
+END_IF*)
 //Part removed during process
 IF GVL_Master.stStationSruct[0].nState > 1000 AND GVL_Master.stStationSruct[0].nState < 2000 AND NOT GVL_IO.dw_T02_EL1809.iPartPresent THEN
 	GVL_MASTER.stAlarms[0].aEventFlags[43] := TRUE;
@@ -278,8 +275,6 @@ GVL_MASTER.stAlarms[0].aEventTexts[102] := 'Release Clamp and Remove Nest';]]></
       <LineId Id="16" Count="0" />
       <LineId Id="13" Count="1" />
       <LineId Id="4" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="18" Count="1" />
       <LineId Id="17" Count="0" />
       <LineId Id="22" Count="2" />
       <LineId Id="21" Count="0" />

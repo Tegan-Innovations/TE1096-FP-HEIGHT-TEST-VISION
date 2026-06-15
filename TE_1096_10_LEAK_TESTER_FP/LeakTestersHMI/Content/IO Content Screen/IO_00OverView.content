@@ -9,10 +9,6 @@
 </div>
 <div id="TcHmi_Controls_Beckhoff_TcHmiImage_34" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="183" data-tchmi-height-unit="px" data-tchmi-left="944" data-tchmi-left-unit="px" data-tchmi-src="Images/ProbsPNG.png" data-tchmi-top="252" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
 </div>
-<div id="TcHmi_Controls_Beckhoff_TcHmiImage_35" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="133" data-tchmi-height-unit="px" data-tchmi-left="866" data-tchmi-left-unit="px" data-tchmi-src="Images/LeakTesterPNG.png" data-tchmi-top="47" data-tchmi-top-unit="px" data-tchmi-width="126" data-tchmi-width-unit="px" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
-</div>
-<div id="TcHmi_Controls_Beckhoff_TcHmiImage_36" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="99" data-tchmi-height-unit="px" data-tchmi-left="1083" data-tchmi-left-unit="px" data-tchmi-src="Images/CameraPNG.png" data-tchmi-top="47" data-tchmi-top-unit="px" data-tchmi-width="98" data-tchmi-width-unit="px" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
-</div>
 <div id="TcHmi_Controls_Beckhoff_TcHmiImage_37" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="193" data-tchmi-height-unit="px" data-tchmi-left="17" data-tchmi-left-unit="px" data-tchmi-src="Images/IO Beckhoff/CP2912-0000.PNG" data-tchmi-top="23" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
 </div>
 <div id="TcHmiTextblock_268" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="15" data-tchmi-height-unit="px" data-tchmi-left="160" data-tchmi-left-unit="px" data-tchmi-text="DVI" data-tchmi-top="352" data-tchmi-top-unit="px" data-tchmi-width="63" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
@@ -93,20 +89,6 @@
 </script>
 </div>
 <div id="TcHmiTextblock_9074" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="15" data-tchmi-height-unit="px" data-tchmi-left="667" data-tchmi-left-unit="px" data-tchmi-text="Profinet" data-tchmi-top="80" data-tchmi-top-unit="px" data-tchmi-width="63" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
-<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
-{
-  "color": "rgba(57, 171, 22, 1)"
-}
-</script>
-</div>
-<div id="TcHmiLine_176" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLine" data-tchmi-height="15" data-tchmi-height-unit="px" data-tchmi-left="575" data-tchmi-left-unit="px" data-tchmi-top="73" data-tchmi-top-unit="px" data-tchmi-width="301" data-tchmi-width-unit="px" data-tchmi-x1="0" data-tchmi-x2="301" data-tchmi-y1="5" data-tchmi-y2="5" data-tchmi-zindex="2" data-tchmi-creator-locked="True">
-<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
-{
-  "color": "rgba(2, 154, 32, 1)"
-}
-</script>
-</div>
-<div id="TcHmiTextblock_9075" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="15" data-tchmi-height-unit="px" data-tchmi-left="667" data-tchmi-left-unit="px" data-tchmi-text="Profinet" data-tchmi-top="58" data-tchmi-top-unit="px" data-tchmi-width="63" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
 <script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
 {
   "color": "rgba(57, 171, 22, 1)"
@@ -205,5 +187,7 @@
   "color": "rgba(57, 171, 22, 1)"
 }
 </script>
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_57" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="147" data-tchmi-height-unit="px" data-tchmi-left="1105" data-tchmi-left-unit="px" data-tchmi-src="Images/keyence_camera.png" data-tchmi-top="31" data-tchmi-top-unit="px" data-tchmi-width="142" data-tchmi-width-unit="px" data-tchmi-zindex="8">
 </div>
 </div>

@@ -1,6 +1,6 @@
 <div id="IO" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1280" data-tchmi-height="506">
 
-<div id="TcHmiCombobox" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="false" data-tchmi-combobox-text="Select" data-tchmi-height="41" data-tchmi-height-unit="px" data-tchmi-left="25" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="1235" data-tchmi-width-unit="px" data-tchmi-src-data="%s%PLC1.GVL_HMI_GLOBAL.aIOScreen%/s%" data-tchmi-selected-index="%i%nIOFrameIndex|BindingMode=TwoWay%/i%">
+<div id="TcHmiCombobox" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="false" data-tchmi-combobox-text="Select" data-tchmi-height="41" data-tchmi-height-unit="px" data-tchmi-left="25" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="1235" data-tchmi-width-unit="px" data-tchmi-selected-index="%i%nIOFrameIndex|BindingMode=TwoWay%/i%" data-tchmi-src-data="%s%PLC1.GVL_HMI_GLOBAL.aIOScreen%/s%">
 <script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
 {
   "top": 3,

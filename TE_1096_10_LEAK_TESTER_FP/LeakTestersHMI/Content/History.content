@@ -225,28 +225,6 @@
     }
   },
   {
-    "name": "sLeakHMI",
-    "label": "Leak Test",
-    "control": "TextBox",
-    "width": 75,
-    "widthUnit": "px",
-    "resize": false,
-    "sortable": false,
-    "minWidth": 75,
-    "minWidthUnit": "px",
-    "textColor": {
-      "color": "rgba(0, 0, 0, 1)"
-    },
-    "editable": false,
-    "horizontalAlignment": "Center",
-    "verticalAlignment": "Center",
-    "headerHorizontalAlignment": "Center",
-    "headerVerticalAlignment": "Center",
-    "ignoreEscapeSequences": false,
-    "autoFocusOut": true,
-    "autoSelectText": false
-  },
-  {
     "name": "sVisionHMI",
     "label": "Vision",
     "control": "TextBox",

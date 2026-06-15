@@ -1,6 +1,6 @@
-declare namespace TcHmi {
-    namespace Functions {
-        namespace LeakTestersHMI {
+declare module TcHmi {
+    module Functions {
+        module LeakTestersHMI {
             function MyRowClassesProvider(rowValue: {
                 sHeightHMI: string;
                 sVisionHMI: string;

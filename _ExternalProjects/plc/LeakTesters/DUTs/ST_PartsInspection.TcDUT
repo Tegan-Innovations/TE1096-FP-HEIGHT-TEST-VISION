@@ -19,11 +19,6 @@ STRUCT
 	nHeightDistancePartsFailed		: ARRAY[1..4] OF DINT;
 	nHeightDistanceTotalPartsFailed	: ARRAY[1..4] OF DINT;
 	
-	nLeakPartsGood					: DINT;
-	nLeakTotalPartsGood				: DINT;
-	nLeakPartsFailed				: DINT;
-	nLeakTotalPartsFailed			: DINT;
-	
 	nPartsGood						: DINT;
 	nTotalPartsGood					: DINT;
 	nPartsFailed					: DINT;

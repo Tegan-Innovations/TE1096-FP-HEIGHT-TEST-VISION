@@ -1,5 +1,5 @@
 {
-  "$schema": "./../../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.762.54/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
+  "$schema": "./../../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.762.57/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
   "basePath": "./framework",
   "scaleMode": "None",
   "startupView": "Desktop.view",
@@ -272,21 +272,14 @@
       "preloadBindings": false
     },
     {
-      "url": "Content/IO Content Screen/IO_09COGNEX.content",
-      "preload": false,
-      "keepAlive": false,
-      "loadSync": false,
-      "preloadBindings": false
-    },
-    {
-      "url": "Content/IO Content Screen/IO_10I28.content",
-      "preload": false,
-      "keepAlive": false,
-      "loadSync": false,
-      "preloadBindings": false
-    },
-    {
       "url": "Content/IO.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Content/keyboard.content",
       "preload": false,
       "keepAlive": false,
       "loadSync": false,

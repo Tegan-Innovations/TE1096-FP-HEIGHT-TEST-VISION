@@ -1,4 +1,6 @@
 {
+    "ALLOWED_ORIGINS": [],
+    "ALLOW_SSL_CERTIFICATES_HOSTS_ORIGINS": true,
     "AUTHCLIENTCERTIFICATE": false,
     "AUTO_LOGINUSER": "",
     "AUTO_LOGOFF": "P30D",
@@ -174,6 +176,21 @@
             },
             "maxItems": 40,
             "minItems": 40,
+            "type": "array"
+        },
+        "PLC1.ARRAY_0..8_OF-STRING-200": {
+            "items": {
+                "allOf": [
+                    {
+                        "maxLength": 200
+                    },
+                    {
+                        "$ref": "tchmi:general#/definitions/String"
+                    }
+                ]
+            },
+            "maxItems": 9,
+            "minItems": 9,
             "type": "array"
         },
         "PLC1.ARRAY_1..10_OF-STRING-80": {
@@ -5401,6 +5418,16 @@
             },
             "USEMAPPING": true
         },
+        "PLC1.GVL_HMI_GLOBAL.aIOScreen": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI_GLOBAL::aIOScreen",
+            "SCHEMA": {
+                "$ref": "tchmi:server#/definitions/PLC1.ARRAY_0..8_OF-STRING-200"
+            },
+            "USEMAPPING": true
+        },
         "PLC1.GVL_HMI_GLOBAL.aManualScreen": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -8142,10 +8169,10 @@
     "VIDEOSEGMENTSIZE": 1048576,
     "VIRTUALDIRECTORIES": {
         "/": "..\\..\\LeakTestersHMI\\",
-        "/Beckhoff.TwinCAT.HMI.Controls": "..\\..\\..\\Packages\\Beckhoff.TwinCAT.HMI.Controls.12.762.54\\runtimes\\native1.12-tchmi",
-        "/Beckhoff.TwinCAT.HMI.Functions": "..\\..\\..\\Packages\\Beckhoff.TwinCAT.HMI.Functions.12.762.54\\runtimes\\native1.12-tchmi",
+        "/Beckhoff.TwinCAT.HMI.Controls": "..\\..\\..\\Packages\\Beckhoff.TwinCAT.HMI.Controls.12.762.57\\runtimes\\native1.12-tchmi",
+        "/Beckhoff.TwinCAT.HMI.Functions": "..\\..\\..\\Packages\\Beckhoff.TwinCAT.HMI.Functions.12.762.57\\runtimes\\native1.12-tchmi",
         "/bin": "..\\..\\LeakTestersHMI\\bin\\",
         "/bin/framework": "..\\..\\LeakTestersHMI\\bin\\framework",
-        "/framework": "..\\..\\..\\Packages\\Beckhoff.TwinCAT.HMI.Framework.12.762.54\\runtimes\\native1.12-tchmi"
+        "/framework": "..\\..\\..\\Packages\\Beckhoff.TwinCAT.HMI.Framework.12.762.57\\runtimes\\native1.12-tchmi"
     }
 }

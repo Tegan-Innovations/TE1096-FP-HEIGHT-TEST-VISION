@@ -7,9 +7,6 @@ VAR_GLOBAL PERSISTENT
 stPartsInspection			: ST_PartsInspection;
 stUserLogHMI				: ARRAY[0..250] OF ST_UserLogHMI;
 UserId						: UINT;
-ast_i28LasResult            : ARRAY [0..250] OF st_i28LasResult;
-nLeakTestID					: UINT;
-
 nCycleNumber				: INT;
 
 aSensorSetPointsHeightTest		: ARRAY[1..4] OF DINT;

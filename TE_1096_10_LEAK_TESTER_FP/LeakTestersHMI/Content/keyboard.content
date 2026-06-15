@@ -1,0 +1,73 @@
+<div id="keyboard" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="800" data-tchmi-height="300">
+
+<div id="TcHmiKeyboard" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiKeyboard" data-tchmi-height="250" data-tchmi-height-unit="px" data-tchmi-label-font-size="14" data-tchmi-layout-file="KeyboardLayouts/US - compact.keyboard.json" data-tchmi-left="5" data-tchmi-left-unit="px" data-tchmi-scale-mode="ScaleToFit" data-tchmi-top="45" data-tchmi-top-unit="px" data-tchmi-width="790" data-tchmi-width-unit="px">
+<script data-tchmi-target-attribute="data-tchmi-indirect-input-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-keyboard-padding" type="application/json">
+{
+  "top": 10,
+  "topUnit": "px",
+  "right": 10,
+  "rightUnit": "px",
+  "bottom": 10,
+  "bottomUnit": "px",
+  "left": 10,
+  "leftUnit": "px"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-key-padding" type="application/json">
+{
+  "top": 4,
+  "topUnit": "px",
+  "right": 4,
+  "rightUnit": "px",
+  "bottom": 4,
+  "bottomUnit": "px",
+  "left": 4,
+  "leftUnit": "px"
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-additional-key-backdrop-padding" type="application/json">
+{
+  "top": 10,
+  "topUnit": "px",
+  "right": 10,
+  "rightUnit": "px",
+  "bottom": 10,
+  "bottomUnit": "px",
+  "left": 10,
+  "leftUnit": "px"
+}
+</script>
+
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_55" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="36" data-tchmi-height-unit="px" data-tchmi-left="754" data-tchmi-left-unit="px" data-tchmi-src="Images/x_close.png" data-tchmi-top="9" data-tchmi-top-unit="px" data-tchmi-width="41" data-tchmi-width-unit="px">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmi_Controls_Beckhoff_TcHmiImage_55.onPressed",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiRegion::Visibility%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/Visibility",
+          "value": "Collapsed"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>

@@ -29,8 +29,6 @@ tonResetStatistics( IN := 	GVL_HMI_GLOBAL.aResetHeightSensorBadParts [1] 	OR
 							GVL_HMI_GLOBAL.bResetHeightFailParts			OR
 							GVL_HMI_GLOBAL.bResetHeightGoodParts			OR
 							GVL_HMI_GLOBAL.bResetGoodParts					OR
-							GVL_HMI_GLOBAL.bResetLeakBadParts				OR
-							GVL_HMI_GLOBAL.bResetLeakGoodParts				OR
 							GVL_HMI_GLOBAL.bResetVisionBadParts				OR
 							GVL_HMI_GLOBAL.bResetVisionGoodParts			OR
 							GVL_HMI_GLOBAL.bResetFailedParts				OR
@@ -57,45 +55,14 @@ IF tonCaseDelay[3].Q THEN
 		
 END_IF
 
-IF GVL_HMI_GLOBAL.bStartLeakMan THEN
-	GVL_IO.dw_B07_i28General_I_O.bStart := TRUE;
-END_IF
-IF tonCaseDelay[4].Q THEN
-	
-		GVL_HMI_GLOBAL.bStartLeakMan	:= FALSE;
-		GVL_IO.dw_B07_i28General_I_O.bStart := FALSE;
-END_IF
 
-IF GVL_HMI_GLOBAL.bStopLeakMan THEN
-	GVL_IO.dw_B07_i28General_I_O.bStop := TRUE;
-END_IF
-IF tonCaseDelay[5].Q THEN
-	
-		GVL_HMI_GLOBAL.bStopLeakMan	:= FALSE;
-		GVL_IO.dw_B07_i28General_I_O.bStop := FALSE;
-		
-END_IF
-
-IF GVL_HMI_GLOBAL.bResetLeakMan THEN
-	GVL_IO.dw_B07_i28General_I_O.bReset := TRUE;
-END_IF
-IF tonCaseDelay[6].Q THEN
-	
-		GVL_HMI_GLOBAL.bResetLeakMan	:= FALSE;
-		GVL_IO.dw_B07_i28General_I_O.bReset := FALSE;
-		
-END_IF
 
 IF tonCaseDelay[7].Q THEN
 	
 		GVL_HMI_GLOBAL.bShutDown	:= FALSE;
 		
 END_IF
-IF tonCaseDelay[8].Q THEN
-	
-		GVL_HMI_GLOBAL.bSetLeakProgramID	:= FALSE;
-		
-END_IF
+
 
 IF tonCaseDelay[9].Q THEN
 	
@@ -122,8 +89,6 @@ IF tonResetStatistics.Q THEN
 							GVL_HMI_GLOBAL.bResetHeightFailParts			:= FALSE;
 							GVL_HMI_GLOBAL.bResetHeightGoodParts			:= FALSE;
 							GVL_HMI_GLOBAL.bResetGoodParts					:= FALSE;
-							GVL_HMI_GLOBAL.bResetLeakBadParts				:= FALSE;
-							GVL_HMI_GLOBAL.bResetLeakGoodParts				:= FALSE;
 							GVL_HMI_GLOBAL.bResetVisionBadParts				:= FALSE;
 							GVL_HMI_GLOBAL.bResetVisionGoodParts			:= FALSE;
 							GVL_HMI_GLOBAL.bResetFailedParts				:= FALSE;
@@ -158,13 +123,12 @@ GVL_HMI_GLOBAL.aIOScreen[4] := 'Terminal 2 - EL6070 | Licence ';
 GVL_HMI_GLOBAL.aIOScreen[5] := CONCAT('Terminal 3 - ' , GVL_IO.dw_T02_EL1809.sTerminalName);
 GVL_HMI_GLOBAL.aIOScreen[6] := CONCAT('Terminal 4 - ' , GVL_IO.dw_T03_EL2809.sTerminalName);
 GVL_HMI_GLOBAL.aIOScreen[7] := 'Terminal 12 - EL6631 |  2-port communication interface';
-GVL_HMI_GLOBAL.aIOScreen[8] := 'DL-PN1 | Keyence Communication Unit | ProfiNET';
-GVL_HMI_GLOBAL.aIOScreen[9] := 'IS2802  | Cognex Camera| ProfiNET';
-GVL_HMI_GLOBAL.aIOScreen[10] := 'I28 | Cincinnati Leak Tester | ProfiNET';
+GVL_HMI_GLOBAL.aIOScreen[8] := 'DL-PN1 4Keyence Communication Unit | IV4 Camera | ProfiNET';
 
-GVL_HMI_GLOBAL.aManualScreen[0] := 'Cognex | Vision Test';
+
+GVL_HMI_GLOBAL.aManualScreen[0] := 'Keyence | Vision Test';
 GVL_HMI_GLOBAL.aManualScreen[1] := 'Keyence | Height Test';
-GVL_HMI_GLOBAL.aManualScreen[2] := 'Cincinnati | Leak Test';
+
 ]]></ST>
       </Implementation>
     </Action>
@@ -175,11 +139,11 @@ GVL_HMI_GLOBAL.aManualScreen[2] := 'Cincinnati | Leak Test';
 tonCaseDelay[1](IN:= GVL_HMI_GLOBAL.bResetButton,PT:=T#500MS);
 tonCaseDelay[2](IN:= GVL_HMI_GLOBAL.bStopButton,PT:=T#500MS);
 tonCaseDelay[3](IN:= GVL_HMI_GLOBAL.bStartButton,PT:=T#500MS);
-tonCaseDelay[4](IN:= GVL_HMI_GLOBAL.bStartLeakMan,PT:=T#500MS);
-tonCaseDelay[5](IN:= GVL_HMI_GLOBAL.bStopLeakMan,PT:=T#500MS);
-tonCaseDelay[6](IN:= GVL_HMI_GLOBAL.bResetLeakMan,PT:=T#500MS);
+tonCaseDelay[4](IN:= ,PT:=T#500MS);
+tonCaseDelay[5](IN:= ,PT:=T#500MS);
+tonCaseDelay[6](IN:= ,PT:=T#500MS);
 //tonCaseDelay[7](IN:= GVL_HMI_GLOBAL.bShutDown,PT:=T#500MS);
-tonCaseDelay[8](IN:= GVL_HMI_GLOBAL.bSetLeakProgramID,PT:=T#5S);
+tonCaseDelay[8](IN:= ,PT:=T#5S);
 tonCaseDelay[9](IN:= GVL_HMI_GLOBAL.bSetSetPointsHeightTest,PT:=T#1S);
 tonCaseDelay[10](IN:= GVL_HMI_GLOBAL.bManualMeasureHeightTest,PT:=T#1S);
 
@@ -197,7 +161,7 @@ rtrigCaseTriger[1](CLK := GVL_MASTER.stNest.bPieceReject);
       <LineId Id="63" Count="0" />
       <LineId Id="75" Count="9" />
       <LineId Id="116" Count="0" />
-      <LineId Id="85" Count="2" />
+      <LineId Id="85" Count="0" />
       <LineId Id="104" Count="1" />
       <LineId Id="88" Count="1" />
       <LineId Id="74" Count="0" />
@@ -205,33 +169,19 @@ rtrigCaseTriger[1](CLK := GVL_MASTER.stNest.bPieceReject);
     <LineIds Name="PRG_HMI.ACT_Buttons">
       <LineId Id="2" Count="15" />
       <LineId Id="1" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="46" Count="2" />
-      <LineId Id="20" Count="3" />
       <LineId Id="19" Count="0" />
-      <LineId Id="51" Count="2" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="25" Count="2" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="56" Count="2" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="30" Count="2" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="33" Count="0" />
       <LineId Id="29" Count="0" />
       <LineId Id="60" Count="0" />
       <LineId Id="36" Count="3" />
       <LineId Id="35" Count="0" />
-      <LineId Id="41" Count="4" />
+      <LineId Id="45" Count="0" />
       <LineId Id="64" Count="4" />
       <LineId Id="63" Count="0" />
       <LineId Id="69" Count="4" />
       <LineId Id="61" Count="1" />
       <LineId Id="74" Count="10" />
       <LineId Id="96" Count="0" />
-      <LineId Id="85" Count="2" />
+      <LineId Id="85" Count="0" />
       <LineId Id="94" Count="1" />
       <LineId Id="88" Count="5" />
       <LineId Id="40" Count="0" />
@@ -249,7 +199,7 @@ rtrigCaseTriger[1](CLK := GVL_MASTER.stNest.bPieceReject);
     </LineIds>
     <LineIds Name="PRG_HMI.ACT_ScreensNamesSet">
       <LineId Id="1" Count="3" />
-      <LineId Id="6" Count="6" />
+      <LineId Id="6" Count="5" />
       <LineId Id="16" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="17" Count="1" />

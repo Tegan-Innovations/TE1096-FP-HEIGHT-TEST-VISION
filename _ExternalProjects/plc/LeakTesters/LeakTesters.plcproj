@@ -18,9 +18,6 @@
     <LibraryReferences>{34e37bb0-2d61-4273-b586-d9a2feb46be4}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\E_CameraJobChange.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\E_MachineState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -28,18 +25,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\HeightMeasureFunction\E_HeighttMeasureProcess.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\IO\i28\st_i28General_I_O.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\IO\i28\st_i28LasResult.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\IO\i28\st_i28LiveMeasurement.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\IO\st_IS2802M.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\IO\E_BoxDiag.TcDUT">
@@ -61,6 +46,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\IO\ST_DL_PN1.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\IO\st_KeyenceCamera.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\IO\st_Terminal_Info.TcDUT">
@@ -149,15 +137,6 @@
     <Compile Include="POUs\B_HightTest\PRG_HeightTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\C_LeakTest\PRG_Fault_LeakTest.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\C_LeakTest\PRG_LeakTest.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\C_LeakTest\PRG_LeakTestEvents_Info.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\D_VisionTest\PRG_Fault_VisionTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -202,13 +181,11 @@
     <Folder Include="DUTs" />
     <Folder Include="DUTs\HeightMeasureFunction" />
     <Folder Include="DUTs\IO" />
-    <Folder Include="DUTs\IO\i28" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\A_Master" />
     <Folder Include="POUs\E_HMI" />
     <Folder Include="POUs\G_Utility" />
     <Folder Include="POUs\B_HightTest" />
-    <Folder Include="POUs\C_LeakTest" />
     <Folder Include="POUs\D_VisionTest" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />

@@ -12,17 +12,12 @@ VAR_GLOBAL
 	bLogOut							: BOOL;
 	bUserLogedIntSignal				: BOOL;
 	bShutDown						: BOOL;
-	
-	
-	
-	
-	
+
 	//General
 	bStopButton						: BOOL;
 	bStartButton					: BOOL;
 	bResetButton					: BOOL;
 	nRegionMain						: INT;
-	bTrigerCamMan					: BOOL;
 	bResetGoodParts					: BOOL;
 	bResetFailedParts				: BOOL;
 	
@@ -34,8 +29,8 @@ VAR_GLOBAL
 	
 	sMessageToOperator				: WSTRING(200);
 	sActualProcess					: WSTRING(200);
-	aIOScreen						: ARRAY [0..10] OF STRING(200);
-	aManualScreen					: ARRAY [0..2] OF STRING(200);
+	aIOScreen						: ARRAY [0..8] OF STRING(200);
+	aManualScreen					: ARRAY [0..1] OF STRING(200);
 	bResetPassAndFail				: BOOL;
 	bEnableManualMode				: BOOL;
 	bRejectPieceAcknowledge			: BOOL;
@@ -47,39 +42,15 @@ VAR_GLOBAL
 	// ------ Screen Info / Data -----------	
 	sSystemDate					: STRING;
 	sSystemTime					: STRING;
-	ntAMSNetID					: T_AmsNetId := '172.18.237.82.1.1';
+	ntAMSNetID					: T_AmsNetId := '172.18.239.139.1.1';
 	
 	
 	
 	//Camera
 	bManualModeOff					: ARRAY[1..2] OF BOOL;
-	bResetCamMan					: BOOL;
-	sInfoCamMan						: STRING;
-	bLoadProductionJob				: BOOL;
-	bLoadCalibrationJob				: BOOL;
-	bEnableTrigerMan				: BOOL;
 	bVisionPass						: BOOL;
 	bResetVisionGoodParts			: BOOL;
 	bResetVisionBadParts			: BOOL;
-	
-	
-	//Leak Tester
-	bLeakTestPass					: BOOL;
-	uSetLeakProgramID				: USINT;
-	bSetLeakProgramID				: BOOL;
-	bResetLeakMan					: BOOL;
-	bStartLeakMan					: BOOL;
-	bStopLeakMan					: BOOL;
-	bLoadLeakProg					: BOOL;
-	uNewLeakProgID					: USINT;
-	
-	
-	
-	bResetLeakGoodParts				: BOOL;
-	bResetLeakBadParts				: BOOL;
-	
-	
-	
 	
 	//Height Tester
 	bHeightTestPass					: BOOL;

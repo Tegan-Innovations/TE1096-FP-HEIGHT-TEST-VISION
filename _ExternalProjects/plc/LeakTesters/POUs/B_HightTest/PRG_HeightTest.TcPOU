@@ -202,14 +202,6 @@ fbHeightMeasurement2(
 	aScaledSensorCurrentValue					=> stHeightMeasurement2.aScaledSensorCurrentValue,
 	nHeightMeasureStateValue					=> GVL_HMI_GLOBAL.nHeightMeasureStateValue);
 
-			
-
-IF NOT stStationStruct.bNoCycleStopRequest THEN
-	GVL_MASTER.bHeightTestacknowledge := TRUE;
-END_IF
-
-
-
 
 //to save data 
 GVL_MASTER.stNest.nDistance							:= stHeightMeasurement2.aDistanceBetweenProbes;
@@ -414,14 +406,8 @@ rtrigCaseTriger[11](clk:= (stStationStruct.nState=1240) AND GVL_HMI_GLOBAL.aGene
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="PRG_HeightTest.ACT_IOLink">
-      <LineId Id="88" Count="31" />
+      <LineId Id="88" Count="30" />
       <LineId Id="54" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="77" Count="1" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="38" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="120" Count="1" />
       <LineId Id="20" Count="1" />
