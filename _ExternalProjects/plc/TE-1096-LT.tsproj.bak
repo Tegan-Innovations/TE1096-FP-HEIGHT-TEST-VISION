@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.62" TcVersionFixed="true">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.53" TcVersionFixed="true">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{29CAAFD0-28B6-D9D0-3B0E-64B337839191}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..5] OF BOOL</Name>
@@ -989,7 +989,7 @@
 		<ImageData Id="1002">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000120b0000120b00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff0000ff0000ff0000ff0000ff0000ff0000ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1003">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{A6DFD27C-185A-41E4-B38F-C507642F7089}" TargetNetId="172.18.239.139.1.1" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{A6DFD27C-185A-41E4-B38F-C507642F7089}" TargetNetId="172.18.239.139.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Settings MaxCpus="4">
 				<Cpu CpuId="3"/>
@@ -1010,7 +1010,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{82C0BC2F-B8AE-4B65-B12E-3410285B5DB1}" Name="LeakTesters" PrjFilePath="LeakTesters\LeakTesters.plcproj" TmcFilePath="LeakTesters\LeakTesters.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="LeakTesters\LeakTesters.tmc" TmcHash="{06FBE154-00D9-E64D-C5BC-6149A34577F4}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="LeakTesters\LeakTesters.tmc" TmcHash="{239D6D69-F298-3E65-A1FC-8414304A46CE}">
 					<Name>LeakTesters Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -1963,7 +1963,7 @@ SW Release Version: 1.00]]></Comment>
 							<Type>UINT</Type>
 						</Var>
 					</Vars>
-					<Profinet DeviceId="4500" VendorId="509" FrameOffset="49152" IPAdd="c0a8074a" ProtocolType="3" BoxOnDeviceTyp="119" MaxPhysSlotNr="16" AvailableSlots="0..16" InstanceServerPort="61000" InstanceClientPort="60000" InstanceId="1" InstanceNumberOfARs="1" InstanceNumberOfAPIs="1" MinDeviceInterval="64" SavePnIoBoxValues="0100" Phase="1" WatchdogFaktor="3" ReductionRatio="16" SendClockFaktor="32" MaxInputLen="1440" MaxOutputLen="1440" SendClockFactorData="2000" RedRatio="020004000800100020004000800000010002" BoxTypeInfo="DL-PN1 PROFINET IO Device" PDOmapping="1" OutputErrorBehavior="2" GSDMLPath="C:\Users\Sebastian.Ulloa\Desktop\LeakTesters\Leak Tester Profinet\DL-PN1_GSDML_103\DL-PN1_GSDML_103\GSDML-V2.3-Keyence-DL-PN1-20230224.xml" ImagePath="C:\Users\Sebastian.Ulloa\Desktop\LeakTesters\Leak Tester Profinet\DL-PN1_GSDML_103\DL-PN1_GSDML_103\GSDML-01FD-1194-DL-PN1.bmp" MainFamily="Sensors" ProductFamily="Keyence Profinet Compatible Network Unit" OrderNr="DL-PN1" DefaultDNSName="dl-pn1" VendorName="Keyence" FamDescription="Profinet Compatible Network Unit" GraphicFile="GSDML-01FD-1194-DL-PN1" SWVersion="1.00" HWVersion="1.00" AltLanguage="7">
+					<Profinet DeviceId="4500" VendorId="509" FrameOffset="49152" IPAdd="c0a8074a" ProtocolType="3" BoxOnDeviceTyp="119" MaxPhysSlotNr="16" InstanceServerPort="61000" InstanceClientPort="60000" InstanceId="1" InstanceNumberOfARs="1" InstanceNumberOfAPIs="1" MinDeviceInterval="64" SavePnIoBoxValues="0100" Phase="1" WatchdogFaktor="3" ReductionRatio="16" SendClockFaktor="32" MaxInputLen="1440" MaxOutputLen="1440" SendClockFactorData="2000" RedRatio="020004000800100020004000800000010002" BoxTypeInfo="DL-PN1 PROFINET IO Device" PDOmapping="1" OutputErrorBehavior="2" GSDMLPath="C:\Users\Sebastian.Ulloa\Desktop\LeakTesters\Leak Tester Profinet\DL-PN1_GSDML_103\DL-PN1_GSDML_103\GSDML-V2.3-Keyence-DL-PN1-20230224.xml" ImagePath="C:\Users\Sebastian.Ulloa\Desktop\LeakTesters\Leak Tester Profinet\DL-PN1_GSDML_103\DL-PN1_GSDML_103\GSDML-01FD-1194-DL-PN1.bmp" MainFamily="Sensors" ProductFamily="Keyence Profinet Compatible Network Unit" OrderNr="DL-PN1" DefaultDNSName="dl-pn1" VendorName="Keyence" FamDescription="Profinet Compatible Network Unit" GraphicFile="GSDML-01FD-1194-DL-PN1" SWVersion="1.00" HWVersion="1.00" AltLanguage="7">
 						<UsedGsdmlModule ModuleIdentNumber="1" ModuleName="DAP Module" InfoText="DL-PN1 PROFINET IO Device" OrderNumber="DL-PN1">
 							<Slot>0</Slot>
 						</UsedGsdmlModule>
@@ -2331,7 +2331,10 @@ Submodule Info: GT2 I/O Device. See Users Manual for Detail.
 				</Box>
 				<Box Id="1" BoxType="9121">
 					<Name>camera-1</Name>
-					<Comment><![CDATA[GSDML Name: GSDML-V2.42-Keyence-IV4-20240516.xml
+					<Comment><![CDATA[
+The GSDML is not available!
+
+GSDML Name: GSDML-V2.42-Keyence-IV4-20240516.xml
 Path: $(TWINCAT3DIR)Config\Io\Profinet\
 VendorName: KEYENCE CORPORATION.
 OrderNumber: IV4-XXXX
@@ -2391,7 +2394,7 @@ SW Release Version: V1.0.0]]></Comment>
 							<BitOffs>56</BitOffs>
 						</Var>
 					</Vars>
-					<Profinet DeviceId="4004" VendorId="509" FrameOffset="32768" IPAdd="c0a8071f" ProtocolType="3" BoxOnDeviceTyp="119" MaxPhysSlotNr="72" AvailableSlots="0..72" InstanceServerPort="50000" InstanceClientPort="50001" InstanceId="1" InstanceNumberOfARs="1" InstanceNumberOfAPIs="1" MinDeviceInterval="128" SavePnIoBoxValues="0100" MultipleWriteSupported="true" Phase="2" WatchdogFaktor="3" ReductionRatio="16" SendClockFaktor="32" MaxInputLen="1440" MaxOutputLen="1440" SendClockFactorData="200040008000" RedRatio="0100020004000800100020004000800000010002" BoxTypeInfo="IV4-XXXX" MacAdd5="158" PDOmapping="1" OutputErrorBehavior="2" GSDMLPath="$(TWINCAT3DIR)Config\Io\Profinet\GSDML-V2.42-Keyence-IV4-20240516.xml" ImagePath="C:\TwinCAT\3.1\Config\Io\Profinet\GSDML-01FD-0FA4-IV4.bmp" MainFamily="Sensors" ProductFamily="Keyence Vision Sensors" OrderNr="IV4-XXXX" DefaultDNSName="IV" VendorName="KEYENCE CORPORATION." FamDescription="IV4 Series Vision Sensor" GraphicFile="GSDML-01FD-0FA4-IV4" SWVersion="V1.0.0" HWVersion="1.0" AltLanguage="7">
+					<Profinet DeviceId="4004" VendorId="509" FrameOffset="32768" IPAdd="c0a8071f" ProtocolType="3" BoxOnDeviceTyp="119" MaxPhysSlotNr="72" InstanceServerPort="50000" InstanceClientPort="50001" InstanceId="1" InstanceNumberOfARs="1" InstanceNumberOfAPIs="1" MinDeviceInterval="128" SavePnIoBoxValues="0100" MultipleWriteSupported="true" Phase="2" WatchdogFaktor="3" ReductionRatio="16" SendClockFaktor="32" MaxInputLen="1440" MaxOutputLen="1440" SendClockFactorData="200040008000" RedRatio="0100020004000800100020004000800000010002" BoxTypeInfo="IV4-XXXX" MacAdd5="158" PDOmapping="1" OutputErrorBehavior="2" GSDMLPath="$(TWINCAT3DIR)Config\Io\Profinet\GSDML-V2.42-Keyence-IV4-20240516.xml" ImagePath="C:\TwinCAT\3.1\Config\Io\Profinet\GSDML-01FD-0FA4-IV4.bmp" MainFamily="Sensors" ProductFamily="Keyence Vision Sensors" OrderNr="IV4-XXXX" DefaultDNSName="IV" VendorName="KEYENCE CORPORATION." FamDescription="IV4 Series Vision Sensor" GraphicFile="GSDML-01FD-0FA4-IV4" SWVersion="V1.0.0" HWVersion="1.0" AltLanguage="7">
 						<UsedGsdmlModule ModuleIdentNumber="1" ModuleName="DAP Module" InfoText="IV4-XXXX" OrderNumber="IV4-XXXX">
 							<Slot>0</Slot>
 						</UsedGsdmlModule>
